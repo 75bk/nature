@@ -1,0 +1,16 @@
+{
+  "name": "config-master",
+  "version": "0.0.0",
+  "description": "Kong Fig Master",
+  "main": "lib/config.js",
+  "scripts": {
+    "test": ""
+  },
+  "repository": "",
+  "author": "Lloyd Brookes",
+  "license": "MIT",
+  "gitHead": "20081be5ea695af800c5b675027ce9408b63bec4",
+  "dependencies": {
+    "underscore": "~1.4.3"
+  }
+}
