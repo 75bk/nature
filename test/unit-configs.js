@@ -1,27 +1,28 @@
 var assert = require("assert"),
-    ConfigMaster = require("../lib/config-master"),
-    Config = require("../lib/config");
+    configMaster = require("../lib/config-master"),
+    Configs = configMaster.Configs,
+    Config = configMaster.Config;
 
-var _configMaster;
+var _configs;
 beforeEach(function(){
-    _configMaster = new ConfigMaster();
+    _configs = new Configs();
 });
 
 describe("ConfigMaster", function(){
     describe("methods:", function(){
         it("add(name, configInstance) should be chainable, get(configName) should return the added.", function(){
             var config = new Config()
-            var output = _configMaster.add( "test", config );
+            var output = _configs.add( "test", config );
         
-            assert.strictEqual(_configMaster.get("test"), config);
-            assert.strictEqual(output, _configMaster);
+            assert.strictEqual(_configs.get("test"), config);
+            assert.strictEqual(output, _configs);
         });
     
         it("add(name, configName) should add a copy of configName", function(){
             var config1 = new Config()
                 .group("whatever")
                     .option("one", { default: 1, valid: /[0-9]/, type: "number" });
-            var config2 = _configMaster
+            var config2 = _configs
                 .add("config1", config1 )
                 .add("config2", "config1")
                 .get("config2");
@@ -32,7 +33,7 @@ describe("ConfigMaster", function(){
         it("add(name, [configNames]) should add a config with merged copies of configNames", function(){
             var config1 = new Config().option("one", { default: 1 });
             var config2 = new Config().option("two", { default: 2 });
-            var config3 = _configMaster
+            var config3 = _configs
                 .add("config1", config1)
                 .add("config2", config2)
                 .add("config3", [ "config1", "config2" ])
@@ -49,13 +50,13 @@ describe("ConfigMaster", function(){
             var config = new Config()
                 .option("one", { })
                 .option("two", { });
-            _configMaster.add("config", config);
+            _configs.add("config", config);
             
             assert.throws(function(){
-                var config2 = _configMaster.get("config", { one: "uno", two: "due", three: "tre" });
+                var config2 = _configs.get("config", { one: "uno", two: "due", three: "tre" });
             });
             
-            var config2 = _configMaster.get("config", { one: "uno", two: "due" });
+            var config2 = _configs.get("config", { one: "uno", two: "due" });
             assert.deepEqual(config2.toJSON(), { one: "uno", two: "due" });
         });
 
@@ -64,7 +65,7 @@ describe("ConfigMaster", function(){
             var config = new Config()
                 .option("one", { })
                 .option("two", { });
-            _configMaster.add("config", config);
+            _configs.add("config", config);
             
             var config2 = new Config()
                 .option("one", { default: -1 })
@@ -72,11 +73,11 @@ describe("ConfigMaster", function(){
                 .option("three", { default: -3 });
 
             assert.throws(function(){
-                _configMaster.get("config", config2);
+                _configs.get("config", config2);
             });
             
             config.option("three", {});
-            _configMaster.get("config", config2);
+            _configs.get("config", config2);
             
             assert.deepEqual(config.toJSON(), { one: -1, two: -2, three: -3 });
         });
@@ -87,9 +88,9 @@ describe("ConfigMaster", function(){
                 .option("two", { type: Number, default: -2 })
                 .option("three", { type: Number, default: -3 });
         
-            _configMaster.add("config", config);
+            _configs.add("config", config);
         
-            var config2 = _configMaster.get("config", [ "--one", "5", "--two", "10", "--three", "20", "clive" ]);
+            var config2 = _configs.get("config", [ "--one", "5", "--two", "10", "--three", "20", "clive" ]);
         
             assert.strictEqual(config, config2);
             assert.deepEqual(config2.toJSON(), {
