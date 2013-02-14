@@ -84,14 +84,6 @@ describe("Config", function(){
     
     describe("methods: ", function(){
         describe("correct usage,", function(){
-            it("get(option) should throw if retrieving a `required` option with no value set", function(){
-               _config.option("files", { type: "string", required: true });
-               
-               assert.throws(function(){
-                   _config.get("files");
-               });
-            });
-            
             it("should set(option, value) and get(option)", function(){
                 _config.option("archiveDirectory", { type: "string", alias: "d" });
                 _config.set("archiveDirectory", "testset");
