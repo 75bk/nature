@@ -1,10 +1,10 @@
 {
   "name": "config-master",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Kong Fig Master",
-  "main": "lib/config.js",
+  "main": "lib/config-master.js",
   "scripts": {
-    "test": ""
+      "test": "mocha --reporter spec test/*.js"
   },
   "repository": "",
   "author": "Lloyd Brookes",
@@ -12,5 +12,8 @@
   "gitHead": "20081be5ea695af800c5b675027ce9408b63bec4",
   "dependencies": {
     "underscore": "~1.4.3"
+  },
+  "devDependencies": {
+      "mocha": "~1.7"
   }
 }
