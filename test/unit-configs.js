@@ -8,7 +8,10 @@ beforeEach(function(){
     _configs = new Configs();
 });
 
-describe("ConfigMaster", function(){
+describe("Configs", function(){
+    describe("constructor:", function(){
+        it("")
+    });
     describe("methods:", function(){
         it("add(name, configInstance) should be chainable, get(configName) should return the added.", function(){
             var config = new Config()

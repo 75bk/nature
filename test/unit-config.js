@@ -7,54 +7,57 @@ describe("Config", function(){
         _config = new Config();
     });
 
-    describe("basics: ", function(){
-        it("should output group toJson", function(){
-            _config.group("testgroup")
-                .option("one", {})
-                .option("two", {})
-                .option("three", {})
-                .set("one", 1)
-                .set("two", 2)
-                .set("three", 3);
-            
-            assert.deepEqual(
-                _config.group("testgroup").toJSON(),
-                {
-                    one: 1,
-                    two: 2,
-                    three: 3
-                }
-            );
-        });
-
-        it("should output group and subgroup toJson", function(){
-            _config.group("testgroup")
-                .option("one", {})
-                .set("one", 1)
-                .subgroup("sub")
+    describe("methods: ", function(){
+        describe("toJSON()", function(){
+            it("should output group toJson()", function(){
+                _config.group("testgroup")
+                    .option("one", {})
                     .option("two", {})
                     .option("three", {})
+                    .set("one", 1)
                     .set("two", 2)
                     .set("three", 3);
             
-            assert.deepEqual(
-                _config.group("testgroup").toJSON(),
-                {
-                    one: 1,
-                    two: 2,
-                    three: 3
-                }
-            );
-            assert.deepEqual(
-                _config.group("testgroup").subgroup("sub").toJSON(),
-                {
-                    two: 2,
-                    three: 3
-                }
-            );
+                assert.deepEqual(
+                    _config.group("testgroup").toJSON(),
+                    {
+                        one: 1,
+                        two: 2,
+                        three: 3
+                    }
+                );
+            });
+
+            it("should output group and subgroup toJson()", function(){
+                _config.group("testgroup")
+                    .option("one", {})
+                    .set("one", 1)
+                    .subgroup("sub")
+                        .option("two", {})
+                        .option("three", {})
+                        .set("two", 2)
+                        .set("three", 3);
+            
+                assert.deepEqual(
+                    _config.group("testgroup").toJSON(),
+                    {
+                        one: 1,
+                        two: 2,
+                        three: 3
+                    }
+                );
+                assert.deepEqual(
+                    _config.group("testgroup").subgroup("sub").toJSON(),
+                    {
+                        two: 2,
+                        three: 3
+                    }
+                );
+            });
         });
+
         
-        it("has() should return true if option has value", function(){
+        it("hasValue() should return true if option has value", function(){
             _config.option("one", {});
             _config.set("one", 1);
             
@@ -62,13 +65,13 @@ describe("Config", function(){
             
         });
 
-        it("has() should return false if option has no value", function(){
+        it("hasValue() should return false if option has no value", function(){
             _config.option("one", {});
             
             assert.strictEqual(_config.hasValue("one"), false);
         });
         
-        it("should unset an option, and its alias", function(){
+        it("should unset() an option, and its alias", function(){
             _config.option("one", {type: "number", default: 1, alias: "K" });
             assert.strictEqual(_config.get("one"), 1);
             assert.strictEqual(_config.get("K"), 1);
@@ -80,10 +83,13 @@ describe("Config", function(){
         it("should report if get/set ambiguous name");
         it("should set aliassed option too when setting alias");
         it("should list defined options");
-    });
-    
-    describe("methods: ", function(){
-        describe("correct usage,", function(){
+
+        describe("set(), get()", function(){
+            it("should set() and get() an array", function(){
+                _config.option("one", { });
+                _config.set("one")
+            })
+            
             it("should set(option, value) and get(option)", function(){
                 _config.option("archiveDirectory", { type: "string", alias: "d" });
                 _config.set("archiveDirectory", "testset");
@@ -168,6 +174,17 @@ describe("Config", function(){
                 assert.strictEqual(_config.get("recurse"), true);
                 assert.deepEqual(_config.get("files"), ["music", "film", "documentary"]);
             });
+        })
+
+        describe("correct usage,", function(){
+            it("option(name, definition) and definition(name) should set and retrieve", function(){
+                var definition = { valid: "string", default: "one" };
+                _config.option("one", definition);
+                
+                assert.strictEqual(definition, _config.definition("one"));
+            });
+            
+
 
             it("definition() should return correctly", function(){
                 _config.option("one", { type: "string", default: 1, alias: "1"})
@@ -205,7 +222,7 @@ describe("Config", function(){
             });
         });
 
-        describe("bad usage,", function(){
+        describe("incorrect usage,", function(){
             it("option(name, definition) will infer definition.type if not specified");
             it("set(name, definition) should throw on duplicate option", function(){
                 _config.option("yeah", {});
@@ -225,23 +242,7 @@ describe("Config", function(){
             });
         });
         
-        
         it("should accept 'required', 'defaultOption' and 'fileExists'");
-        // configMaster.add(
-        //     "just-files", 
-        //      new Config()
-        //          .option("files", { 
-        //              type: "array",
-        //              required: true,
-        //              defaultOption: true,
-        //              valid: { pathExists: true }
-        //          })
-        // );
-        // configMaster.add(
-        //     "help", 
-        //     new Config()
-        //         .option("topic", { type: "string", defaultOption: true, valid: "core|handbrake" })
-        // );
     });
     
     describe("properties: ", function(){
