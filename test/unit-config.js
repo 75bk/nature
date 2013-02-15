@@ -56,6 +56,7 @@ describe("Config", function(){
             });
         });
 
+        it("should toArray()");
         
         it("hasValue() should return true if option has value", function(){
             _config.option("one", {});
