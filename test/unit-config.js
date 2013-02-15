@@ -7,6 +7,16 @@ describe("Config", function(){
         _config = new Config();
     });
 
+    describe("properties:", function(){
+        it("isValid should return `true` only if all option values are valid", function(){
+            _config.option("one", { valid: Number, default: 1 });
+            assert.strictEqual(_config.isValid, true);
+            _config.option("two", { valid: Number, default: -1034.1 });
+            assert.strictEqual(_config.isValid, true);
+            _config.option("three", { valid: Number, default: "Cazzo" });
+            assert.strictEqual(_config.isValid, false);
+        });
+    })
     describe("methods: ", function(){
         describe("toJSON()", function(){
             it("should output group toJson()", function(){
