@@ -16,7 +16,8 @@ describe("Config", function(){
             _config.option("three", { valid: Number, default: "Cazzo" });
             assert.strictEqual(_config.isValid, false);
         });
-    })
+    });
+    
     describe("methods: ", function(){
         describe("toJSON()", function(){
             it("should output group toJson()", function(){
