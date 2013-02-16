@@ -9,16 +9,49 @@ describe("Config", function(){
 
     describe("properties:", function(){
         it("isValid should return `true` only if all option values are valid", function(){
-            _config.option("one", { valid: Number, default: 1 });
+            _config.option("one", { type: "number", default: 1 });
             assert.strictEqual(_config.isValid, true);
-            _config.option("two", { valid: Number, default: -1034.1 });
+            _config.option("two", { type: "number", default: -1034.1 });
             assert.strictEqual(_config.isValid, true);
-            _config.option("three", { valid: Number, default: "Cazzo" });
+            _config.option("three", { type: "number", default: "Cazzo" });
             assert.strictEqual(_config.isValid, false);
         });
     });
     
     describe("methods: ", function(){
+        it("should toArray()");
+        it("should list defined options");
+        
+        describe("option()", function(){
+            it("option(name, definition) and definition(name) should set and retrieve", function(){
+                var definition = { type: "string", default: "one" };
+                _config.option("one", definition);
+                
+                assert.strictEqual(definition.type, _config.definition("one").type);
+                assert.strictEqual(definition.default, _config.definition("one").default);
+                assert.strictEqual(definition.value, _config.get("one"));
+            });
+            
+            describe("incorrect usage,", function(){
+                it("option(name, definition) should throw on duplicate option", function(){
+                    _config.option("yeah", {});
+                
+                    assert.throws(function(){
+                        _config.option("yeah", { });
+                    });
+                });
+                it("option(name, definition) should throw on duplicate alias", function(){
+                    _config.option("one", { alias: "o" });
+                    _config.option("two", { alias: "d" });
+                    _config.option("three", { alias: "t" });
+                
+                    assert.throws(function(){
+                        _config.option("four", { alias: "t" });
+                    });
+                });
+            });
+        });
+        
         describe("toJSON()", function(){
             it("should output group toJson()", function(){
                 _config.group("testgroup")
@@ -67,20 +100,20 @@ describe("Config", function(){
             });
         });
 
-        it("should toArray()");
-        
-        it("hasValue() should return true if option has value", function(){
-            _config.option("one", {});
-            _config.set("one", 1);
+        describe("hasValue()", function(){
+            it("hasValue() should return true if option has value", function(){
+                _config.option("one", {});
+                _config.set("one", 1);
             
-            assert.strictEqual(_config.hasValue("one"), true);
+                assert.strictEqual(_config.hasValue("one"), true);
             
-        });
+            });
 
-        it("hasValue() should return false if option has no value", function(){
-            _config.option("one", {});
+            it("hasValue() should return false if option has no value", function(){
+                _config.option("one", {});
             
-            assert.strictEqual(_config.hasValue("one"), false);
+                assert.strictEqual(_config.hasValue("one"), false);
+            });
         });
         
         it("should unset() an option, and its alias", function(){
@@ -92,10 +125,6 @@ describe("Config", function(){
             assert.strictEqual(_config.get("K"), undefined);
         });
         
-        it("should report if get/set ambiguous name");
-        it("should set aliassed option too when setting alias");
-        it("should list defined options");
-
         describe("set(), get()", function(){
             it("should set() and get() an array", function(){
                 _config.option("one", { });
@@ -109,14 +138,15 @@ describe("Config", function(){
                 assert.equal(_config.get("archiveDirectory"), "testset");
             });
 
-            it("should set(alias, value) and get(alias)", function(){
+            it("should set(alias, value) then get(alias) and get(option)", function(){
                 _config.option("archiveDirectory", { type: "string", alias: "d" });
                 _config.set("d", "testset");
 
-                assert.equal(_config.get("d"), "testset");
+                assert.strictEqual(_config.get("d"), "testset");
+                assert.strictEqual(_config.get("archiveDirectory"), "testset");
             });
 
-            it("should set(option, value) and get(option) option within specific group", function(){
+            it("should set(option, value) and get(option) within specific group", function(){
                 _config.group("veelo").option("archiveDirectory", {type: "string"});
                 _config.set("archiveDirectory", "testset2");
 
@@ -186,87 +216,45 @@ describe("Config", function(){
                 assert.strictEqual(_config.get("recurse"), true);
                 assert.deepEqual(_config.get("files"), ["music", "film", "documentary"]);
             });
-        })
-
-        describe("correct usage,", function(){
-            it("option(name, definition) and definition(name) should set and retrieve", function(){
-                var definition = { valid: "string", default: "one" };
-                _config.option("one", definition);
-                
-                assert.strictEqual(definition, _config.definition("one"));
-            });
             
-
-
-            it("definition() should return correctly", function(){
-                _config.option("one", { type: "string", default: 1, alias: "1"})
-
-                assert.deepEqual(
-                    _config.definition("one"), 
-                    { type: "string", default: 1, alias: "1", value: 1, group: "" }
-                );
-            });
-        
-            it("should clone()", function(){
-                _config.option("one", { type: "number", default: 1 })
-                    .option("two", { type: "number", default: 2 });
-            
-                var config2 = _config.clone();
-
-                assert.notStrictEqual(_config, config2);
-                assert.deepEqual(_config.definition("one"), config2.definition("one"), config2);
-                assert.deepEqual(_config.definition("two"), config2.definition("two"), config2);
-            });
-        
-            it("options() should return Array of option names");
-        
-            it("mixin(config) should work", function(){
-                _config.option("year", { type: "number", default: 2013 });
-                var config2 = new Config().option("month", { type: "string", default: "feb" });
-                var config3 = new Config().option("day", { type: "string", default: "Sunday" })
-            
-                _config.mixIn(config2);
-                _config.mixIn(config3);
-            
-                assert.strictEqual(_config.get("year"), 2013);
-                assert.strictEqual(_config.get("month"), "feb");
-                assert.strictEqual(_config.get("day"), "Sunday");
-            });
-        });
-
-        describe("incorrect usage,", function(){
-            it("option(name, definition) will infer definition.type if not specified");
-            it("set(name, definition) should throw on duplicate option", function(){
-                _config.option("yeah", {});
-                
-                assert.throws(function(){
-                    _config.option("yeah", { });
+            describe("incorrect usage,", function(){
+                it("set(option, value) should throw on unregistered option", function(){
+                    assert.throws(function(){
+                        _config.set("yeah", "test");
+                    });
+                });
+                it("get(option) should throw on unregistered option", function(){
+                    assert.throws(function(){
+                        _config.get("yeah", "test");
+                    });
                 });
             });
-            it("set(name, definition) should throw on duplicate alias", function(){
-                _config.option("one", { alias: "o" });
-                _config.option("two", { alias: "d" });
-                _config.option("three", { alias: "t" });
-                
-                assert.throws(function(){
-                    _config.option("four", { alias: "t" });
-                });
-            });
+        })
+
+        it("should clone()", function(){
+            _config.option("one", { type: "number", default: 1 })
+                .option("two", { type: "number", default: 2 });
+            
+            var config2 = _config.clone();
+
+            assert.notStrictEqual(_config, config2);
+            assert.deepEqual(_config.definition("one"), config2.definition("one"), config2);
+            assert.deepEqual(_config.definition("two"), config2.definition("two"), config2);
         });
         
-        it("should accept 'required', 'defaultOption' and 'fileExists'");
-    });
-    
-    describe("properties: ", function(){
-        it("`valid` should return `true` with valid options", function(){
-            _config.option("one", { type: "number" })
-        })
-    })
-    describe("validation: ", function(){
-        it("should validate string");
-        it("should validate number");
-        it("should validate array");
-        it("should validate boolean");
-        it("should validate type if specifying arbitrary class, e.g. type: Config, Number ");
+        it("options() should return Array of option names");
+        
+        it("mixin(config) should work", function(){
+            _config.option("year", { type: "number", default: 2013 });
+            var config2 = new Config().option("month", { type: "string", default: "feb" });
+            var config3 = new Config().option("day", { type: "string", default: "Sunday" })
+            
+            _config.mixIn(config2);
+            _config.mixIn(config3);
+            
+            assert.strictEqual(_config.get("year"), 2013);
+            assert.strictEqual(_config.get("month"), "feb");
+            assert.strictEqual(_config.get("day"), "Sunday");
+        });
     });
 });
