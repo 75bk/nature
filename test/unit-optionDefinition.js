@@ -123,7 +123,7 @@ describe("OptionDefinition", function(){
         
         it("`valid` RegExp should work with primitive types", function(){
             var def = new Definition({ type: "string", default: "test", valid: /es/ });
-            assert.strictEqual(def.validValue, true);
+            assert.strictEqual(def.validValue, true, JSON.stringify(def));
             def.valid = /as/;
             assert.strictEqual(def.validValue, false);
 

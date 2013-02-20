@@ -16,6 +16,18 @@ describe("Config", function(){
             _config.option("three", { type: "number", default: "Cazzo" });
             assert.strictEqual(_config.isValid, false);
         });
+        
+        it("`errors` should return an array of errors on invalid values and types", function(){
+            _config.option("one", { type: Array, default: 1 });
+            _config.option("two", { type: "string", default: 1 });
+            _config.option("three", { type: RegExp, default: 1 });
+            _config.option("four", { type: "string", default: "clive", valid: /test/ });
+            _config.option("five", { type: Array, default: "clive", valid: function (val){ 
+                return val.length == 0; 
+            }});
+            
+            assert.ok(_config.errors.length == 5, JSON.stringify(_config.errors));
+        });
     });
     
     describe("methods: ", function(){
@@ -29,7 +41,7 @@ describe("Config", function(){
                 
                 assert.strictEqual(definition.type, _config.definition("one").type);
                 assert.strictEqual(definition.default, _config.definition("one").default);
-                assert.strictEqual(definition.value, _config.get("one"));
+                assert.strictEqual(_config.get("one"), "one");
             });
             
             describe("incorrect usage,", function(){
