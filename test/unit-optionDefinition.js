@@ -150,6 +150,8 @@ describe("OptionDefinition", function(){
             def.value = [1,2,3,4,5,6,7,5,4,3,2,1,0];
             assert.strictEqual(def.validValue, false);
         });
+        
+        it("`valid` should accept and test an array of functions");
     
         it("`isValid` should return true if both type and value valid", function(){
             var def = new Definition({ type: "string", default: "test" });
@@ -173,6 +175,68 @@ describe("OptionDefinition", function(){
             assert.strictEqual(def.validType, true);
             assert.strictEqual(def.validValue, true);
             assert.strictEqual(def.isValid, true);            
+        });
+        
+        describe("bad usage", function(){
+            it("`validValue` should return `false` if `valid` function threw", function(){
+                var def = new Definition({ type: Array, required: true, valid: function(files){
+                    throw new Error("error");
+                }});
+                
+                def.value = ["test"];
+                assert.strictEqual(def.validType, true);
+                assert.strictEqual(def.validValue, false);
+                // assert.strictEqual(def.errors.length, 1, JSON.stringify(def.errors));
+                
+            });
+        });
+        
+        it("custom invalid msg with type `number`", function(){
+            function validTest(value){
+                return value > 10;
+            }
+            var def = new Definition({type: "number", valid: validTest, invalidMsg: "must supply a value over 10" });
+            
+            def.value = 1;
+            assert.deepEqual(def.errors, ["must supply a value over 10"]);
+
+            def.value = 11;
+            assert.deepEqual(def.errors, []);
+        });
+
+        it("custom invalid msg with type `Array`", function(){
+            function validArray(values){
+                return values.every(function(val){
+                    return val > 10;
+                });
+            }
+            var def = new Definition({type: Array, valid: validArray, invalidMsg: "every value must be over 10" });
+            
+            def.value = [1];
+            assert.deepEqual(def.errors, ["every value must be over 10"]);
+
+            def.value = [11];
+            assert.deepEqual(def.errors, []);
+        });
+
+        it("inserting error messages from a `valid` function", function(){
+            function validArray(values){
+                var valid = true, self = this;
+                values.forEach(function(val){
+                    if (val < 10){
+                        valid = false; 
+                        self.addValidationError("less than 10: " + val);
+                    }
+                });
+                return valid;
+            }
+            var def = new Definition({type: Array, valid: validArray, invalidMsg: "every value must be over 10" });
+            
+            def.value = [1];
+            assert.deepEqual(def.errors, ["less than 10: 1", "every value must be over 10"]);
+
+            def.value = [11];
+            assert.deepEqual(def.errors, []);
         });
     });
 });

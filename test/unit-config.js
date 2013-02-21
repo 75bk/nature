@@ -25,6 +25,7 @@ describe("Config", function(){
             _config.option("five", { type: Array, default: "clive", valid: function (val){ 
                 return val.length == 0; 
             }});
+            _config.option("six", {type: "number", value: 1 });
             
             assert.ok(_config.errors.length == 5, JSON.stringify(_config.errors));
         });
@@ -43,6 +44,8 @@ describe("Config", function(){
                 assert.strictEqual(definition.default, _config.definition("one").default);
                 assert.strictEqual(_config.get("one"), "one");
             });
+            
+            it("option(existName, definition) should modify existin option definition");
             
             describe("incorrect usage,", function(){
                 it("option(name, definition) should throw on duplicate option", function(){
@@ -137,10 +140,14 @@ describe("Config", function(){
             assert.strictEqual(_config.get("K"), undefined);
         });
         
+        it("should remove() an option and its alias");
+        
         describe("set(), get()", function(){
             it("should set() and get() an array", function(){
-                _config.option("one", { });
-                _config.set("one")
+                _config.option("one", { type: Array });
+                _config.set("one", [0, 1]);
+                
+                assert.deepEqual(_config.get("one"), [0, 1]);
             })
             
             it("should set(option, value) and get(option)", function(){
@@ -229,6 +236,27 @@ describe("Config", function(){
                 assert.deepEqual(_config.get("files"), ["music", "film", "documentary"]);
             });
             
+            // it("set(optionsArray) with a `defaultOption` of type string", function(){
+            //     _config.option("one", { type: "string", defaultOption: true });
+            //     _config.set(["test"]);
+            //     
+            //     assert.strictEqual(_config.get("one"), "test");
+            // });
+            // 
+            // it("set(optionsArray) with a `defaultOption` of type number", function(){
+            //     _config.option("one", { type: "number", defaultOption: true });
+            //     _config.set([1]);
+            //     
+            //     assert.strictEqual(_config.get("one"), 1);
+            // });
+
+            it("set(optionsArray) with a `defaultOption` of type Array", function(){
+                _config.option("one", { type: Array, defaultOption: true });
+                _config.set(["test", 1, false]);
+                
+                assert.deepEqual(_config.get("one"), ["test", 1, false]);
+            });
+            
             describe("incorrect usage,", function(){
                 it("set(option, value) should throw on unregistered option", function(){
                     assert.throws(function(){
@@ -258,8 +286,8 @@ describe("Config", function(){
         
         it("mixin(config) should work", function(){
             _config.option("year", { type: "number", default: 2013 });
-            var config2 = new Config().option("month", { type: "string", default: "feb" });
-            var config3 = new Config().option("day", { type: "string", default: "Sunday" })
+            var config2 = new Config().option("month", { type: "string", default: "feb", alias: "m" });
+            var config3 = new Config().option("day", { type: "string", default: "Sunday", alias: "d" })
             
             _config.mixIn(config2);
             _config.mixIn(config3);
@@ -267,6 +295,21 @@ describe("Config", function(){
             assert.strictEqual(_config.get("year"), 2013);
             assert.strictEqual(_config.get("month"), "feb");
             assert.strictEqual(_config.get("day"), "Sunday");
+            assert.strictEqual(_config.get("m"), "feb");
+            assert.strictEqual(_config.get("d"), "Sunday");
+        });
+        
+        it("definition(option) should return correct def for full name and alias", function(){
+            _config.option("one", {type: Array, default: [1,2], required: true, alias: "a" });
+
+            assert.strictEqual(_config.definition("one").type, Array);
+            assert.strictEqual(_config.definition("a").type, Array);
+            assert.deepEqual(_config.definition("one").default, [1,2]);
+            assert.deepEqual(_config.definition("a").default, [1,2]);
+            assert.strictEqual(_config.definition("one").required, true);
+            assert.strictEqual(_config.definition("a").required, true);
+            assert.strictEqual(_config.definition("one").alias, "a");
+            assert.strictEqual(_config.definition("a").alias, "a");
         });
     });
 });
