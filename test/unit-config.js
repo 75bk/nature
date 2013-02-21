@@ -29,6 +29,8 @@ describe("Config", function(){
             
             assert.ok(_config.errors.length == 5, JSON.stringify(_config.errors));
         });
+        
+        it("`definitions`");
     });
     
     describe("methods: ", function(){
@@ -45,7 +47,7 @@ describe("Config", function(){
                 assert.strictEqual(_config.get("one"), "one");
             });
             
-            it("option(existName, definition) should modify existin option definition");
+            it("option(existName, definition) should modify existing option definition");
             
             describe("incorrect usage,", function(){
                 it("option(name, definition) should throw on duplicate option", function(){
@@ -284,7 +286,7 @@ describe("Config", function(){
         
         it("options() should return Array of option names");
         
-        it("mixin(config) should work", function(){
+        it("mixin(config)", function(){
             _config.option("year", { type: "number", default: 2013 });
             var config2 = new Config().option("month", { type: "string", default: "feb", alias: "m" });
             var config3 = new Config().option("day", { type: "string", default: "Sunday", alias: "d" })
@@ -310,6 +312,66 @@ describe("Config", function(){
             assert.strictEqual(_config.definition("a").required, true);
             assert.strictEqual(_config.definition("one").alias, "a");
             assert.strictEqual(_config.definition("a").alias, "a");
+        });
+        
+        describe("grouping", function(){
+            it("groupOptions(optionNameArray)", function(){
+                _config.option("one", { type: "number", alias: "1", default: 1 })
+                    .option("two", { type: "number", alias: "t", default: 2 })
+                    .option("three", { type: "number", alias: "3", default: 3 });
+                _config.groupOptions(["one", "two", "three"], "everything");
+                _config.groupOptions(["one", "two", "three"], "everything2");
+                _config.groupOptions("one", "smallest");
+                _config.groupOptions(["two", "three"], "not the smallest");
+            
+                assert.deepEqual(_config.group("everything").toJSON(), {one: 1, two:2, three:3 });
+                assert.deepEqual(_config.group("everything2").toJSON(), {one: 1, two:2, three:3 });
+                assert.deepEqual(_config.group("smallest").toJSON(), {one: 1 });
+                assert.deepEqual(_config.group("not the smallest").toJSON(), { two:2, three:3 });
+            
+            });
+            
+            it("define() with groups", function(){
+                _config
+                    .define({ name: "no group" })
+                    .define("general", [
+                        { name: "help", type: "boolean", alias: "h" },
+                        { name: "input", type: "string", alias: "i" },
+                        { name: "output", type: "string", alias: "o" }
+                    ])
+                    .define("source", [
+                        {
+                            name: "title",
+                            type: "number",
+                            alias: "t"
+                        },
+                        {
+                            name: "start-at", 
+                            type: "string", 
+                            valid: /duration|frame|pts/, 
+                            invalidMsg: "please specify the unit, e.g. --start-at duration:10 or --start-at frame:2000"
+                        },
+                        {
+                            name: "stop-at",
+                            type: "string",
+                            valid: /duration|frame|pts/,
+                            invalidMsg: "please specify the unit, e.g. --stop-at duration:100 or --stop-at frame:3000" 
+                        }
+                    ]);
+               
+                assert.deepEqual(_config.definition("no group").groups, []);
+                assert.deepEqual(_config.definition("title").groups, ["source"]);
+                assert.deepEqual(_config.definition("start-at").groups, ["source"]);
+                assert.deepEqual(_config.definition("stop-at").groups, ["source"]);
+            });
+            
+            it("addToGroup(groupName, option)", function(){
+                _config.define({ name: "one", default: 1 });
+                
+                assert.deepEqual(_config.group("testgroup").toJSON(), {});
+                _config.addToGroup("testgroup", "one");
+                assert.deepEqual(_config.group("testgroup").toJSON(), { one: 1 });
+            })
         });
     });
 });
