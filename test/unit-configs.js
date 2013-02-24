@@ -45,6 +45,8 @@ describe("Configs", function(){
             assert.deepEqual(config3.definition("one"), config1.definition("one"));
             assert.deepEqual(config3.definition("two"), config2.definition("two"));
             assert.deepEqual(config3.toJSON(), { one: 1, two: 2 });
+            assert.deepEqual(config3.group("config1").toJSON(), { one: 1 });
+            assert.deepEqual(config3.group("config2").toJSON(), { two: 2 });
             assert.deepEqual(config3.get("a"), 1);
             assert.deepEqual(config3.get("b"), 2);
         });

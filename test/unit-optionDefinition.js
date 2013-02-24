@@ -4,12 +4,12 @@ var assert = require("assert"),
 describe("OptionDefinition", function(){
     describe("properties: ", function(){
         it("`validType` should return true if no type specified", function(){
-            var def = new Definition({  });
+            var def = new Definition({ name: "one" });
             assert.strictEqual(def.validType, true);
         });
     
         it("`validType` should return true when `typeof value === type`", function(){
-            var def = new Definition({ type: "string" });
+            var def = new Definition({ name: "one", type: "string" });
             assert.strictEqual(def.validType, true);
             def.value = 123;
             assert.strictEqual(def.validType, false);
@@ -24,7 +24,7 @@ describe("OptionDefinition", function(){
             def.value = [];
             assert.strictEqual(def.validType, false);
         
-            def = new Definition({type: "number"});
+            def = new Definition({name: "one", type: "number"});
             assert.strictEqual(def.validType, true);
             def.value = 123;
             assert.strictEqual(def.validType, true);
@@ -41,7 +41,7 @@ describe("OptionDefinition", function(){
             def.value = [];
             assert.strictEqual(def.validType, false);
 
-            def = new Definition({type: "boolean"});
+            def = new Definition({name: "one", type: "boolean"});
             assert.strictEqual(def.validType, true);
             def.value = 123;
             assert.strictEqual(def.validType, false);
@@ -58,7 +58,7 @@ describe("OptionDefinition", function(){
             def.value = [];
             assert.strictEqual(def.validType, false);
 
-            def = new Definition({type: "function"});
+            def = new Definition({name: "one", type: "function"});
             assert.strictEqual(def.validType, true);
             def.value = 123;
             assert.strictEqual(def.validType, false);
@@ -75,7 +75,7 @@ describe("OptionDefinition", function(){
             def.value = [];
             assert.strictEqual(def.validType, false);
         
-            def = new Definition({type: "object"});
+            def = new Definition({name: "one", type: "object"});
             assert.strictEqual(def.validType, true);
             def.value = 123;
             assert.strictEqual(def.validType, false);
@@ -94,7 +94,7 @@ describe("OptionDefinition", function(){
         });
     
         it("`validType` should return true if `value instanceof type`", function(){
-            var def = new Definition({ type: Array });
+            var def = new Definition({ name: "one", type: Array });
             assert.strictEqual(def.validType, true);
             def.value = 123;
             assert.strictEqual(def.validType, false);
@@ -104,7 +104,7 @@ describe("OptionDefinition", function(){
             assert.strictEqual(def.validType, false);
 
             var CustomClass = function(){};
-            var def = new Definition({ type: CustomClass });
+            var def = new Definition({ name: "one", type: CustomClass });
             assert.strictEqual(def.validType, true);
             def.value = 123;
             assert.strictEqual(def.validType, false);
@@ -115,19 +115,19 @@ describe("OptionDefinition", function(){
             def.value = new CustomClass();
             assert.strictEqual(def.validType, true);
 
-            var def = new Definition({ type: Date });
+            var def = new Definition({ name: "one", type: Date });
             assert.strictEqual(def.validType, true);
             def.value = new Date();
             assert.strictEqual(def.validType, true);
         });
         
         it("`valid` RegExp should work with primitive types", function(){
-            var def = new Definition({ type: "string", default: "test", valid: /es/ });
+            var def = new Definition({ name: "one", type: "string", default: "test", valid: /es/ });
             assert.strictEqual(def.validValue, true, JSON.stringify(def));
             def.valid = /as/;
             assert.strictEqual(def.validValue, false);
 
-            def = new Definition({ type: "boolean", default: false, valid: /false/ });
+            def = new Definition({ name: "one", type: "boolean", default: false, valid: /false/ });
             assert.strictEqual(def.validValue, true);
             def.valid = /true/;
             assert.strictEqual(def.validValue, false);
@@ -137,7 +137,7 @@ describe("OptionDefinition", function(){
             function smallNumber(value) {
                 return value < 10;
             }
-            var def = new Definition({ type: "number", default: 4, valid: smallNumber });
+            var def = new Definition({ name: "one", type: "number", default: 4, valid: smallNumber });
             assert.strictEqual(def.validValue, true);
             def.value = 11;
             assert.strictEqual(def.validValue, false);
@@ -145,7 +145,7 @@ describe("OptionDefinition", function(){
             function smallArray(a){
                 return a.length < 10;
             }
-            def = new Definition({ type: Array, default: [0,4,6], valid: smallArray });
+            def = new Definition({ name: "one", type: Array, default: [0,4,6], valid: smallArray });
             assert.strictEqual(def.validValue, true);
             def.value = [1,2,3,4,5,6,7,5,4,3,2,1,0];
             assert.strictEqual(def.validValue, false);
@@ -154,24 +154,24 @@ describe("OptionDefinition", function(){
         it("`valid` should accept and test an array of functions");
     
         it("`isValid` should return true if both type and value valid", function(){
-            var def = new Definition({ type: "string", default: "test" });
+            var def = new Definition({ name: "one", type: "string", default: "test" });
             assert.strictEqual(def.validType, true);
             assert.strictEqual(def.validValue, true);
             assert.strictEqual(def.isValid, true);
 
-            var def = new Definition({ type: "string" });
+            var def = new Definition({ name: "one", type: "string" });
             assert.strictEqual(def.validType, true);
             assert.strictEqual(def.validValue, true);
             assert.strictEqual(def.isValid, true);
         });
         
         it("`validType` and `validValue` should return false if option `required` with no value set", function(){
-            var def = new Definition({ type: "number", required: true });
+            var def = new Definition({ name: "one", type: "number", required: true });
             assert.strictEqual(def.validType, false);
             assert.strictEqual(def.validValue, false);
             assert.strictEqual(def.isValid, false);
             
-            def = new Definition({ type: "number", required: true, default: 1 });
+            def = new Definition({ name: "one", type: "number", required: true, default: 1 });
             assert.strictEqual(def.validType, true);
             assert.strictEqual(def.validValue, true);
             assert.strictEqual(def.isValid, true);            
@@ -179,7 +179,7 @@ describe("OptionDefinition", function(){
         
         describe("bad usage", function(){
             it("`validValue` should return `false` if `valid` function threw", function(){
-                var def = new Definition({ type: Array, required: true, valid: function(files){
+                var def = new Definition({ name: "one", type: Array, required: true, valid: function(files){
                     throw new Error("error");
                 }});
                 
@@ -195,7 +195,7 @@ describe("OptionDefinition", function(){
             function validTest(value){
                 return value > 10;
             }
-            var def = new Definition({type: "number", valid: validTest, invalidMsg: "must supply a value over 10" });
+            var def = new Definition({name: "one", type: "number", valid: validTest, invalidMsg: "must supply a value over 10" });
             
             def.value = 1;
             assert.deepEqual(def.errors, ["must supply a value over 10"]);
@@ -210,7 +210,7 @@ describe("OptionDefinition", function(){
                     return val > 10;
                 });
             }
-            var def = new Definition({type: Array, valid: validArray, invalidMsg: "every value must be over 10" });
+            var def = new Definition({name: "one", type: Array, valid: validArray, invalidMsg: "every value must be over 10" });
             
             def.value = [1];
             assert.deepEqual(def.errors, ["every value must be over 10"]);
@@ -230,7 +230,7 @@ describe("OptionDefinition", function(){
                 });
                 return valid;
             }
-            var def = new Definition({type: Array, valid: validArray, invalidMsg: "every value must be over 10" });
+            var def = new Definition({name: "one", type: Array, valid: validArray, invalidMsg: "every value must be over 10" });
             
             def.value = [1];
             assert.deepEqual(def.errors, ["less than 10: 1", "every value must be over 10"]);
