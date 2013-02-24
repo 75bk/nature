@@ -396,15 +396,25 @@ describe("Config", function(){
                 assert.deepEqual(_config.where({ group: "not the smallest" }).toJSON2(), { two:2, three:3 });
             });
             
+            it("group(groupName) groups all options", function(){
+                _config
+                    .define({ name: "one", type: "number", alias: "1", default: 1 })
+                    .define({ name: "two", type: "number", alias: "t", default: 2 })
+                    .define({ name: "three", type: "number", alias: "3", default: 3 })
+                    .group2("everything");
+            
+                assert.deepEqual(_config.where({ group: "everything" }).toJSON2(), {one: 1, two:2, three:3 });
+            })
+            
             it("ungroup(groupName) should remove all options from groupName", function(){
                 _config
                     .define("group1", {name: "one"})
                     .define("group1", {name: "two"})
                     .define("group2", {name: "three"});
-                assert.deepEqual(_config.where({ group: "group1 "}).options, ["one", "two"]);
+                assert.deepEqual(_config.where({ group: "group1"}).options, ["one", "two"]);
                 
                 _config.ungroup("group1");
-                assert.deepEqual(_config.where({ group: "group1 "}).options, []);
+                assert.deepEqual(_config.where({ group: "group1"}).options, []);
                 
             });
 
@@ -414,13 +424,13 @@ describe("Config", function(){
                     .define("group1", {name: "two"})
                     .define("group2", {name: "three"})
                     .define("group1", {name: "four"});
-                assert.deepEqual(_config.where({ group: "group1 "}).options, ["one", "two", "four"]);
+                assert.deepEqual(_config.where({ group: "group1"}).options, ["one", "two", "four"]);
                 
                 _config.ungroup("group1", "one");
-                assert.deepEqual(_config.where({ group: "group1 "}).options, ["two", "four"]);
+                assert.deepEqual(_config.where({ group: "group1"}).options, ["two", "four"]);
 
                 _config.ungroup("group1", ["two", "four"]);
-                assert.deepEqual(_config.where({ group: "group1 "}).options, []);
+                assert.deepEqual(_config.where({ group: "group1"}).options, []);
             });
             
             it("where({group: groupName}) returns a config clone, with reduced options", function(){

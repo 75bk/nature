@@ -34,8 +34,8 @@ describe("Configs", function(){
         });
 
         it("add(name, [configNames]) should add a config with merged copies of configNames", function(){
-            var config1 = new Config().option("one", { default: 1, alias: "a" });
-            var config2 = new Config().option("two", { default: 2, alias: "b" });
+            var config1 = new Config().define({ name: "one", default: 1, alias: "a" });
+            var config2 = new Config().define({ name: "two", default: 2, alias: "b" });
             var config3 = _configs
                 .add("config1", config1)
                 .add("config2", config2)
@@ -44,9 +44,9 @@ describe("Configs", function(){
 
             assert.deepEqual(config3.definition("one"), config1.definition("one"));
             assert.deepEqual(config3.definition("two"), config2.definition("two"));
-            assert.deepEqual(config3.toJSON(), { one: 1, two: 2 });
-            assert.deepEqual(config3.group("config1").toJSON(), { one: 1 });
-            assert.deepEqual(config3.group("config2").toJSON(), { two: 2 });
+            assert.deepEqual(config3.toJSON2(), { one: 1, two: 2 });
+            assert.deepEqual(config3.where({ group: "config1" }).toJSON2(), { one: 1 });
+            assert.deepEqual(config3.where({ group: "config2" }).toJSON2(), { two: 2 });
             assert.deepEqual(config3.get("a"), 1);
             assert.deepEqual(config3.get("b"), 2);
         });
