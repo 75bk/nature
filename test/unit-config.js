@@ -171,10 +171,10 @@ describe("Config", function(){
             })
             
             it("should set(option, value) and get(option)", function(){
-                _config.option("archiveDirectory", { type: "string", alias: "d" });
+                _config.define({ name: "archiveDirectory", type: "string", alias: "d" });
                 _config.set("archiveDirectory", "testset");
 
-                assert.equal(_config.get("archiveDirectory"), "testset");
+                assert.strictEqual(_config.get("archiveDirectory"), "testset");
             });
 
             it("should set(alias, value) then get(alias) and get(option)", function(){
@@ -189,7 +189,7 @@ describe("Config", function(){
                 _config.group("veelo").option("archiveDirectory", {type: "string"});
                 _config.set("archiveDirectory", "testset2");
 
-                assert.equal(_config.get("archiveDirectory"), "testset2");
+                assert.strictEqual(_config.get("archiveDirectory"), "testset2");
             });
 
             it("should set default option() value", function(){
@@ -258,19 +258,15 @@ describe("Config", function(){
                 assert.deepEqual(_config.get("files"), ["music", "film", "documentary"]);
             });
             
-            // it("set(optionsArray) with a `defaultOption` of type string", function(){
-            //     _config.option("one", { type: "string", defaultOption: true });
-            //     _config.set(["test"]);
-            //     
-            //     assert.strictEqual(_config.get("one"), "test");
-            // });
-            // 
-            // it("set(optionsArray) with a `defaultOption` of type number", function(){
-            //     _config.option("one", { type: "number", defaultOption: true });
-            //     _config.set([1]);
-            //     
-            //     assert.strictEqual(_config.get("one"), 1);
-            // });
+            it("set(optionsArray) with a type Array", function(){
+                _config.define({ name:"one", type: Array });
+
+                _config.set(["--one", "test", 1, false]);
+                assert.deepEqual(_config.get("one"), ["test"]);
+
+                _config.set(["--one", "test ,1    , false"]);
+                assert.deepEqual(_config.get("one"), ["test", "1", "false"]);
+            });
 
             it("set(optionsArray) with a `defaultOption` of type Array", function(){
                 _config.option("one", { type: Array, defaultOption: true });
@@ -278,7 +274,21 @@ describe("Config", function(){
                 
                 assert.deepEqual(_config.get("one"), ["test", 1, false]);
             });
-            
+
+            it("set(optionsArray) with a `defaultOption` of type 'string'", function(){
+                _config.define({ name: "one", type: "string", defaultOption: true });
+                _config.set(["test", 1, false]);
+                
+                assert.strictEqual(_config.get("one"), "test");
+            });
+
+            it("set(optionsArray) with a `defaultOption` of type number", function(){
+                _config.define({ name: "one", type: "number", defaultOption: true });
+                _config.set([1, 4, 5]);
+                
+                assert.strictEqual(_config.get("one"), 1);
+            });
+
             describe("incorrect usage,", function(){
                 it("set(option, value) should throw on unregistered option", function(){
                     assert.throws(function(){
