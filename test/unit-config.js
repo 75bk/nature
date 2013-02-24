@@ -241,18 +241,20 @@ describe("Config", function(){
             });
         
             it("set(optionsArray) should set options in bulk", function(){
-                var argv = ["node", "test.js", "info", "-d", "--recurse", "music", "film", "documentary"];
+                var argv = ["node", "test.js", "info", "-d", "--preset", "--recurse", "music", "film", "documentary"];
                 argv.splice(0, 2);
                 var command = argv.shift();
                 _config
-                    .option("detailed", { alias: "d", type: "boolean" })
-                    .option("recurse", { type: "boolean" })
-                    .option("files", { array: true, type: "object", defaultOption: true });
+                    .define({ name: "detailed", alias: "d", type: "boolean" })
+                    .define({ name: "recurse", type: "boolean" })
+                    .define({ name: "preset", type: "string" })
+                    .define({ name: "files", type: Array, defaultOption: true });
             
                 _config.set(argv);
             
-                assert.strictEqual(_config.get("detailed"), true);
-                assert.strictEqual(_config.get("recurse"), true);
+                assert.strictEqual(_config.get("detailed"), true, JSON.stringify(_config.toJSON2()));
+                assert.strictEqual(_config.get("recurse"), true, JSON.stringify(_config.toJSON2()));
+                assert.strictEqual(_config.get("preset"), undefined);
                 assert.deepEqual(_config.get("files"), ["music", "film", "documentary"]);
             });
             

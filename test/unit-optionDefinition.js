@@ -121,6 +121,10 @@ describe("OptionDefinition", function(){
             assert.strictEqual(def.validType, true);
         });
         
+        it("`validValue` should be true with an empty value and not `required`", function(){
+            
+        });
+        
         it("`valid` RegExp should work with primitive types", function(){
             var def = new Definition({ name: "one", type: "string", default: "test", valid: /es/ });
             assert.strictEqual(def.validValue, true, JSON.stringify(def));
