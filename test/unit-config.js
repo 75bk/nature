@@ -337,6 +337,8 @@ describe("Config", function(){
             assert.strictEqual(_config.get("m"), "feb");
             assert.strictEqual(_config.get("d"), "Sunday");
         });
+        
+        it("mixin() must fail on duplicate optionName or alias");
 
         it("mixin(config, groups)", function(){
             _config.option("year", { type: "number", default: 2013 });
