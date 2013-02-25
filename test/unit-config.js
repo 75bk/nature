@@ -67,6 +67,8 @@ describe("Config", function(){
                 assert.strictEqual(_config.definition("one").valid, testValid);
             });
             
+            it("define() should work the same with a `definition.value` as set()");
+            
             describe("incorrect usage,", function(){
                 it("option(name, definition) should throw on duplicate option", function(){
                     _config.option("yeah", {});
@@ -288,6 +290,8 @@ describe("Config", function(){
                 
                 assert.strictEqual(_config.get("one"), 1);
             });
+            
+            it("warn if set(optionsArray) produces defaultValues with no defaultOption set");
 
             describe("incorrect usage,", function(){
                 it("set(option, value) should throw on unregistered option", function(){
@@ -295,6 +299,9 @@ describe("Config", function(){
                         _config.set("yeah", "test");
                     });
                 });
+                
+                it("set(option, value) should emit error on unregistered option");
+                
                 it("get(option) should throw on unregistered option", function(){
                     assert.throws(function(){
                         _config.get("yeah", "test");
