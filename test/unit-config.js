@@ -37,6 +37,7 @@ describe("Config", function(){
     describe("methods: ", function(){
         it("should toArray()");
         it("should list defined options");
+        it("should extend(object) a passed in object with the option/values from config.toJSON");
         
         describe("defining options", function(){
             it("option(name, definition) and definition(name) should set and retrieve", function(){
@@ -468,6 +469,21 @@ describe("Config", function(){
                 assert.strictEqual(_config.where({ group: "group" }).get("three"), 3);
                 assert.strictEqual(_config.get("one"), 1);
                 assert.strictEqual(_config.get("two"), 2);
+                assert.strictEqual(_config.get("three"), 3);
+            });
+            
+            it("where({ name: {$ne: []}}) should exclude named options", function(){
+                _config
+                    .define({ name: "one", type: "number", alias: "1", default: 1 })
+                    .define({ name: "two", type: "number", alias: "t", default: 2 })
+                    .define({ name: "three", type: "number", alias: "3", default: 3 });
+                    
+                assert.throws(function(){
+                    assert.strictEqual(_config.where({ name: { $ne: ["one", "two"] }}).get("one"), 1);
+                }, null, JSON.stringify(_config.where({ name: { $ne: ["one", "two"] }}).toJSON2()));
+                assert.throws(function(){
+                    assert.strictEqual(_config.where({ name: { $ne: ["one", "two"] }}).get("two"), 2);
+                });
                 assert.strictEqual(_config.get("three"), 3);
             });
             
