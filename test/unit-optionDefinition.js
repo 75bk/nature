@@ -3,6 +3,53 @@ var assert = require("assert"),
 
 describe("OptionDefinition", function(){
     describe("properties: ", function(){
+        it("a number string should typecast to a Number type automatically", function(){
+           var def = new Definition({ name: "one", type: "number" }) ;
+           
+           def.value = "3";
+           assert.strictEqual(def.value, 3);
+           assert.strictEqual(def.validType, true);
+
+           def.value = "0";
+           assert.strictEqual(def.value, 0);
+           assert.strictEqual(def.validType, true);
+
+           def.value = "-1";
+           assert.strictEqual(def.value, -1);
+           assert.strictEqual(def.validType, true);
+
+           def.value = -1.5345;
+           assert.strictEqual(def.value, -1.5345);
+           assert.strictEqual(def.validType, true);
+
+           def.value = "-1.5345";
+           assert.strictEqual(def.value, -1.5345);
+           assert.strictEqual(def.validType, true);
+
+           def.value = "a";
+           assert.strictEqual(def.value, "a");
+           assert.strictEqual(def.validType, false);
+
+           def.value = "";
+           assert.strictEqual(def.value, "");
+           assert.strictEqual(def.validType, false);
+
+           def.value = true;
+           assert.strictEqual(def.value, true);
+           assert.strictEqual(def.validType, false);
+
+           def.value = function(){};
+           assert.strictEqual(def.validType, false);
+
+           def.value = null;
+           assert.strictEqual(def.value, null);
+           assert.strictEqual(def.validType, false);
+
+           def.value = undefined;
+           assert.strictEqual(def.value, undefined);
+           assert.strictEqual(def.validType, true); // if an option is not required an undefined value is ok
+        });
+        
         it("`validType` should return true if no type specified", function(){
             var def = new Definition({ name: "one" });
             assert.strictEqual(def.validType, true);
@@ -33,7 +80,7 @@ describe("OptionDefinition", function(){
             def.value = "test";
             assert.strictEqual(def.validType, false);
             def.value = "123";
-            assert.strictEqual(def.validType, false);
+            assert.strictEqual(def.validType, true); // numeric string gets typecast to Number
             def.value = function(){};
             assert.strictEqual(def.validType, false);
             def.value = {};
