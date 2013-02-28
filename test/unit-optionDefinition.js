@@ -3,6 +3,8 @@ var assert = require("assert"),
 
 describe("OptionDefinition", function(){
     describe("properties: ", function(){
+        it("access to `this.config` in a `valid` function must fail if config is not set");
+        
         it("a number string should typecast to a Number type automatically", function(){
            var def = new Definition({ name: "one", type: "number" }) ;
            
