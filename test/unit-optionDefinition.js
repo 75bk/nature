@@ -53,16 +53,79 @@ describe("OptionDefinition", function(){
         });
         
         describe("validation", function(){
-            it("validation summary", function(){
+            it("type validation summary", function(){
                 var def = new Definition({ name: "one", type: "string", value: "ok" });
-                assert.strictEqual(def.validType, true);
-                assert.strictEqual(def.validValue, true);
-                assert.strictEqual(def.isValid, true);
+                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.validationMessages.length, 0);
                 
-                var def = new Definition({ name: "one", type: "number", value: "not ok" });
-                assert.strictEqual(def.validType, false);
-                assert.strictEqual(def.validValue, false);
-                assert.strictEqual(def.isValid, false);
+                def = new Definition({ name: "one", type: "number", value: "not ok" });
+                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.validationMessages.length, 1);
+
+                def = new Definition({ name: "one", type: RegExp, value: /ok/ });
+                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.validationMessages.length, 0);
+                
+                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "not ok" });
+                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.validationMessages.length, 1);
+            });
+            
+            it("value validation summary", function(){
+                var def = new Definition({ 
+                    name: "relative", 
+                    type: "string", 
+                    value: "dog", 
+                    valueTest: /^(dad|sister|brother|mother)$/,
+                    valueFail: "invalid relative"
+                });
+                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.validationMessages.length, 1);
+                def.value = "dad";
+                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.validationMessages.length, 0);
+
+                def = new Definition({
+                    name: "family", 
+                    type: Array, 
+                    value: ["dad", "sister", "dog"], 
+                    valueTest: /^(dad|sister|brother|mother)$/
+                });
+                assert.strictEqual(def.valid, true);
+
+                def = new Definition({
+                    name: "family", 
+                    type: Array, 
+                    value: ["dad", "sister", "dog"], 
+                    valueTest: function(family){
+                        return family.every(function(member){
+                            return /^(dad|sister|brother|mother)$/.test(member);
+                        });
+                    },
+                    valueFail: "every member must be valid"
+                });
+                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.validationMessages.length, 1);
+
+                def = new Definition({
+                    name: "family", 
+                    type: Array, 
+                    value: ["dad", "sister", "dog"], 
+                    valueTest: function(family){
+                        var self = this;
+                        return family.every(function(member){
+                            if (/^(dad|sister|brother|mother)$/.test(member)){
+                                return true;
+                            } else {
+                                self.addValidationMessage("this one is invalid: " + member);
+                                return false;
+                            }
+                        });
+                    },
+                    valueFail: "every member must be valid"
+                });
+                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.validationMessages.length, 2);
             });
             
             it("`validType` should return true if no type specified", function(){
