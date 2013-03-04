@@ -303,13 +303,13 @@ describe("OptionDefinition", function(){
                 function validTest(value){
                     return value > 10;
                 }
-                var def = new Definition({name: "one", type: "number", valueTest: validTest, invalidMsg: "must supply a value over 10" });
+                var def = new Definition({name: "one", type: "number", valueTest: validTest, valueFailMsg: "must supply a value over 10" });
             
                 def.value = 1;
-                assert.deepEqual(def.errors, ["must supply a value over 10"]);
+                assert.deepEqual(def.validationMessages, ["must supply a value over 10"]);
 
                 def.value = 11;
-                assert.deepEqual(def.errors, []);
+                assert.deepEqual(def.validationMessages, []);
             });
 
             it("custom invalid msg with type `Array`", function(){
@@ -318,33 +318,44 @@ describe("OptionDefinition", function(){
                         return val > 10;
                     });
                 }
-                var def = new Definition({name: "one", type: Array, valueTest: validArray, invalidMsg: "every value must be over 10" });
+                var def = new Definition({
+                    name: "one", 
+                    type: Array, 
+                    valueTest: validArray, 
+                    valueFailMsg: "every value must be over 10" 
+                });
             
                 def.value = [1];
-                assert.deepEqual(def.errors, ["every value must be over 10"]);
+                assert.deepEqual(def.validationMessages, ["every value must be over 10"]);
 
                 def.value = [11];
-                assert.deepEqual(def.errors, []);
+                assert.deepEqual(def.validationMessages, []);
             });
 
             it("inserting error messages from a `valid` function", function(){
                 function validArray(values){
+                    console.log(this);
                     var valid = true, self = this;
                     values.forEach(function(val){
                         if (val < 10){
                             valid = false; 
-                            self.addValidationError("less than 10: " + val);
+                            self.addValidationMessage("less than 10: " + val);
                         }
                     });
                     return valid;
                 }
-                var def = new Definition({name: "one", type: Array, valueTest: validArray, invalidMsg: "every value must be over 10" });
+                var def = new Definition({
+                    name: "one", 
+                    type: Array, 
+                    valueTest: validArray, 
+                    valueFailMsg: "every value must be over 10" 
+                });
             
                 def.value = [1];
-                assert.deepEqual(def.errors, ["less than 10: 1", "every value must be over 10"]);
+                assert.deepEqual(def.validationMessages, ["less than 10: 1", "every value must be over 10"]);
 
                 def.value = [11];
-                assert.deepEqual(def.errors, []);
+                assert.deepEqual(def.validationMessages, []);
             });
         });
     });

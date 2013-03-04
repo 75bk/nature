@@ -23,8 +23,8 @@ describe("Config", function(){
             _config.define({ name: "one", type: Array, default: 1 });
             _config.define({ name: "two", type: "string", default: 1 });
             _config.define({ name: "three", type: RegExp, default: 1 });
-            _config.define({ name: "four", type: "string", default: "clive", valid: /test/ });
-            _config.define({ name: "five", type: Array, default: "clive", valid: function (val){ 
+            _config.define({ name: "four", type: "string", default: "clive", valueTest: /test/ });
+            _config.define({ name: "five", type: Array, default: "clive", valueTest: function (val){ 
                 return val.length == 0; 
             }});
             _config.define({ name: "six",type: "number", value: 1 });
@@ -59,14 +59,14 @@ describe("Config", function(){
                 assert.strictEqual(def, _config.definition("one"));
             });
 
-            it("define(defOptions) and defOption properties match definition(name)", function(){
+            it("definition(name) should return defined properties", function(){
                 function testValid(){}
-                _config.define({ name: "one", "type": "number", alias: "o", valid: testValid });
+                _config.define({ name: "one", "type": "number", alias: "o", valueTest: testValid });
                 
                 assert.strictEqual(_config.definition("one").type, "number");
                 assert.strictEqual(_config.definition("o").type, "number");
                 assert.strictEqual(_config.definition("one").alias, "o");
-                assert.strictEqual(_config.definition("one").valid, testValid);
+                assert.strictEqual(_config.definition("one").valueTest, testValid);
             });
             
             it("define() should work the same with a `definition.value` as set()");
