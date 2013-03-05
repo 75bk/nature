@@ -5,53 +5,6 @@ describe("OptionDefinition", function(){
     describe("properties: ", function(){
         it("access to `this.config` in a `valid` function must fail if config is not set");
         
-        it("a number string should typecast to a Number type automatically", function(){
-           var def = new Definition({ name: "one", type: "number" }) ;
-           
-           def.value = "3";
-           assert.strictEqual(def.value, 3);
-           assert.strictEqual(def.valid, true);
-
-           def.value = "0";
-           assert.strictEqual(def.value, 0);
-           assert.strictEqual(def.valid, true);
-
-           def.value = "-1";
-           assert.strictEqual(def.value, -1);
-           assert.strictEqual(def.valid, true);
-
-           def.value = -1.5345;
-           assert.strictEqual(def.value, -1.5345);
-           assert.strictEqual(def.valid, true);
-
-           def.value = "-1.5345";
-           assert.strictEqual(def.value, -1.5345);
-           assert.strictEqual(def.valid, true);
-
-           def.value = "a";
-           assert.strictEqual(def.value, "a");
-           assert.strictEqual(def.valid, false);
-
-           def.value = "";
-           assert.strictEqual(def.value, "");
-           assert.strictEqual(def.valid, false);
-
-           def.value = true;
-           assert.strictEqual(def.value, true);
-           assert.strictEqual(def.valid, false);
-
-           def.value = function(){};
-           assert.strictEqual(def.valid, false);
-
-           def.value = null;
-           assert.strictEqual(def.value, null);
-           assert.strictEqual(def.valid, false);
-
-           def.value = undefined;
-           assert.strictEqual(def.value, undefined);
-           assert.strictEqual(def.valid, true); // if an option is not required an undefined value is ok
-        });
-        
         describe("validation", function(){
             it("type validation summary", function(){
                 var def = new Definition({ name: "one", type: "string", value: "ok" });
@@ -66,9 +19,68 @@ describe("OptionDefinition", function(){
                 assert.strictEqual(def.valid, true);
                 assert.strictEqual(def.validationMessages.length, 0);
                 
-                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "not ok" });
+                // "ok" parses by RegExp
+                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "ok" });
+                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.validationMessages.length, 0);
+
+                // "+++" does not parse by RegExp
+                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "+++" });
                 assert.strictEqual(def.valid, false);
                 assert.strictEqual(def.validationMessages.length, 1);
+            });
+            
+            it("a number string should typecast to a Number type automatically", function(){
+               var def = new Definition({ name: "one", type: "number" }) ;
+           
+               def.value = "3";
+               assert.strictEqual(def.value, 3);
+               assert.strictEqual(def.valid, true);
+
+               def.value = "0";
+               assert.strictEqual(def.value, 0);
+               assert.strictEqual(def.valid, true);
+
+               def.value = "-1";
+               assert.strictEqual(def.value, -1);
+               assert.strictEqual(def.valid, true);
+
+               def.value = -1.5345;
+               assert.strictEqual(def.value, -1.5345);
+               assert.strictEqual(def.valid, true);
+
+               def.value = "-1.5345";
+               assert.strictEqual(def.value, -1.5345);
+               assert.strictEqual(def.valid, true);
+
+               def.value = "a";
+               assert.strictEqual(def.value, "a");
+               assert.strictEqual(def.valid, false);
+
+               def.value = "";
+               assert.strictEqual(def.value, "");
+               assert.strictEqual(def.valid, false);
+
+               def.value = true;
+               assert.strictEqual(def.value, true);
+               assert.strictEqual(def.valid, false);
+
+               def.value = function(){};
+               assert.strictEqual(def.valid, false);
+
+               def.value = null;
+               assert.strictEqual(def.value, null);
+               assert.strictEqual(def.valid, false);
+
+               def.value = undefined;
+               assert.strictEqual(def.value, undefined);
+               assert.strictEqual(def.valid, true); // if an option is not required an undefined value is ok
+            });
+            
+            it("a regex string should typecast to a RegExp", function(){
+                var def = new Definition({ name: "one", type: RegExp, value: "\\w{4}" });
+                assert.ok(def.value instanceof RegExp, def.value);
+                assert.deepEqual(def.value, /\w{4}/);
             });
             
             it("value validation summary", function(){
@@ -334,7 +346,6 @@ describe("OptionDefinition", function(){
 
             it("inserting error messages from a `valid` function", function(){
                 function validArray(values){
-                    console.log(this);
                     var valid = true, self = this;
                     values.forEach(function(val){
                         if (val < 10){
