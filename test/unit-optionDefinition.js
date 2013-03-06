@@ -5,6 +5,8 @@ describe("OptionDefinition", function(){
     describe("properties: ", function(){
         it("access to `this.config` in a `valid` function must fail if config is not set");
         
+        it("should be ok to have an option with no defined type");
+        
         describe("validation", function(){
             it("type validation summary", function(){
                 var def = new Definition({ name: "one", type: "string", value: "ok" });
