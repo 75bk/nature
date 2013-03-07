@@ -39,6 +39,8 @@ describe("Config", function(){
         it("should toArray()");
         it("should list defined options");
         it("should extend(object) a passed in object with the option/values from config.toJSON");
+        it("should loadCliArgs()");
+        it("set(['--option', '---']) should set '---' on `option`");
         
         describe("defining options", function(){
             it("define(definition) and definition(name) should set and retrieve", function(){
