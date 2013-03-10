@@ -159,11 +159,7 @@ describe("Config", function(){
                 assert.strictEqual(_config.get("t"), undefined);
                 assert.strictEqual(_config.get("3"), undefined);
 
-                _config.set({
-                    one: 1,
-                    "t": 2,
-                    "3": 3
-                });
+                _config.set({ one: 1, t: 2, 3: 3 });
             
                 assert.strictEqual(_config.get("one"), 1);
                 assert.strictEqual(_config.get("two"), 2);

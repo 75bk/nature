@@ -241,6 +241,8 @@ describe("OptionDefinition", function(){
                 assert.strictEqual(def.valid, true);
                 def.value = {};
                 assert.strictEqual(def.valid, false);
+                def.value = "a string";
+                assert.strictEqual(def.valid, true); // converted to Array
 
                 var CustomClass = function(){};
                 var def = new Definition({ name: "one", type: CustomClass });
