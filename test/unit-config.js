@@ -29,7 +29,7 @@ describe("Config", function(){
             }});
             _config.define({ name: "six",type: "number", value: 1 });
             
-            assert.ok(_config.errors.length == 5, JSON.stringify(_config.errors));
+            assert.ok(_config.errors.length == 4, JSON.stringify(_config.errors));
         });
         
         it("`definitions`");

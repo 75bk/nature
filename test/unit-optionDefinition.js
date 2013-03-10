@@ -236,13 +236,20 @@ describe("OptionDefinition", function(){
                 var def = new Definition({ name: "one", type: Array });
                 assert.strictEqual(def.valid, true);
                 def.value = 123;
-                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.valid, true); // converted to Array
+                assert.deepEqual(def.value, [ 123 ]);
                 def.value = [];
                 assert.strictEqual(def.valid, true);
+                assert.deepEqual(def.value, [ ]);
                 def.value = {};
-                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.valid, true);
+                assert.deepEqual(def.value, [ {} ]);
                 def.value = "a string";
                 assert.strictEqual(def.valid, true); // converted to Array
+                assert.deepEqual(def.value, [ "a string" ]);
+                def.value = new Date();
+                assert.strictEqual(def.valid, true); // converted to Array
+                assert.ok(def.value[0] instanceof Date);
 
                 var CustomClass = function(){};
                 var def = new Definition({ name: "one", type: CustomClass });
