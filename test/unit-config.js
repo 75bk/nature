@@ -41,6 +41,7 @@ describe("Config", function(){
         it("should extend(object) a passed in object with the option/values from config.toJSON");
         it("should loadCliArgs()");
         it("set(['--option', '---']) should set '---' on `option`");
+        it("should be compatible with --option=value style");
         
         describe("defining options", function(){
             it("define(definition) and definition(name) should set and retrieve", function(){
