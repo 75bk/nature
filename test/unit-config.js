@@ -10,13 +10,13 @@ describe("Config", function(){
     });
 
     describe("properties:", function(){
-        it("isValid should return `true` only if all option values are valid", function(){
+        it("`valid` should return `true` only when all option values are valid", function(){
             _config.define({ name: "one", type: "number", default: 1 });
-            assert.strictEqual(_config.isValid, true);
+            assert.strictEqual(_config.valid, true);
             _config.define({ name: "two", type: "number", default: -1034.1 });
-            assert.strictEqual(_config.isValid, true);
+            assert.strictEqual(_config.valid, true);
             _config.define({ name: "three", type: "number", default: "Cazzo" });
-            assert.strictEqual(_config.isValid, false);
+            assert.strictEqual(_config.valid, false);
         });
         
         it("`errors` should return an array of errors on invalid values and types", function(){
@@ -32,7 +32,25 @@ describe("Config", function(){
             assert.ok(_config.errors.length == 4, JSON.stringify(_config.errors));
         });
         
-        it("`definitions`");
+        it("`definitions`", function(){
+            var def1 = new OptionDefinition({ name: "one", type: Array, default: 1 }),
+                def2 = new OptionDefinition({ name: "two", type: "string", default: 1 }),
+                def3 = new OptionDefinition({ name: "three", type: RegExp, default: 1 });
+
+            _config.define([ def1, def2, def3 ]);
+            
+            assert.strictEqual(Object.keys(_config.definitions).length, 3);
+            assert.strictEqual(_config.definitions.one, def1);
+            assert.strictEqual(_config.definitions.two, def2);
+            assert.strictEqual(_config.definitions.three, def3);
+        });
+        it("`options`", function(){
+            _config.define({ name: "one", type: Array, default: 1 });
+            _config.define({ name: "two", type: "string", default: 1 });
+            _config.define({ name: "three", type: RegExp, default: 1 });
+
+            assert.deepEqual(_config.options, [ "one", "two", "three" ]);
+        })
     });
     
     describe("methods: ", function(){
@@ -95,18 +113,24 @@ describe("Config", function(){
         });
         
         describe("hasValue()", function(){
-            it("hasValue() should return true if option has value", function(){
+            it("hasValue(optionName) should return true if option has value", function(){
                 _config.define({ name: "one" });
+                assert.strictEqual(_config.hasValue("one"), false);
+
                 _config.set("one", 1);
-            
                 assert.strictEqual(_config.hasValue("one"), true);
-            
             });
 
-            it("hasValue() should return false if option has no value", function(){
-                _config.define({ name: "one" });
-            
-                assert.strictEqual(_config.hasValue("one"), false);
+            it("hasValue(optionNameArray) should return true if has at least one value in list", function(){
+                _config.define({ name: "one" })
+                    .define({ name: "two" });
+                assert.strictEqual(_config.hasValue(["one", "two"]), false);
+                
+                _config.set("one", 1);
+                assert.strictEqual(_config.hasValue(["one", "two"]), true);
+
+                _config.set("two", 2);
+                assert.strictEqual(_config.hasValue(["one", "two"]), true);
             });
         });
         
