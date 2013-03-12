@@ -1,0 +1,9 @@
+{
+    "name": "Config Master",
+    "description": "Blah blah blah",
+    "version": "0.1.0",
+    "url": "",
+    "options": {
+        "linkNatives": "true"
+    }
+}

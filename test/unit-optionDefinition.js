@@ -6,6 +6,7 @@ describe("OptionDefinition", function(){
         it("access to `this.config` in a `valid` function must fail if config is not set");
         
         it("should be ok to have an option with no defined type");
+        it("type: [Array, Function] should allow a type of either");
         
         describe("validation", function(){
             it("type validation summary", function(){
