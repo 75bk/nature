@@ -1,12 +1,12 @@
 {
-  "name": "config-master",
+  "name": "nature",
   "version": "0.0.1",
-  "description": "Kong Fig Master",
-  "main": "lib/config-master.js",
+  "description": "A library to help classify the things (models) in your world (app) and how they interact.",
+  "main": "lib/nature.js",
   "scripts": {
       "test": "mocha --reporter spec test/*.js"
   },
-  "repository": "",
+  "repository": "https://github.com/75lb/nature.git",
   "author": "Lloyd Brookes",
   "license": "MIT",
   "gitHead": "20081be5ea695af800c5b675027ce9408b63bec4",

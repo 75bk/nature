@@ -1,8 +1,5 @@
 {
-    "name": "Thing Master",
-    "description": "Blah blah blah",
-    "version": "0.1.0",
-    "url": "",
+    "name": "Nature",
     "options": {
         "linkNatives": "true"
     }
