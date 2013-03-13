@@ -1,12 +1,12 @@
 var assert = require("assert"),
     _ = require("underscore"),
-    Config = require("../lib/config"),
-    OptionDefinition = require("../lib/optionDefinition");
+    Thing = require("../lib/thing"),
+    PropertyDefinition = require("../lib/propertyDefinition");
 
-describe("Config", function(){
+describe("Thing", function(){
     var _config;
     beforeEach(function(){
-        _config = new Config();
+        _config = new Thing();
     });
 
     describe("properties:", function(){
@@ -33,9 +33,9 @@ describe("Config", function(){
         });
         
         it("`definitions`", function(){
-            var def1 = new OptionDefinition({ name: "one", type: Array, default: 1 }),
-                def2 = new OptionDefinition({ name: "two", type: "string", default: 1 }),
-                def3 = new OptionDefinition({ name: "three", type: RegExp, default: 1 });
+            var def1 = new PropertyDefinition({ name: "one", type: Array, default: 1 }),
+                def2 = new PropertyDefinition({ name: "two", type: "string", default: 1 }),
+                def3 = new PropertyDefinition({ name: "three", type: RegExp, default: 1 });
 
             _config.define([ def1, def2, def3 ]);
             
@@ -73,8 +73,8 @@ describe("Config", function(){
             
             it("define(existingDefinition) should modify existing option definition");
             
-            it("define(OptionDefinition) and retrieve with definition(name)", function(){
-                var def = new OptionDefinition({ name: "one", "type": "number" });
+            it("define(PropertyDefinition) and retrieve with definition(name)", function(){
+                var def = new PropertyDefinition({ name: "one", "type": "number" });
                 _config.define(def);
                 
                 assert.strictEqual(def, _config.definition("one"));
@@ -199,7 +199,7 @@ describe("Config", function(){
                 assert.strictEqual(_config.get("t"), undefined);
                 assert.strictEqual(_config.get("3"), undefined);
 
-                var config2 = new Config()
+                var config2 = new Thing()
                     .define({ name: "one", type: "number", default: -1 })
                     .define({ name: "two", type: "number", default: -2 })
                     .define({ name: "three", type: "number", default: -3 })
@@ -294,8 +294,8 @@ describe("Config", function(){
         
         it("mixin(config)", function(){
             _config.define({ name: "year", type: "number", default: 2013 });
-            var config2 = new Config().define({ name: "month", type: "string", default: "feb", alias: "m" });
-            var config3 = new Config().define({ name: "day", type: "string", default: "Sunday", alias: "d" })
+            var config2 = new Thing().define({ name: "month", type: "string", default: "feb", alias: "m" });
+            var config3 = new Thing().define({ name: "day", type: "string", default: "Sunday", alias: "d" })
             
             _config.mixIn(config2);
             _config.mixIn(config3);
@@ -311,8 +311,8 @@ describe("Config", function(){
 
         it("mixin(config, groups)", function(){
             _config.define({ name: "year", type: "number", default: 2013 });
-            var config2 = new Config().define({ name: "month", type: "string", default: "feb", alias: "m" });
-            var config3 = new Config().define({ name: "day", type: "string", default: "Sunday", alias: "d" })
+            var config2 = new Thing().define({ name: "month", type: "string", default: "feb", alias: "m" });
+            var config3 = new Thing().define({ name: "day", type: "string", default: "Sunday", alias: "d" })
             
             _config.mixIn(config2, "config2");
             _config.mixIn(config3, ["config2", "config3"]);
@@ -357,7 +357,7 @@ describe("Config", function(){
                     .define("group3", { name: "title", type: "number"});
                     
                 // group during mixin
-                var config2 = new Config().define({ name: "seven" });
+                var config2 = new Thing().define({ name: "seven" });
                 _config.mixIn(config2, "group4");
                 
                 // ungroup specific options

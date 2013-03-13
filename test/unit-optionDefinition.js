@@ -1,7 +1,7 @@
 var assert = require("assert"),
-    Definition = require("../lib/optionDefinition");
+    Definition = require("../lib/propertyDefinition");
 
-describe("OptionDefinition", function(){
+describe("PropertyDefinition", function(){
     describe("properties: ", function(){
         it("access to `this.config` in a `valid` function must fail if config is not set");
         
