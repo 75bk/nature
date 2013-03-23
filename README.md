@@ -33,7 +33,7 @@ exports.burnCar = function(arsonist){
     }
 }
 ```
-Client code for the above is straight forward, input taken directly from the command line
+Client code for the above is straight forward. In this case `burnCar()` input is taken directly from the command line. You can also pass the environment (`process.env`), an object literal or a `Thing` instance. 
 ```javascript
 var outdoors = require("outdoor-activity");
 outdoors.burnCar(process.argv);
