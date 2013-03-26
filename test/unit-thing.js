@@ -56,7 +56,7 @@ describe("Thing", function(){
     describe("methods: ", function(){
         it("should toArray()");
         it("should list defined options");
-        it("should extend(object) a passed in object with the option/values from config.toJSON");
+        it("should copyTo(this), copy its properties to passed in object");
         it("should loadCliArgs()");
         it("set(['--option', '---']) should set '---' on `option`");
         it("should be compatible with --option=value style");

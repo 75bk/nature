@@ -2,25 +2,25 @@
 
 Nature
 ======
-Nature provides a base class (`Thing`) to enable more accurate classification of the things (DatabaseConfig, VideoFileList, YoungMan, FlammableCar etc.) in your world (function or app). These Things can be reused, subclassed or merged with other Things to create new hybrids. The `Thing` class, when subclassed/instantiated adds useful features to each new object:
+The Nature library provides a class (`Thing`) which creates objects with strict, per-property type and value checking. This enables more fine-grained classification base on type *and* state. Say you have a `Person` class, with nature you can create a sub-class of `Person` in a particular state, e.g. `Drunkard`, `Scoundrel`, `Leader` etc. These Things can be reused, subclassed or merged with other Things to create new hybrids. The `Thing` class adds these features to each new object:
 
-* Fine-grained type and value validation per property
-* Direct command line, environment, external file or object literal loading capability
+* Type and value validation per property
+* Data loading from the command line, environment, external file or plain object
 * Merging and cloning
-* property grouping and filtering
-* mechanism for duck typing
+* Property grouping and filtering
+* Mechanism for duck typing
 
 Synopsis
 --------
 
-Enables you to write an API method like: (`YoungMan` and `FlammableCar` are derivitives of `Thing`)
+Enables you to write an API method like: (`Scoundrel` and `FlammableCar` are derivitives of `Thing`)
 ```javascript
 exports.burnCar = function(arsonist){
-    var youngMan = new YoungMan(arsonist);
-    if (!youngMan.valid){
-        throw new Error(youngMan.validationMessages.join("\n"));
+    var scoundrel = new Scoundrel(arsonist);
+    if (!scoundrel.valid){
+        throw new Error(scoundrel.validationMessages.join("\n"));
         // throws:
-        // The arsonist supplied must be a young man.
+        // The arsonist supplied must be a Scoundrel, you passed a Metrosexual
         // Invalid age 29: Must be between 11 and 19. 
         // Over 5 litres Gasoline required
         // Less compassion necessary.
@@ -28,7 +28,7 @@ exports.burnCar = function(arsonist){
         var car = new FlammableCar(process.env);
         if (car.valid){
             // the Vauxhall Astra supplied in the environment is indeed flammable
-            youngMan.igniteCar(car);
+            scoundrel.igniteCar(car);
         }
     }
 }
