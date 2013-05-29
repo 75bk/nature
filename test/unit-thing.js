@@ -3,6 +3,15 @@ var assert = require("assert"),
     Thing = require("../lib/thing"),
     PropertyDefinition = require("../lib/propertyDefinition");
 
+it("should toArray()");
+it("should list defined options");
+it("should copyTo(this), copy its properties to passed in object");
+it("should loadCliArgs()");
+it("should `process.argv.splice(0, 2);` for you");
+it("set(['--option', '---']) should set '---' on `option`");
+it("should be compatible with --option=value style");
+it("add(Thing) should add the Thing, not create a new one");
+
 describe("Thing", function(){
     var _config;
     beforeEach(function(){
@@ -54,13 +63,6 @@ describe("Thing", function(){
     });
     
     describe("methods: ", function(){
-        it("should toArray()");
-        it("should list defined options");
-        it("should copyTo(this), copy its properties to passed in object");
-        it("should loadCliArgs()");
-        it("set(['--option', '---']) should set '---' on `option`");
-        it("should be compatible with --option=value style");
-        
         describe("defining options", function(){
             it("define(definition) and definition(name) should set and retrieve", function(){
                 var definition = { name: "one", type: "string", default: "one" };

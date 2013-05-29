@@ -8,7 +8,7 @@ The Nature library provides a class (`Thing`) which creates objects with strict,
 * Data loading from the command line, environment, external file or plain object
 * Merging and cloning
 * Property grouping and filtering
-* Mechanism for duck typing
+* A general mechanism for duck typing
 
 Synopsis
 --------
