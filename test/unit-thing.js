@@ -8,13 +8,11 @@ it("should list defined options");
 it("set(['--option', '---']) should set '---' on `option`");
 it("should be compatible with --option=value style");
 it("add(Thing) should add the Thing, not create a new one");
-it("should handle 'unspecified option', rather than throw");
 it("passing required:true should test for defaultOption.length > 0")
 it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
 it("should throw when a none-existent property is accessed, e.g. console.log(options.dfkdshl)");
 it("free usage on --help");
 it("optimise validation checking, check once on value set or define, cache validation state");
-it("Thing shuold be a EE"); // _.extend(Thing.prototype, EventEmitter.prototype);
 it("the name 'option' should be changed to 'property'");
 it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
 
@@ -284,14 +282,21 @@ describe("Thing", function(){
             it("warn if set(optionsArray) produces defaultValues with no defaultOption set");
 
             describe("incorrect usage,", function(){
-                it("set(option, value) should throw on unregistered option", function(){
+                it("set(option, value) should emit 'error' on unregistered option", function(){
                     assert.throws(function(){
                         _config.set("yeah", "test");
                     });
                 });
                 
-                it("set(option, value) should emit error on unregistered option");
-                
+                it("catching 'error' surpresses throw on bad set()", function(){
+                    _config.on("error", function(err){
+                        assert.ok(err);
+                    });
+                    assert.doesNotThrow(function(){
+                        _config.set("yeah", "test");
+                    });
+                });
+                                
                 it("get(option) should throw on unregistered option", function(){
                     assert.throws(function(){
                         _config.get("yeah", "test");
