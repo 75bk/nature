@@ -11,6 +11,14 @@ it("should `process.argv.splice(0, 2);` for you");
 it("set(['--option', '---']) should set '---' on `option`");
 it("should be compatible with --option=value style");
 it("add(Thing) should add the Thing, not create a new one");
+it("should not be able to set a primative value on a type 'object'");
+it("should handle 'unspecified option', rather than throw");
+it("passing required:true should test for defaultOption.length > 0")
+it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
+it("should throw when a none-existent property is accessed, e.g. console.log(options.dfkdshl)");
+it("free usage on --help");
+it("optimise validation checking, check once on value set or define, cache validation state");
+it("Thing shuold be a EE"); // _.extend(Thing.prototype, EventEmitter.prototype);
 
 describe("Thing", function(){
     var _config;
