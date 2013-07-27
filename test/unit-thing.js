@@ -5,13 +5,9 @@ var assert = require("assert"),
 
 it("should toArray()");
 it("should list defined options");
-it("should copyTo(this), copy its properties to passed in object");
-it("should loadCliArgs()");
-it("should `process.argv.splice(0, 2);` for you");
 it("set(['--option', '---']) should set '---' on `option`");
 it("should be compatible with --option=value style");
 it("add(Thing) should add the Thing, not create a new one");
-it("should not be able to set a primative value on a type 'object'");
 it("should handle 'unspecified option', rather than throw");
 it("passing required:true should test for defaultOption.length > 0")
 it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
@@ -19,6 +15,8 @@ it("should throw when a none-existent property is accessed, e.g. console.log(opt
 it("free usage on --help");
 it("optimise validation checking, check once on value set or define, cache validation state");
 it("Thing shuold be a EE"); // _.extend(Thing.prototype, EventEmitter.prototype);
+it("the name 'option' should be changed to 'property'");
+it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
 
 describe("Thing", function(){
     var _config;
@@ -46,7 +44,7 @@ describe("Thing", function(){
             }});
             _config.define({ name: "six",type: "number", value: 1 });
             
-            assert.ok(_config.errors.length == 4, JSON.stringify(_config.errors));
+            assert.ok(_config.validationMessages.length == 4, JSON.stringify(_config.errors));
         });
         
         it("`definitions`", function(){
@@ -155,19 +153,19 @@ describe("Thing", function(){
         
         it("should remove() an option and its alias");
         
-        describe("set(), get()", function(){
-            it("should set() and get() an array", function(){
+        describe("setting and getting values", function(){
+            it("should set(option, value) and get(options) an array", function(){
                 _config.define({ name: "one", type: Array });
                 _config.set("one", [0, 1]);
                 
                 assert.deepEqual(_config.get("one"), [0, 1]);
             })
             
-            it("should set(option, value) and get(option)", function(){
-                _config.define({ name: "archiveDirectory", type: "string", alias: "d" });
-                _config.set("archiveDirectory", "testset");
+            it("should set(option, value) and get(option) a string", function(){
+                _config.define({ name: "test", type: "string", alias: "d" });
+                _config.set("test", "testset");
 
-                assert.strictEqual(_config.get("archiveDirectory"), "testset");
+                assert.strictEqual(_config.get("test"), "testset");
             });
 
             it("should set(alias, value) then get(alias) and get(option)", function(){
@@ -223,16 +221,28 @@ describe("Thing", function(){
             });
         
             it("set(optionsArray) should set options in bulk", function(){
-                var argv = ["node", "test.js", "info", "-d", "--preset", "--recurse", "music", "film", "documentary"];
-                argv.splice(0, 2);
-                var command = argv.shift();
+                var argv = ["-d", "--preset", "--recurse", "music", "film", "documentary"];
                 _config
                     .define({ name: "detailed", alias: "d", type: "boolean" })
                     .define({ name: "recurse", type: "boolean" })
                     .define({ name: "preset", type: "string" })
-                    .define({ name: "files", type: Array, defaultOption: true });
+                    .define({ name: "files", type: Array, defaultOption: true })
+                    .set(argv);
             
-                _config.set(argv);
+                assert.strictEqual(_config.get("detailed"), true, JSON.stringify(_config.toJSON()));
+                assert.strictEqual(_config.get("recurse"), true, JSON.stringify(_config.toJSON()));
+                assert.strictEqual(_config.get("preset"), undefined);
+                assert.deepEqual(_config.get("files"), ["music", "film", "documentary"]);
+            });
+
+            it("set(process.argv) should set options in bulk", function(){
+                var argv = ["node", "test.js", "-d", "--preset", "--recurse", "music", "film", "documentary"];
+                _config
+                    .define({ name: "detailed", alias: "d", type: "boolean" })
+                    .define({ name: "recurse", type: "boolean" })
+                    .define({ name: "preset", type: "string" })
+                    .define({ name: "files", type: Array, defaultOption: true })
+                    .set(argv);
             
                 assert.strictEqual(_config.get("detailed"), true, JSON.stringify(_config.toJSON()));
                 assert.strictEqual(_config.get("recurse"), true, JSON.stringify(_config.toJSON()));

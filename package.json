@@ -1,7 +1,7 @@
 {
   "name": "nature",
-  "version": "0.0.4",
-  "description": "Classify the things (models) in your world (app) and how they interact.",
+  "version": "0.0.5",
+  "description": "Classify the things in your world and how they interact.",
   "main": "lib/nature.js",
   "scripts": {
       "test": "mocha --reporter spec test/*.js"
