@@ -16,14 +16,14 @@ it("optimise validation checking, check once on value set or define, cache valid
 it("the name 'option' should be changed to 'property'");
 it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
 
-describe("Thing", function(){
+describe("Thing API", function(){
     var _thing;
     beforeEach(function(){
         _thing = new Thing();
     });
 
     describe("properties:", function(){
-        it("`valid` should return `true` only when all option values are valid", function(){
+        it("valid - should return true only when all option values are valid", function(){
             _thing.define({ name: "one", type: "number", default: 1 });
             assert.strictEqual(_thing.valid, true);
             _thing.define({ name: "two", type: "number", default: -1034.1 });
@@ -32,7 +32,7 @@ describe("Thing", function(){
             assert.strictEqual(_thing.valid, false);
         });
         
-        it("`errors` should return an array of errors on invalid values and types", function(){
+        it("validationMessages - should return an array of msgs", function(){
             _thing.define({ name: "one", type: Array, default: 1 });
             _thing.define({ name: "two", type: "string", default: 1 });
             _thing.define({ name: "three", type: RegExp, default: 1 });
@@ -42,10 +42,10 @@ describe("Thing", function(){
             }});
             _thing.define({ name: "six",type: "number", value: 1 });
             
-            assert.ok(_thing.validationMessages.length == 4, JSON.stringify(_thing.errors));
+            assert.ok(_thing.validationMessages.length == 4, JSON.stringify(_thing.validationMessages));
         });
         
-        it("`definitions`", function(){
+        it("definitions", function(){
             var def1 = new PropertyDefinition({ name: "one", type: Array, default: 1 }),
                 def2 = new PropertyDefinition({ name: "two", type: "string", default: 1 }),
                 def3 = new PropertyDefinition({ name: "three", type: RegExp, default: 1 });
@@ -57,7 +57,7 @@ describe("Thing", function(){
             assert.strictEqual(_thing.definitions.two, def2);
             assert.strictEqual(_thing.definitions.three, def3);
         });
-        it("`options`", function(){
+        it("options", function(){
             _thing.define({ name: "one", type: Array, default: 1 });
             _thing.define({ name: "two", type: "string", default: 1 });
             _thing.define({ name: "three", type: RegExp, default: 1 });
