@@ -77,7 +77,13 @@ describe("Thing", function(){
                 assert.strictEqual(_thing.get("one"), "one");
             });
             
-            it("define(existingDefinition) should modify existing option definition");
+            it("define(existingDefinition) should redefine definition", function(){
+                _thing.define({ name: "one", type: "number", alias: "a" });
+                assert.strictEqual(_thing.definition("one").type, "number");
+                assert.strictEqual(_thing.definition("a").type, "number");
+                _thing.define({ name: "one", type: "string", alias: "a" });
+                assert.strictEqual(_thing.definition("a").type, "string");
+            });
             
             it("define(PropertyDefinition) and retrieve with definition(name)", function(){
                 var def = new PropertyDefinition({ name: "one", "type": "number" });
@@ -99,10 +105,10 @@ describe("Thing", function(){
             it("define() should work the same with a `definition.value` as set()");
             
             describe("incorrect usage,", function(){
-                it("define(definition) should throw on duplicate option", function(){
+                it("define(definition) should not throw on duplicate option", function(){
                     _thing.define({ name: "yeah" });
                 
-                    assert.throws(function(){
+                    assert.doesNotThrow(function(){
                         _thing.define({ name: "yeah", });
                     });
                 });
