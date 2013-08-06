@@ -253,6 +253,36 @@ describe("Thing API", function(){
                 assert.strictEqual(_thing.get("preset"), undefined);
                 assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
             });
+
+            it("set(process.argv) should set correct defaults", function(){
+                process.argv = [ 
+                    "/usr/local/bin/node", "/usr/local/bin/rename", "file1.test","file2.test", "file3.test", 
+                    "file4.test", "file5.test", "--num", "--num2", "-f", "-m", "-d", "-r" 
+                ];
+                _thing
+                    .define({ 
+                        name: "files",
+                        type: Array,
+                        required: true,
+                        defaultOption: true,
+                        default: []
+                    })
+                    .define({ name: "find", type: "string", alias: "f" })
+                    .define({ name: "make", type: "string", alias: "m", default: "pie" })
+                    .define({ name: "num", type: "number" })
+                    .define({ name: "num2", type: "number", default: 10 })
+                    .define({ name: "replace", type: "string", alias: "r", default: "" })
+                    .define({ name: "dry-run", type: "boolean", alias: "d" })
+                    .set(process.argv);
+            
+                assert.strictEqual(_thing.find, undefined, JSON.stringify(_thing.toJSON()));
+                assert.strictEqual(_thing.make, "pie", JSON.stringify(_thing.toJSON()));
+                assert.strictEqual(_thing.replace, "", JSON.stringify(_thing.toJSON()));
+                assert.strictEqual(_thing.num, undefined, JSON.stringify(_thing.toJSON()));
+                assert.strictEqual(_thing.num2, 10, JSON.stringify(_thing.toJSON()));
+                assert.strictEqual(_thing["dry-run"], true, JSON.stringify(_thing.toJSON()));
+                assert.deepEqual(_thing.files, ["file1.test", "file2.test", "file3.test", "file4.test", "file5.test"]);
+            });
             
             it("set(optionsArray) with a type Array", function(){
                 _thing.define({ name:"one", type: Array });
