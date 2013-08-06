@@ -270,7 +270,31 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.valid, true);
             });
         
-            it("`valid` should be true with an empty value and not `required`");
+            it("`valid` should be true with an empty value and not `required`", function(){
+                var def = new Definition({ name: "one", type: "string" });
+                assert.strictEqual(def.valid, true);
+                
+                def = new Definition({ name: "one", type: "string", required: true });
+                assert.strictEqual(def.valid, false);
+
+                var def = new Definition({ name: "one", type: "number" });
+                assert.strictEqual(def.valid, true);
+                
+                def = new Definition({ name: "one", type: "number", required: true });
+                assert.strictEqual(def.valid, false);
+                
+                var def = new Definition({ name: "one", type: Array });
+                assert.strictEqual(def.valid, true);
+                
+                def = new Definition({ name: "one", type: Array, required: true });
+                assert.strictEqual(def.valid, false);
+                
+                var def = new Definition({ name: "one", type: "string", valueTest: /test/ });
+                assert.strictEqual(def.valid, true);
+                
+                def = new Definition({ name: "one", type: "string", valueTest: /test/, required: true });
+                assert.strictEqual(def.valid, false);
+            });
         
             it("`valid` RegExp should work with primitive types", function(){
                 var def = new Definition({ name: "one", type: "string", default: "test", valueTest: /es/ });

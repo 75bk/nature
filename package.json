@@ -1,6 +1,6 @@
 {
   "name": "nature",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Classify the things in your world and how they interact.",
   "main": "lib/nature.js",
   "scripts": {
