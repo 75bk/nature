@@ -15,6 +15,8 @@ it("free usage on --help");
 it("optimise validation checking, check once on value set or define, cache validation state");
 it("the name 'option' should be changed to 'property'");
 it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
+it("should throw on empty option, i.e. '-' or '--'");
+it("should expose _errors array on Thing instance API, same as 'validationMessages'");
 
 describe("Thing API", function(){
     var _thing;
@@ -345,13 +347,6 @@ describe("Thing API", function(){
                     assert.strictEqual(_thing._errors.length, 1);                    
                 });
                                 
-                // it("get(option) should throw on unregistered option", function(){
-                //     assert.throws(function(){
-                //         _thing.get("yeah", "test");
-                //     });
-                //     assert.strictEqual(_thing.valid, false);
-                //     assert.strictEqual(_thing._errors.length, 1);                    
-                // });
                 it("get(option) should return undefined on unregistered option", function(){
                     assert.strictEqual(_thing.get("yeah", "test"), undefined);
                 });
