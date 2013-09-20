@@ -5,7 +5,6 @@ var assert = require("assert"),
 
 it("should toArray()");
 it("should list defined options");
-it("set(['--option', '---']) should set '---' on `option`");
 it("should be compatible with --option=value style");
 it("add(Thing) should add the Thing, not create a new one");
 it("passing required:true should test for defaultOption.length > 0")
@@ -15,8 +14,9 @@ it("free usage on --help");
 it("optimise validation checking, check once on value set or define, cache validation state");
 it("the name 'option' should be changed to 'property'");
 it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
-it("should throw on empty option, i.e. '-' or '--'");
+it("should throw on empty option, i.e. 'rename -' or '--'");
 it("should expose _errors array on Thing instance API, same as 'validationMessages'");
+it("needs consistent error handling.. some errors emit, some throw (like 'rename -').. should all errors just set valid=false?");
 
 describe("Thing API", function(){
     var _thing;
@@ -160,7 +160,7 @@ describe("Thing API", function(){
         it("should remove() an option and its alias");
         
         describe("setting and getting values", function(){
-            it("should set(option, value) and get(options) an array", function(){
+            it("should set(option, value) and get(option) an array", function(){
                 _thing.define({ name: "one", type: Array });
                 _thing.set("one", [0, 1]);
                 
@@ -187,7 +187,7 @@ describe("Thing API", function(){
             
                 assert.strictEqual(_thing.get("one"), 1);
             });
-        
+
             it("set(optionsHash) should set options in bulk", function(){
                 _thing.define({ name: "one", type: "number", alias: "1" })
                     .define({ name: "two", type: "number", alias: "t" })
@@ -227,7 +227,7 @@ describe("Thing API", function(){
             });
         
             it("set(optionsArray) should set options in bulk", function(){
-                var argv = ["-d", "--preset", "--recurse", "music", "film", "documentary"];
+                var argv = ["-d", "--preset", "dope", "--recurse", "music", "film", "documentary"];
                 _thing
                     .define({ name: "detailed", alias: "d", type: "boolean" })
                     .define({ name: "recurse", type: "boolean" })
@@ -237,29 +237,30 @@ describe("Thing API", function(){
             
                 assert.strictEqual(_thing.get("detailed"), true, JSON.stringify(_thing.toJSON()));
                 assert.strictEqual(_thing.get("recurse"), true, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.get("preset"), undefined);
+                assert.strictEqual(_thing.get("preset"), "dope");
                 assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
             });
-
+            
             it("set(process.argv) should set options in bulk", function(){
-                process.argv = ["node", "test.js", "-d", "--preset", "--recurse", "music", "film", "documentary"];
+                process.argv = ["node", "test.js", "-d", "--preset", "dope", "--recurse", "music", "film", "documentary"];
                 _thing
                     .define({ name: "detailed", alias: "d", type: "boolean" })
                     .define({ name: "recurse", type: "boolean" })
                     .define({ name: "preset", type: "string" })
                     .define({ name: "files", type: Array, defaultOption: true })
                     .set(process.argv);
-            
+
                 assert.strictEqual(_thing.get("detailed"), true, JSON.stringify(_thing.toJSON()));
                 assert.strictEqual(_thing.get("recurse"), true, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.get("preset"), undefined);
+                assert.strictEqual(_thing.get("preset"), "dope");
                 assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
             });
 
             it("set(process.argv) should set correct defaults", function(){
                 process.argv = [ 
-                    "/usr/local/bin/node", "/usr/local/bin/rename", "file1.test","file2.test", "file3.test", 
-                    "file4.test", "file5.test", "--num", "--num2", "-f", "-m", "-d", "-r" 
+                    "/usr/local/bin/node", "/usr/local/bin/rename", "file1.test","file2.test", 
+                    "file3.test", "file4.test", "file5.test", 
+                    "-d", "-r" 
                 ];
                 _thing
                     .define({ 
@@ -277,7 +278,6 @@ describe("Thing API", function(){
                     .define({ name: "dry-run", type: "boolean", alias: "d" })
                     .set(process.argv);
             
-                assert.strictEqual(_thing.find, undefined, JSON.stringify(_thing.toJSON()));
                 assert.strictEqual(_thing.make, "pie", JSON.stringify(_thing.toJSON()));
                 assert.strictEqual(_thing.replace, "", JSON.stringify(_thing.toJSON()));
                 assert.strictEqual(_thing.num, undefined, JSON.stringify(_thing.toJSON()));
@@ -294,6 +294,14 @@ describe("Thing API", function(){
 
                 _thing.set(["--one", "test ,1    , false"]);
                 assert.deepEqual(_thing.get("one"), ["test", "1", "false"]);
+            });
+            
+            it("set(['--property', '--value']) should set correctly, where 'property' expects a value", function(){
+                _thing.define({ name: "one", type: "string" });
+                _thing.set([ "--one", "--23" ]);
+                assert.deepEqual(_thing.one, "--23");
+                _thing.set([ "--one", "" ]);
+                assert.deepEqual(_thing.one, "");
             });
 
             it("set(optionsArray) with a `defaultOption` of type Array", function(){
