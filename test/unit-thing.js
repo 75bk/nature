@@ -358,6 +358,18 @@ describe("Thing API", function(){
                 it("get(option) should return undefined on unregistered option", function(){
                     assert.strictEqual(_thing.get("yeah", "test"), undefined);
                 });
+                
+                it("set(optionsArray) should not alter optionsArray itself", function(){
+                    var args = [ "--one", 1, "--two", 2, "--three", 3 ];
+                    _thing
+                        .define({ name: "one", type: "number", default: -1 })
+                        .define({ name: "two", type: "number", default: -2 })
+                        .define({ name: "three", type: "number", default: -3 });
+                    
+                    assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
+                    _thing.set(args);
+                    assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
+                });
             });
         })
 
