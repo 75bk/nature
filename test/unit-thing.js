@@ -17,6 +17,7 @@ it("should protect from defining properties with reserved names like clone, toJS
 it("should throw on empty option, i.e. 'rename -' or '--'");
 it("should expose _errors array on Thing instance API, same as 'validationMessages'");
 it("needs consistent error handling.. some errors emit, some throw (like 'rename -').. should all errors just set valid=false?");
+it("should valueTest run on get, so function can refer to other set values in this.config? e.g. if (this.config.regex) then ...");
 
 describe("Thing API", function(){
     var _thing;
