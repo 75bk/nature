@@ -91,13 +91,13 @@ See the Thing docs for more detail..
 ##Properties
 <table>
     <tr>
-        <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
-        <td>Thing</td><td></td><td>Thing</td><td></td>
+        <td>Thing</td><td><em>Thing</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>PropertyDefinition</td><td></td><td>PropertyDefinition</td><td></td>
+        <td>PropertyDefinition</td><td><em>PropertyDefinition</em></td><td></td><td></td>
     </tr>
 </table>
 
@@ -108,46 +108,46 @@ Enforces strict type and value checking on config options
 ##Properties
 <table>
     <tr>
-        <th>Property</th><th>Description</th><th>Type</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
-        <td>value</td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td>Any</td><td></td>
+        <td>value</td><td><em>Any</em></td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td></td>
     </tr>
     <tr>
-        <td>type</td><td></td><td>{String|Function}</td><td></td>
+        <td>type</td><td><em>{String|Function}</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>valueTest</td><td></td><td>{Regexp|Function|Array}</td><td></td>
+        <td>valueTest</td><td><em>{Regexp|Function|Array}</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>valid</td><td></td><td>Boolean</td><td></td>
+        <td>valid</td><td><em>Boolean</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>default</td><td>The default value to set on instantiation</td><td>Any</td><td></td>
+        <td>default</td><td><em>Any</em></td><td>The default value to set on instantiation</td><td></td>
     </tr>
     <tr>
-        <td>validationMessages</td><td></td><td>Array</td><td></td>
+        <td>validationMessages</td><td><em>Array</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>groups</td><td>tags</td><td>Array</td><td></td>
+        <td>groups</td><td><em>Array</em></td><td>tags</td><td></td>
     </tr>
     <tr>
-        <td>name</td><td></td><td>string</td><td></td>
+        <td>name</td><td><em>string</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>required</td><td>Thing instance will remain invalid until a value is set</td><td>Boolean</td><td></td>
+        <td>required</td><td><em>Boolean</em></td><td>Thing instance will remain invalid until a value is set</td><td></td>
     </tr>
     <tr>
-        <td>defaultOption</td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td><td>Boolean</td><td></td>
+        <td>defaultOption</td><td><em>Boolean</em></td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td><td></td>
     </tr>
     <tr>
-        <td>alias</td><td></td><td>string</td><td></td>
+        <td>alias</td><td><em>string</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>typeFailMsg</td><td></td><td>string</td><td></td>
+        <td>typeFailMsg</td><td><em>string</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>valueFailMsg</td><td></td><td>string</td><td></td>
+        <td>valueFailMsg</td><td><em>string</em></td><td></td><td></td>
     </tr>
 </table>
 
@@ -258,19 +258,19 @@ Other ways of retrieving values
 ##Properties
 <table>
     <tr>
-        <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
-        <td>definitions</td><td></td><td>Object</td><td></td>
+        <td>definitions</td><td><em>Object</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>valid</td><td></td><td>Boolean</td><td></td>
+        <td>valid</td><td><em>Boolean</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>errors</td><td></td><td>Array</td><td></td>
+        <td>errors</td><td><em>Array</em></td><td></td><td></td>
     </tr>
     <tr>
-        <td>options</td><td>a list of defined Options</td><td>Array</td><td></td>
+        <td>options</td><td><em>Array</em></td><td>a list of defined Options</td><td></td>
     </tr>
 </table>
 
