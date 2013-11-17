@@ -93,19 +93,12 @@ See the Thing docs for more detail..
     <tr>
         <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
     </tr>
-
     <tr>
-        <td>Thing</td><td></td><td>Thing</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>Thing</td><td></td><td>Thing</td><td></td>
     </tr>
-
     <tr>
-        <td>PropertyDefinition</td><td></td><td>PropertyDefinition</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>PropertyDefinition</td><td></td><td>PropertyDefinition</td><td></td>
     </tr>
-
 </table>
 
 #propertyDefinition
@@ -117,103 +110,45 @@ Enforces strict type and value checking on config options
     <tr>
         <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
     </tr>
-
     <tr>
-        <td>value</td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td>Any</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>value</td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td>Any</td><td></td>
     </tr>
-
     <tr>
-        <td>type</td><td></td><td>{String|Function}</td><td></td><td>
-<pre><code>
-    config.define({ name: &quot;name&quot;, type: &quot;string&quot; }); 
-    config.define({ name: &quot;created&quot;, type: Date });
-    config.define({ name: &quot;onComplete&quot;, type: &quot;function&quot; });
-    config.define({ name: &quot;data&quot;, type: JobData });
-    config.define({ name: &quot;options&quot;, type: Object }); 
-    config.define({ name: &quot;files&quot;, type: Array });</pre></code>
-        </td>
+        <td>type</td><td></td><td>{String|Function}</td><td></td>
     </tr>
-
     <tr>
-        <td>valueTest</td><td></td><td>{Regexp|Function|Array}</td><td></td><td>
-<pre><code>
-    config.define({ name: &quot;name&quot;, type: &quot;string&quot;, valueTest: /\w{3}/ })
-    config.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: function(value){ return value &gt; 16; } })
-    config.define({
-        name: &quot;colours&quot;, 
-        type: Array, 
-        valueTest: [ 
-            /red/, 
-            function(colours){ 
-                return colours.length &gt; 0;
-            } 
-        ] 
-    });</pre></code>
-        </td>
+        <td>valueTest</td><td></td><td>{Regexp|Function|Array}</td><td></td>
     </tr>
-
     <tr>
-        <td>valid</td><td></td><td>Boolean</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>valid</td><td></td><td>Boolean</td><td></td>
     </tr>
-
     <tr>
-        <td>default</td><td>The default value to set on instantiation</td><td>Any</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>default</td><td>The default value to set on instantiation</td><td>Any</td><td></td>
     </tr>
-
     <tr>
-        <td>validationMessages</td><td></td><td>Array</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>validationMessages</td><td></td><td>Array</td><td></td>
     </tr>
-
     <tr>
-        <td>groups</td><td>tags</td><td>Array</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>groups</td><td>tags</td><td>Array</td><td></td>
     </tr>
-
     <tr>
-        <td>name</td><td></td><td>string</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>name</td><td></td><td>string</td><td></td>
     </tr>
-
     <tr>
-        <td>required</td><td>Thing instance will remain invalid until a value is set</td><td>Boolean</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>required</td><td>Thing instance will remain invalid until a value is set</td><td>Boolean</td><td></td>
     </tr>
-
     <tr>
-        <td>defaultOption</td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td><td>Boolean</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>defaultOption</td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td><td>Boolean</td><td></td>
     </tr>
-
     <tr>
-        <td>alias</td><td></td><td>string</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>alias</td><td></td><td>string</td><td></td>
     </tr>
-
     <tr>
-        <td>typeFailMsg</td><td></td><td>string</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>typeFailMsg</td><td></td><td>string</td><td></td>
     </tr>
-
     <tr>
-        <td>valueFailMsg</td><td></td><td>string</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>valueFailMsg</td><td></td><td>string</td><td></td>
     </tr>
-
 </table>
 
 #Thing
@@ -325,31 +260,18 @@ Other ways of retrieving values
     <tr>
         <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
     </tr>
-
     <tr>
-        <td>definitions</td><td></td><td>Object</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>definitions</td><td></td><td>Object</td><td></td>
     </tr>
-
     <tr>
-        <td>valid</td><td></td><td>Boolean</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>valid</td><td></td><td>Boolean</td><td></td>
     </tr>
-
     <tr>
-        <td>errors</td><td></td><td>Array</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>errors</td><td></td><td>Array</td><td></td>
     </tr>
-
     <tr>
-        <td>options</td><td>a list of defined Options</td><td>Array</td><td></td><td>
-<pre><code></pre></code>
-        </td>
+        <td>options</td><td>a list of defined Options</td><td>Array</td><td></td>
     </tr>
-
 </table>
 
 ##Methods
