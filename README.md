@@ -126,13 +126,31 @@ Enforces strict type and value checking on config options
 
     <tr>
         <td>type</td><td></td><td>{String|Function}</td><td></td><td>
-<pre><code></pre></code>
+<pre><code>
+    config.define({ name: &quot;name&quot;, type: &quot;string&quot; }); 
+    config.define({ name: &quot;created&quot;, type: Date });
+    config.define({ name: &quot;onComplete&quot;, type: &quot;function&quot; });
+    config.define({ name: &quot;data&quot;, type: JobData });
+    config.define({ name: &quot;options&quot;, type: Object }); 
+    config.define({ name: &quot;files&quot;, type: Array });</pre></code>
         </td>
     </tr>
 
     <tr>
         <td>valueTest</td><td></td><td>{Regexp|Function|Array}</td><td></td><td>
-<pre><code></pre></code>
+<pre><code>
+    config.define({ name: &quot;name&quot;, type: &quot;string&quot;, valueTest: /\w{3}/ })
+    config.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: function(value){ return value &gt; 16; } })
+    config.define({
+        name: &quot;colours&quot;, 
+        type: Array, 
+        valueTest: [ 
+            /red/, 
+            function(colours){ 
+                return colours.length &gt; 0;
+            } 
+        ] 
+    });</pre></code>
         </td>
     </tr>
 
