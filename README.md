@@ -57,12 +57,12 @@ Nature, a library to help classify the things (models) in your world (app). Take
 
 Synopsis
 
-Enables you to write API methods like: (&#x60;YoungMan&#x60; and &#x60;FlammableCar&#x60; are derivitives of &#x60;Thing&#x60;)
+Enables you to write API methods like: (`YoungMan` and `FlammableCar` are derivitives of `Thing`)
 
     exports.burnCar = function(arsonist){
         var youngMan = new YoungMan(arsonist);
         if (!youngMan.valid){
-            throw new Error(youngMan.validationMessages.join(&quot;\n&quot;));
+            throw new Error(youngMan.validationMessages.join("\n"));
             // throws:
             // The arsonist supplied must be a young man.
             // Invalid age 29: Must be between 11 and 19. 
@@ -79,7 +79,7 @@ Enables you to write API methods like: (&#x60;YoungMan&#x60; and &#x60;Flammable
 
 Client code for the above is straight forward: 
 
-    var outdoors = require(&quot;outdoor-activity&quot;);
+    var outdoors = require("outdoor-activity");
     outdoors.burnCar(process.argv);
 
 Then a simple command executes the outdoor activity:
@@ -106,7 +106,7 @@ Enforces strict type and value checking on config options
 
 ###value
 
-Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.
+Gets/sets the property value. Will attempt to convert values to Number for definitions of `type` "number".
 
 **type**: Any
 
@@ -116,12 +116,12 @@ Gets/sets the property value. Will attempt to convert values to Number for defin
 
 ####Example
 
-    config.define({ name: &quot;name&quot;, type: &quot;string&quot; }); 
-    config.define({ name: &quot;created&quot;, type: Date });
-    config.define({ name: &quot;onComplete&quot;, type: &quot;function&quot; });
-    config.define({ name: &quot;data&quot;, type: JobData });
-    config.define({ name: &quot;options&quot;, type: Object }); 
-    config.define({ name: &quot;files&quot;, type: Array });
+    config.define({ name: "name", type: "string" }); 
+    config.define({ name: "created", type: Date });
+    config.define({ name: "onComplete", type: "function" });
+    config.define({ name: "data", type: JobData });
+    config.define({ name: "options", type: Object }); 
+    config.define({ name: "files", type: Array });
 
 ###valueTest
 
@@ -129,15 +129,15 @@ Gets/sets the property value. Will attempt to convert values to Number for defin
 
 ####Example
 
-    config.define({ name: &quot;name&quot;, type: &quot;string&quot;, valueTest: /\w{3}/ })
-    config.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: function(value){ return value &gt; 16; } })
+    config.define({ name: "name", type: "string", valueTest: /\w{3}/ })
+    config.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
     config.define({
-        name: &quot;colours&quot;, 
+        name: "colours", 
         type: Array, 
         valueTest: [ 
             /red/, 
             function(colours){ 
-                return colours.length &gt; 0;
+                return colours.length > 0;
             } 
         ] 
     });
@@ -210,89 +210,89 @@ or a hybrid of things
  
 To define Things, first load the class
  
-    var Thing = require(&quot;nature&quot;).Thing;
+    var Thing = require("nature").Thing;
      
 get an instance and start [defining](/classes/Thing.html#method_define)
  
     var youngLad = new Thing()
-        .define({ name: &quot;firstname&quot; });
+        .define({ name: "firstname" });
          
-    youngLad.firstname = &quot;Geoff&quot;;
-    youngLad.car = &quot;Clio&quot;; // Ignored, &#x60;car&#x60; is not yet defined and Thing instances are sealed (object non-extensible, properties non-configurable). 
+    youngLad.firstname = "Geoff";
+    youngLad.car = "Clio"; // Ignored, `car` is not yet defined and Thing instances are sealed (object non-extensible, properties non-configurable). 
 
 Add [type](/classes/PropertyDefinition.html#property_type) checking
  
     // additional calls to define() redefine an existing property, or add new property definitions.
-    youngLad.define({ name: &quot;firstname&quot;, type: &quot;string&quot; })
-        .define({ name: &quot;DOB&quot;, type: Date });
+    youngLad.define({ name: "firstname", type: "string" })
+        .define({ name: "DOB", type: Date });
     
-    var dob = new Date(&quot;19 Feb 2000&quot;);
-    youngLad.DOB = dob; // valid, &#x60;dob&#x60; is an instance of &#x60;Date&#x60;
-    youngLad.firstname = dob; // invalid, &#x60;typeof dob&#x60; is not &#x60;&quot;string&quot;&#x60;
+    var dob = new Date("19 Feb 2000");
+    youngLad.DOB = dob; // valid, `dob` is an instance of `Date`
+    youngLad.firstname = dob; // invalid, `typeof dob` is not `"string"`
 
 Add [value testing](/classes/PropertyDefinition.html#property_valueTest)
 
-    youngLad.define({ name: &quot;gender&quot;, type: &quot;string&quot;, valueTest: /^(male|female)$/ });
+    youngLad.define({ name: "gender", type: "string", valueTest: /^(male|female)$/ });
     
-    youngLad.gender = &quot;man&quot;; // invalid
-    youngLad.gender = &quot;male&quot;; // valid
+    youngLad.gender = "man"; // invalid
+    youngLad.gender = "male"; // valid
     
 [Value tests](/classes/PropertyDefinition.html#property_valueTest) can be a function
 
-    function oldEnough(age){ return age &gt;= 11; }
-    youngLad.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: oldEnough });
+    function oldEnough(age){ return age >= 11; }
+    youngLad.define({ name: "age", type: "number", valueTest: oldEnough });
     
     youngLad.age = 9; // invalid, too young
     
 Or an array of tests, which must all pass
 
-    function oldEnough(age){ return age &gt;= 11; }
-    function youngEnough(age){ return age &lt;= 19; }
-    youngLad.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: [oldEnough, youngEnough] });
+    function oldEnough(age){ return age >= 11; }
+    function youngEnough(age){ return age <= 19; }
+    youngLad.define({ name: "age", type: "number", valueTest: [oldEnough, youngEnough] });
     
     youngLad.age = 29; // invalid, too old!
 
-Invalid data doesn&#x27;t throw an error so check the &#x60;valid&#x60; flag and &#x60;validationMessages&#x60;
+Invalid data doesn't throw an error so check the `valid` flag and `validationMessages`
 
     if (!youngLad.valid){
-        console.log(youngLad.validationMessages); // prints &quot;Invalid age: 22&quot;
+        console.log(youngLad.validationMessages); // prints "Invalid age: 22"
     }
     
 Add custom validationMessages
 
-    // you could also set &#x60;validFail&#x60; property using &#x60;define&#x60;, either is fine
-    youngLad.definition(&quot;age&quot;).validFail = &quot;You must be 16-21&quot;;
+    // you could also set `validFail` property using `define`, either is fine
+    youngLad.definition("age").validFail = "You must be 16-21";
 
-    youngLad.set(&quot;age&quot;, 9); // invalid
-    console.log(youngLad.validationMessages); // prints &quot;You must be 16-21&quot;
+    youngLad.set("age", 9); // invalid
+    console.log(youngLad.validationMessages); // prints "You must be 16-21"
 
 Mix and match..
 
     var appearance = new Thing()
-        .define({ name: &quot;style&quot;, type: &quot;string&quot; })
-        .define({ name: &quot;labels&quot;, type: Array });
+        .define({ name: "style", type: "string" })
+        .define({ name: "labels", type: Array });
 
     youngLad.mixIn(appearance);
 
 Load data in bulk
 
     youngLad.load({
-        firstname: &quot;Paul&quot;,
+        firstname: "Paul",
         age: 19, 
-        style: &quot;understated class with a grassroot drizzle&quot;,
-        labels: [ &quot;Paul Smith&quot;, &quot;Burberry&quot;, &quot;Nike&quot; ]
+        style: "understated class with a grassroot drizzle",
+        labels: [ "Paul Smith", "Burberry", "Nike" ]
     });
  
 Besides object literals you can load from the command line, environment or file
 
     youngLad.load(process.argv);
     youngLad.load(process.env);
-    youngLad.load(&quot;./profile.json&quot;);
+    youngLad.load("./profile.json");
   
 Other ways of retrieving values
 
     youngLad.toJSON(); // get entire set
-    youngLad.where({ group: &quot;primary&quot; }).toJSON(); // get sub-set
+    youngLad.where({ group: "primary" }).toJSON(); // get sub-set
 
 ##Properties
 
@@ -333,11 +333,11 @@ Define an option
 ####Example
 
     var vehicleThing = new Thing()
-        .define({ name: &quot;maxSpeed&quot;, type: &quot;number&quot;, alias: &quot;m&quot;, valueTest: /\d+/, default: 4 })
-        .define({ name: &quot;isTaxed&quot;, type: &quot;boolean&quot;, default: false })
-        .define(&quot;specifications&quot;, [
-            { name: &quot;engineSize&quot;, type: &quot;number&quot; },
-            { name: &quot;wheels&quot;, type: &quot;number&quot; }
+        .define({ name: "maxSpeed", type: "number", alias: "m", valueTest: /\d+/, default: 4 })
+        .define({ name: "isTaxed", type: "boolean", default: false })
+        .define("specifications", [
+            { name: "engineSize", type: "number" },
+            { name: "wheels", type: "number" }
         ]);
 
 ###getDefinition
@@ -389,8 +389,8 @@ Groups an option.
 
 ####Example
 
-    config.ungroup(&quot;video&quot;);
-    config.ungroup(&quot;video&quot;, [&quot;stereo&quot;, &quot;channels&quot;]);
+    config.ungroup("video");
+    config.ungroup("video", ["stereo", "channels"]);
 
 ###where
 
@@ -467,8 +467,8 @@ true if at least one of the values is set.
 
 ####Example
 
-    config.hasValue(&quot;verbose&quot;);
-    config.hasValue([ &quot;verbose&quot;, &quot;debug&quot; ]);
+    config.hasValue("verbose");
+    config.hasValue([ "verbose", "debug" ]);
 
 
 
