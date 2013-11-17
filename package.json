@@ -4,7 +4,7 @@
   "description": "Classify the things in your world and how they interact.",
   "main": "lib/nature.js",
   "scripts": {
-      "test": "mocha --reporter spec test/*.js"
+    "test": "mocha --reporter spec test/*.js"
   },
   "repository": "https://github.com/75lb/nature.git",
   "author": "Lloyd Brookes",
@@ -14,6 +14,9 @@
     "underscore": "~1.4.3"
   },
   "devDependencies": {
-      "mocha": "~1.7"
+    "mocha": "~1.7",
+    "grunt": "~0.4.1",
+    "yuidoc2md": "~0.2.2",
+    "grunt-boil": "~0.4.0"
   }
 }
