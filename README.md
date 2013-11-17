@@ -1,4 +1,4 @@
-***library under construction*** CLIVE
+***library under construction***
 
 [![NPM version](https://badge.fury.io/js/nature.png)](http://badge.fury.io/js/nature)
 
@@ -57,12 +57,12 @@ Nature, a library to help classify the things (models) in your world (app). Take
 
 Synopsis
 
-Enables you to write API methods like: (&amp;#x60;YoungMan&amp;#x60; and &amp;#x60;FlammableCar&amp;#x60; are derivitives of &amp;#x60;Thing&amp;#x60;)
+Enables you to write API methods like: (&#x60;YoungMan&#x60; and &#x60;FlammableCar&#x60; are derivitives of &#x60;Thing&#x60;)
 
     exports.burnCar = function(arsonist){
         var youngMan = new YoungMan(arsonist);
         if (!youngMan.valid){
-            throw new Error(youngMan.validationMessages.join(&amp;quot;\n&amp;quot;));
+            throw new Error(youngMan.validationMessages.join(&quot;\n&quot;));
             // throws:
             // The arsonist supplied must be a young man.
             // Invalid age 29: Must be between 11 and 19. 
@@ -79,7 +79,7 @@ Enables you to write API methods like: (&amp;#x60;YoungMan&amp;#x60; and &amp;#x
 
 Client code for the above is straight forward: 
 
-    var outdoors = require(&amp;quot;outdoor-activity&amp;quot;);
+    var outdoors = require(&quot;outdoor-activity&quot;);
     outdoors.burnCar(process.argv);
 
 Then a simple command executes the outdoor activity:
@@ -210,89 +210,89 @@ or a hybrid of things
  
 To define Things, first load the class
  
-    var Thing = require(&amp;quot;nature&amp;quot;).Thing;
+    var Thing = require(&quot;nature&quot;).Thing;
      
 get an instance and start [defining](/classes/Thing.html#method_define)
  
     var youngLad = new Thing()
-        .define({ name: &amp;quot;firstname&amp;quot; });
+        .define({ name: &quot;firstname&quot; });
          
-    youngLad.firstname = &amp;quot;Geoff&amp;quot;;
-    youngLad.car = &amp;quot;Clio&amp;quot;; // Ignored, &amp;#x60;car&amp;#x60; is not yet defined and Thing instances are sealed (object non-extensible, properties non-configurable). 
+    youngLad.firstname = &quot;Geoff&quot;;
+    youngLad.car = &quot;Clio&quot;; // Ignored, &#x60;car&#x60; is not yet defined and Thing instances are sealed (object non-extensible, properties non-configurable). 
 
 Add [type](/classes/PropertyDefinition.html#property_type) checking
  
     // additional calls to define() redefine an existing property, or add new property definitions.
-    youngLad.define({ name: &amp;quot;firstname&amp;quot;, type: &amp;quot;string&amp;quot; })
-        .define({ name: &amp;quot;DOB&amp;quot;, type: Date });
+    youngLad.define({ name: &quot;firstname&quot;, type: &quot;string&quot; })
+        .define({ name: &quot;DOB&quot;, type: Date });
     
-    var dob = new Date(&amp;quot;19 Feb 2000&amp;quot;);
-    youngLad.DOB = dob; // valid, &amp;#x60;dob&amp;#x60; is an instance of &amp;#x60;Date&amp;#x60;
-    youngLad.firstname = dob; // invalid, &amp;#x60;typeof dob&amp;#x60; is not &amp;#x60;&amp;quot;string&amp;quot;&amp;#x60;
+    var dob = new Date(&quot;19 Feb 2000&quot;);
+    youngLad.DOB = dob; // valid, &#x60;dob&#x60; is an instance of &#x60;Date&#x60;
+    youngLad.firstname = dob; // invalid, &#x60;typeof dob&#x60; is not &#x60;&quot;string&quot;&#x60;
 
 Add [value testing](/classes/PropertyDefinition.html#property_valueTest)
 
-    youngLad.define({ name: &amp;quot;gender&amp;quot;, type: &amp;quot;string&amp;quot;, valueTest: /^(male|female)$/ });
+    youngLad.define({ name: &quot;gender&quot;, type: &quot;string&quot;, valueTest: /^(male|female)$/ });
     
-    youngLad.gender = &amp;quot;man&amp;quot;; // invalid
-    youngLad.gender = &amp;quot;male&amp;quot;; // valid
+    youngLad.gender = &quot;man&quot;; // invalid
+    youngLad.gender = &quot;male&quot;; // valid
     
 [Value tests](/classes/PropertyDefinition.html#property_valueTest) can be a function
 
-    function oldEnough(age){ return age &amp;gt;= 11; }
-    youngLad.define({ name: &amp;quot;age&amp;quot;, type: &amp;quot;number&amp;quot;, valueTest: oldEnough });
+    function oldEnough(age){ return age &gt;= 11; }
+    youngLad.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: oldEnough });
     
     youngLad.age = 9; // invalid, too young
     
 Or an array of tests, which must all pass
 
-    function oldEnough(age){ return age &amp;gt;= 11; }
-    function youngEnough(age){ return age &amp;lt;= 19; }
-    youngLad.define({ name: &amp;quot;age&amp;quot;, type: &amp;quot;number&amp;quot;, valueTest: [oldEnough, youngEnough] });
+    function oldEnough(age){ return age &gt;= 11; }
+    function youngEnough(age){ return age &lt;= 19; }
+    youngLad.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: [oldEnough, youngEnough] });
     
     youngLad.age = 29; // invalid, too old!
 
-Invalid data doesn&amp;#x27;t throw an error so check the &amp;#x60;valid&amp;#x60; flag and &amp;#x60;validationMessages&amp;#x60;
+Invalid data doesn&#x27;t throw an error so check the &#x60;valid&#x60; flag and &#x60;validationMessages&#x60;
 
     if (!youngLad.valid){
-        console.log(youngLad.validationMessages); // prints &amp;quot;Invalid age: 22&amp;quot;
+        console.log(youngLad.validationMessages); // prints &quot;Invalid age: 22&quot;
     }
     
 Add custom validationMessages
 
-    // you could also set &amp;#x60;validFail&amp;#x60; property using &amp;#x60;define&amp;#x60;, either is fine
-    youngLad.definition(&amp;quot;age&amp;quot;).validFail = &amp;quot;You must be 16-21&amp;quot;;
+    // you could also set &#x60;validFail&#x60; property using &#x60;define&#x60;, either is fine
+    youngLad.definition(&quot;age&quot;).validFail = &quot;You must be 16-21&quot;;
 
-    youngLad.set(&amp;quot;age&amp;quot;, 9); // invalid
-    console.log(youngLad.validationMessages); // prints &amp;quot;You must be 16-21&amp;quot;
+    youngLad.set(&quot;age&quot;, 9); // invalid
+    console.log(youngLad.validationMessages); // prints &quot;You must be 16-21&quot;
 
 Mix and match..
 
     var appearance = new Thing()
-        .define({ name: &amp;quot;style&amp;quot;, type: &amp;quot;string&amp;quot; })
-        .define({ name: &amp;quot;labels&amp;quot;, type: Array });
+        .define({ name: &quot;style&quot;, type: &quot;string&quot; })
+        .define({ name: &quot;labels&quot;, type: Array });
 
     youngLad.mixIn(appearance);
 
 Load data in bulk
 
     youngLad.load({
-        firstname: &amp;quot;Paul&amp;quot;,
+        firstname: &quot;Paul&quot;,
         age: 19, 
-        style: &amp;quot;understated class with a grassroot drizzle&amp;quot;,
-        labels: [ &amp;quot;Paul Smith&amp;quot;, &amp;quot;Burberry&amp;quot;, &amp;quot;Nike&amp;quot; ]
+        style: &quot;understated class with a grassroot drizzle&quot;,
+        labels: [ &quot;Paul Smith&quot;, &quot;Burberry&quot;, &quot;Nike&quot; ]
     });
  
 Besides object literals you can load from the command line, environment or file
 
     youngLad.load(process.argv);
     youngLad.load(process.env);
-    youngLad.load(&amp;quot;./profile.json&amp;quot;);
+    youngLad.load(&quot;./profile.json&quot;);
   
 Other ways of retrieving values
 
     youngLad.toJSON(); // get entire set
-    youngLad.where({ group: &amp;quot;primary&amp;quot; }).toJSON(); // get sub-set
+    youngLad.where({ group: &quot;primary&quot; }).toJSON(); // get sub-set
 
 ##Properties
 
@@ -472,6 +472,7 @@ true if at least one of the values is set.
 
 
 
+[![NPM](https://nodei.co/npm-dl/nature.png?months=1)](https://nodei.co/npm/nature/)
+
 [![githalytics.com alpha](https://cruel-carlota.pagodabox.com/c5ed60ded97e6bf11b24cf4d3c41fe97 "githalytics.com")](http://githalytics.com/75lb/nature)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/75lb/nature/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-[![NPM](https://nodei.co/npm-dl/nature.png?months=1)](https://nodei.co/npm/nature/)
