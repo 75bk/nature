@@ -47,65 +47,14 @@ $ CAR_MAKE=Vauxhall CAR_MODEL=Astra node outdoors.js --name Alfie --age 11 --lit
 
 API Documentation
 =================
-#nature
-
-Nature, a library to help classify the things (models) in your world (app). Take charge of Nature, design Things that do stuff. 
-
-* Things can be instantiated with data directly from the command line, environment, an object literal or file.
-* Once classified, Things can be re-used across your apps
-* Removes all input validation code from your app
-
-Synopsis
-
-Enables you to write API methods like: (`YoungMan` and `FlammableCar` are derivitives of `Thing`)
-
-    exports.burnCar = function(arsonist){
-        var youngMan = new YoungMan(arsonist);
-        if (!youngMan.valid){
-            throw new Error(youngMan.validationMessages.join("\n"));
-            // throws:
-            // The arsonist supplied must be a young man.
-            // Invalid age 29: Must be between 11 and 19. 
-            // Over 5 litres Gasoline required
-            // Less compassion necessary.
-        } else {
-            var car = new FlammableCar(process.env);
-            if (car.valid){
-                // the Vauxhall Astra supplied in the environment is indeed flammable
-                youngMan.igniteCar(astra);
-            }
-        }
-    }
-
-Client code for the above is straight forward: 
-
-    var outdoors = require("outdoor-activity");
-    outdoors.burnCar(process.argv);
-
-Then a simple command executes the outdoor activity:
-
-    $ CAR_MAKE=Vauxhall CAR_MODEL=Astra node outdoors.js --name Alfie --age 11 --litres 13 --compassion unknown
-
-See the Thing docs for more detail..
-
-##Properties
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
-    </tr>
-    <tr>
-        <td>Thing</td><td><em>Thing</em></td><td></td><td></td>
-    </tr>
-    <tr>
-        <td>PropertyDefinition</td><td><em>PropertyDefinition</em></td><td></td><td></td>
-    </tr>
-</table>
-
-#propertyDefinition
+#PropertyDefinition
 
 Enforces strict type and value checking on config options
 
-##Properties
+##Properties 
+
+### value
+
 <table>
     <tr>
         <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
@@ -113,38 +62,158 @@ Enforces strict type and value checking on config options
     <tr>
         <td>value</td><td><em>Any</em></td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td></td>
     </tr>
+</table>
+
+### type
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>type</td><td><em>{String|Function}</em></td><td></td><td></td>
+    </tr>
+</table>
+
+#### Example
+
+    config.define({ name: &quot;name&quot;, type: &quot;string&quot; }); 
+    config.define({ name: &quot;created&quot;, type: Date });
+    config.define({ name: &quot;onComplete&quot;, type: &quot;function&quot; });
+    config.define({ name: &quot;data&quot;, type: JobData });
+    config.define({ name: &quot;options&quot;, type: Object }); 
+    config.define({ name: &quot;files&quot;, type: Array });
+
+### valueTest
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
         <td>valueTest</td><td><em>{Regexp|Function|Array}</em></td><td></td><td></td>
     </tr>
+</table>
+
+#### Example
+
+    config.define({ name: &quot;name&quot;, type: &quot;string&quot;, valueTest: /\w{3}/ })
+    config.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: function(value){ return value &gt; 16; } })
+    config.define({
+        name: &quot;colours&quot;, 
+        type: Array, 
+        valueTest: [ 
+            /red/, 
+            function(colours){ 
+                return colours.length &gt; 0;
+            } 
+        ] 
+    });
+
+### valid
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>valid</td><td><em>Boolean</em></td><td></td><td></td>
+    </tr>
+</table>
+
+### default
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
         <td>default</td><td><em>Any</em></td><td>The default value to set on instantiation</td><td></td>
     </tr>
+</table>
+
+### validationMessages
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>validationMessages</td><td><em>Array</em></td><td></td><td></td>
+    </tr>
+</table>
+
+### groups
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
         <td>groups</td><td><em>Array</em></td><td>tags</td><td></td>
     </tr>
+</table>
+
+### name
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>name</td><td><em>string</em></td><td></td><td></td>
+    </tr>
+</table>
+
+### required
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
         <td>required</td><td><em>Boolean</em></td><td>Thing instance will remain invalid until a value is set</td><td></td>
     </tr>
+</table>
+
+### defaultOption
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>defaultOption</td><td><em>Boolean</em></td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td><td></td>
+    </tr>
+</table>
+
+### alias
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
         <td>alias</td><td><em>string</em></td><td></td><td></td>
     </tr>
+</table>
+
+### typeFailMsg
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>typeFailMsg</td><td><em>string</em></td><td></td><td></td>
+    </tr>
+</table>
+
+### valueFailMsg
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
         <td>valueFailMsg</td><td><em>string</em></td><td></td><td></td>
@@ -255,7 +324,10 @@ Other ways of retrieving values
     youngLad.toJSON(); // get entire set
     youngLad.where({ group: "primary" }).toJSON(); // get sub-set
 
-##Properties
+##Properties 
+
+### definitions
+
 <table>
     <tr>
         <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
@@ -263,11 +335,35 @@ Other ways of retrieving values
     <tr>
         <td>definitions</td><td><em>Object</em></td><td></td><td></td>
     </tr>
+</table>
+
+### valid
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>valid</td><td><em>Boolean</em></td><td></td><td></td>
     </tr>
+</table>
+
+### errors
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
     <tr>
         <td>errors</td><td><em>Array</em></td><td></td><td></td>
+    </tr>
+</table>
+
+### options
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
     </tr>
     <tr>
         <td>options</td><td><em>Array</em></td><td>a list of defined Options</td><td></td>
@@ -429,6 +525,71 @@ true if at least one of the values is set.
 
     config.hasValue("verbose");
     config.hasValue([ "verbose", "debug" ]);
+
+#nature
+
+Nature, a library to help classify the things (models) in your world (app). Take charge of Nature, design Things that do stuff. 
+
+* Things can be instantiated with data directly from the command line, environment, an object literal or file.
+* Once classified, Things can be re-used across your apps
+* Removes all input validation code from your app
+
+Synopsis
+
+Enables you to write API methods like: (`YoungMan` and `FlammableCar` are derivitives of `Thing`)
+
+    exports.burnCar = function(arsonist){
+        var youngMan = new YoungMan(arsonist);
+        if (!youngMan.valid){
+            throw new Error(youngMan.validationMessages.join("\n"));
+            // throws:
+            // The arsonist supplied must be a young man.
+            // Invalid age 29: Must be between 11 and 19. 
+            // Over 5 litres Gasoline required
+            // Less compassion necessary.
+        } else {
+            var car = new FlammableCar(process.env);
+            if (car.valid){
+                // the Vauxhall Astra supplied in the environment is indeed flammable
+                youngMan.igniteCar(astra);
+            }
+        }
+    }
+
+Client code for the above is straight forward: 
+
+    var outdoors = require("outdoor-activity");
+    outdoors.burnCar(process.argv);
+
+Then a simple command executes the outdoor activity:
+
+    $ CAR_MAKE=Vauxhall CAR_MODEL=Astra node outdoors.js --name Alfie --age 11 --litres 13 --compassion unknown
+
+See the Thing docs for more detail..
+
+##Properties 
+
+### Thing
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
+    <tr>
+        <td>Thing</td><td><em>Thing</em></td><td></td><td></td>
+    </tr>
+</table>
+
+### PropertyDefinition
+
+<table>
+    <tr>
+        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+    </tr>
+    <tr>
+        <td>PropertyDefinition</td><td><em>PropertyDefinition</em></td><td></td><td></td>
+    </tr>
+</table>
 
 
 
