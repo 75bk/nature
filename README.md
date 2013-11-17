@@ -89,106 +89,114 @@ Then a simple command executes the outdoor activity:
 See the Thing docs for more detail..
 
 ##Properties
+<table>
+    <tr>
+        <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
+    </tr>
 
-###Thing
+    <tr>
+        <td>Thing</td><td></td><td>Thing</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-**type**: Thing
+    <tr>
+        <td>PropertyDefinition</td><td></td><td>PropertyDefinition</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-###PropertyDefinition
-
-**type**: PropertyDefinition
+</table>
 
 #propertyDefinition
 
 Enforces strict type and value checking on config options
 
 ##Properties
+<table>
+    <tr>
+        <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
+    </tr>
 
-###value
+    <tr>
+        <td>value</td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td>Any</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-Gets/sets the property value. Will attempt to convert values to Number for definitions of `type` "number".
+    <tr>
+        <td>type</td><td></td><td>{String|Function}</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-**type**: Any
+    <tr>
+        <td>valueTest</td><td></td><td>{Regexp|Function|Array}</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-###type
+    <tr>
+        <td>valid</td><td></td><td>Boolean</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-**type**: {String|Function}
+    <tr>
+        <td>default</td><td>The default value to set on instantiation</td><td>Any</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-####Example
+    <tr>
+        <td>validationMessages</td><td></td><td>Array</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-    config.define({ name: "name", type: "string" }); 
-    config.define({ name: "created", type: Date });
-    config.define({ name: "onComplete", type: "function" });
-    config.define({ name: "data", type: JobData });
-    config.define({ name: "options", type: Object }); 
-    config.define({ name: "files", type: Array });
+    <tr>
+        <td>groups</td><td>tags</td><td>Array</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-###valueTest
+    <tr>
+        <td>name</td><td></td><td>string</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-**type**: {Regexp|Function|Array}
+    <tr>
+        <td>required</td><td>Thing instance will remain invalid until a value is set</td><td>Boolean</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-####Example
+    <tr>
+        <td>defaultOption</td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td><td>Boolean</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-    config.define({ name: "name", type: "string", valueTest: /\w{3}/ })
-    config.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
-    config.define({
-        name: "colours", 
-        type: Array, 
-        valueTest: [ 
-            /red/, 
-            function(colours){ 
-                return colours.length > 0;
-            } 
-        ] 
-    });
+    <tr>
+        <td>alias</td><td></td><td>string</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-###valid
+    <tr>
+        <td>typeFailMsg</td><td></td><td>string</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-**type**: Boolean
+    <tr>
+        <td>valueFailMsg</td><td></td><td>string</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-###default
-
-The default value to set on instantiation
-
-**type**: Any
-
-###validationMessages
-
-**type**: Array
-
-###groups
-
-tags
-
-**type**: Array
-
-###name
-
-**type**: string
-
-###required
-
-Thing instance will remain invalid until a value is set
-
-**type**: Boolean
-
-###defaultOption
-
-if unnamed values are passed to config.set(), set them AS AN ARRAY on this option
-
-**type**: Boolean
-
-###alias
-
-**type**: string
-
-###typeFailMsg
-
-**type**: string
-
-###valueFailMsg
-
-**type**: string
+</table>
 
 #Thing
 
@@ -295,24 +303,36 @@ Other ways of retrieving values
     youngLad.where({ group: "primary" }).toJSON(); // get sub-set
 
 ##Properties
+<table>
+    <tr>
+        <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
+    </tr>
 
-###definitions
+    <tr>
+        <td>definitions</td><td></td><td>Object</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-**type**: Object
+    <tr>
+        <td>valid</td><td></td><td>Boolean</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-###valid
+    <tr>
+        <td>errors</td><td></td><td>Array</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-**type**: Boolean
+    <tr>
+        <td>options</td><td>a list of defined Options</td><td>Array</td><td></td><td>
+<pre><code></pre></code>
+        </td>
+    </tr>
 
-###errors
-
-**type**: Array
-
-###options
-
-a list of defined Options
-
-**type**: Array
+</table>
 
 ##Methods
 
