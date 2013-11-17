@@ -57,10 +57,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>value</td><td><em>Any</em></td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td></td>
+        <td>value</td><td><em>Any</em></td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td>
     </tr>
 </table>
 
@@ -68,44 +68,44 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>type</td><td><em>{String|Function}</em></td><td></td><td></td>
+        <td>type</td><td><em>{String|Function}</em></td><td></td>
     </tr>
 </table>
 
 #### Example
 
-    config.define({ name: &quot;name&quot;, type: &quot;string&quot; }); 
-    config.define({ name: &quot;created&quot;, type: Date });
-    config.define({ name: &quot;onComplete&quot;, type: &quot;function&quot; });
-    config.define({ name: &quot;data&quot;, type: JobData });
-    config.define({ name: &quot;options&quot;, type: Object }); 
-    config.define({ name: &quot;files&quot;, type: Array });
+    config.define({ name: "name", type: "string" }); 
+    config.define({ name: "created", type: Date });
+    config.define({ name: "onComplete", type: "function" });
+    config.define({ name: "data", type: JobData });
+    config.define({ name: "options", type: Object }); 
+    config.define({ name: "files", type: Array });
 
 ### valueTest
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>valueTest</td><td><em>{Regexp|Function|Array}</em></td><td></td><td></td>
+        <td>valueTest</td><td><em>{Regexp|Function|Array}</em></td><td></td>
     </tr>
 </table>
 
 #### Example
 
-    config.define({ name: &quot;name&quot;, type: &quot;string&quot;, valueTest: /\w{3}/ })
-    config.define({ name: &quot;age&quot;, type: &quot;number&quot;, valueTest: function(value){ return value &gt; 16; } })
+    config.define({ name: "name", type: "string", valueTest: /\w{3}/ })
+    config.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
     config.define({
-        name: &quot;colours&quot;, 
+        name: "colours", 
         type: Array, 
         valueTest: [ 
             /red/, 
             function(colours){ 
-                return colours.length &gt; 0;
+                return colours.length > 0;
             } 
         ] 
     });
@@ -114,10 +114,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>valid</td><td><em>Boolean</em></td><td></td><td></td>
+        <td>valid</td><td><em>Boolean</em></td><td></td>
     </tr>
 </table>
 
@@ -125,10 +125,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>default</td><td><em>Any</em></td><td>The default value to set on instantiation</td><td></td>
+        <td>default</td><td><em>Any</em></td><td>The default value to set on instantiation</td>
     </tr>
 </table>
 
@@ -136,10 +136,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>validationMessages</td><td><em>Array</em></td><td></td><td></td>
+        <td>validationMessages</td><td><em>Array</em></td><td></td>
     </tr>
 </table>
 
@@ -147,10 +147,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>groups</td><td><em>Array</em></td><td>tags</td><td></td>
+        <td>groups</td><td><em>Array</em></td><td>tags</td>
     </tr>
 </table>
 
@@ -158,10 +158,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>name</td><td><em>string</em></td><td></td><td></td>
+        <td>name</td><td><em>string</em></td><td></td>
     </tr>
 </table>
 
@@ -169,10 +169,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>required</td><td><em>Boolean</em></td><td>Thing instance will remain invalid until a value is set</td><td></td>
+        <td>required</td><td><em>Boolean</em></td><td>Thing instance will remain invalid until a value is set</td>
     </tr>
 </table>
 
@@ -180,10 +180,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>defaultOption</td><td><em>Boolean</em></td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td><td></td>
+        <td>defaultOption</td><td><em>Boolean</em></td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td>
     </tr>
 </table>
 
@@ -191,10 +191,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>alias</td><td><em>string</em></td><td></td><td></td>
+        <td>alias</td><td><em>string</em></td><td></td>
     </tr>
 </table>
 
@@ -202,10 +202,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>typeFailMsg</td><td><em>string</em></td><td></td><td></td>
+        <td>typeFailMsg</td><td><em>string</em></td><td></td>
     </tr>
 </table>
 
@@ -213,10 +213,10 @@ Enforces strict type and value checking on config options
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>valueFailMsg</td><td><em>string</em></td><td></td><td></td>
+        <td>valueFailMsg</td><td><em>string</em></td><td></td>
     </tr>
 </table>
 
@@ -330,10 +330,10 @@ Other ways of retrieving values
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>definitions</td><td><em>Object</em></td><td></td><td></td>
+        <td>definitions</td><td><em>Object</em></td><td></td>
     </tr>
 </table>
 
@@ -341,10 +341,10 @@ Other ways of retrieving values
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>valid</td><td><em>Boolean</em></td><td></td><td></td>
+        <td>valid</td><td><em>Boolean</em></td><td></td>
     </tr>
 </table>
 
@@ -352,10 +352,10 @@ Other ways of retrieving values
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>errors</td><td><em>Array</em></td><td></td><td></td>
+        <td>errors</td><td><em>Array</em></td><td></td>
     </tr>
 </table>
 
@@ -363,10 +363,10 @@ Other ways of retrieving values
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>options</td><td><em>Array</em></td><td>a list of defined Options</td><td></td>
+        <td>options</td><td><em>Array</em></td><td>a list of defined Options</td>
     </tr>
 </table>
 
@@ -378,13 +378,19 @@ Define an option
 
 **Chainable**: true
 
-**Params**:  
-*   groups _String|Array_
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>groups</td><td><em>String|Array</em></td><td>The group or groups to add the new option definition to</td>
+    </tr>
+    <tr>
+        <td>definitions</td><td><em>Object|PropertyDefinition|Array</em></td><td>The new option definitions</td>
+    </tr>
+</table>
 
-    The group or groups to add the new option definition to
-*   definitions _Object|PropertyDefinition|Array_
-
-    The new option definitions
 
 ####Example
 
@@ -400,23 +406,33 @@ Define an option
 
 **Returns**: __ - Object
 
-**Params**:  
-*   optionName _String_
-
-    full name or alias
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>optionName</td><td><em>String</em></td><td>full name or alias</td>
+    </tr>
+</table>
 
 
 ###set
 
 **Chainable**: true
 
-**Params**:  
-*   option _Thing|Object|String|Array_
-
-    Pass a Thing instance, string to set a single value, an object to set multiple values
-*   value _Any_
-
-    
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>option</td><td><em>Thing|Object|String|Array</em></td><td>Pass a Thing instance, string to set a single value, an object to set multiple values</td>
+    </tr>
+    <tr>
+        <td>value</td><td><em>Any</em></td><td></td>
+    </tr>
+</table>
 
 
 ###group
@@ -425,23 +441,34 @@ Groups an option.
 
 **Chainable**: true
 
-**Params**:  
-*   groupName _String_
-
-    The group
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>groupName</td><td><em>String</em></td><td>The group</td>
+    </tr>
+</table>
 
 
 ###ungroup
 
 **Chainable**: true
 
-**Params**:  
-*   String __
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>String</td><td><em></em></td><td>groupName</td>
+    </tr>
+    <tr>
+        <td>Array</td><td><em></em></td><td>[optionNames]</td>
+    </tr>
+</table>
 
-    groupName
-*   Array __
-
-    [optionNames]
 
 ####Example
 
@@ -454,10 +481,15 @@ returns a new config instance containing a subset of the options
 
 **Returns**: __ - Thing
 
-**Params**:  
-*   Object __
-
-    filterOptions
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>Object</td><td><em></em></td><td>filterOptions</td>
+    </tr>
+</table>
 
 
 ###toArray
@@ -468,20 +500,30 @@ Returns the set options as an array suitable for passing to say, Child_Process.
 
 ###unset
 
-**Params**:  
-*   optionName _String_
-
-    unset the option value
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>optionName</td><td><em>String</em></td><td>unset the option value</td>
+    </tr>
+</table>
 
 
 ###get
 
 **Returns**: _Any_ - Option Value
 
-**Params**:  
-*   option _String_
-
-    Option name
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>option</td><td><em>String</em></td><td>Option name</td>
+    </tr>
+</table>
 
 
 ###toJSON
@@ -494,13 +536,18 @@ Mix in options from another config instance
 
 **Chainable**: true
 
-**Params**:  
-*   config _Thing_
-
-    The config instance to mix in
-*   groups _String|Array_
-
-    The group or groups to put the added options in
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>config</td><td><em>Thing</em></td><td>The config instance to mix in</td>
+    </tr>
+    <tr>
+        <td>groups</td><td><em>String|Array</em></td><td>The group or groups to put the added options in</td>
+    </tr>
+</table>
 
 
 ###clone
@@ -516,10 +563,16 @@ true if at least one of the values is set.
 
 **Returns**: __ - Boolean
 
-**Params**:  
-*   options _Array|String_
+**Params**:
+<table>
+    <tr>
+        <th>Name</th><th>Type</th><th>Description</th>
+    </tr>
+    <tr>
+        <td>options</td><td><em>Array|String</em></td><td>A single, or array of option names</td>
+    </tr>
+</table>
 
-    A single, or array of option names
 
 ####Example
 
@@ -573,10 +626,10 @@ See the Thing docs for more detail..
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>Thing</td><td><em>Thing</em></td><td></td><td></td>
+        <td>Thing</td><td><em>Thing</em></td><td></td>
     </tr>
 </table>
 
@@ -584,10 +637,10 @@ See the Thing docs for more detail..
 
 <table>
     <tr>
-        <th>Property</th><th>Type</th><th>Description</th><th>Default</th>
+        <th>Property</th><th>Type</th><th>Description</th>
     </tr>
     <tr>
-        <td>PropertyDefinition</td><td><em>PropertyDefinition</em></td><td></td><td></td>
+        <td>PropertyDefinition</td><td><em>PropertyDefinition</em></td><td></td>
     </tr>
 </table>
 
