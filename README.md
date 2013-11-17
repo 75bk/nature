@@ -108,7 +108,7 @@ Enforces strict type and value checking on config options
 ##Properties
 <table>
     <tr>
-        <th>Property</th><th>Description</th><th>Type</th><th>Default</th><th>Example</th>
+        <th>Property</th><th>Description</th><th>Type</th><th>Default</th>
     </tr>
     <tr>
         <td>value</td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td><td>Any</td><td></td>
