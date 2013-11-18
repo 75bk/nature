@@ -6,7 +6,11 @@ module.exports = function(grunt){
             readme: {
                 options: {
                     templateData: {
-                        APIdocs: yuidoc2md.getMarkdown(grunt.file.expand("lib/*.js"))
+                        APIdocs: yuidoc2md.getMarkdown([
+                            "lib/nature.js",
+                            "lib/Thing.js",
+                            "lib/PropertyDefinition.js"
+                        ])
                     }
                 },
                 create: { 
