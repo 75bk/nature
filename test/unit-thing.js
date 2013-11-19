@@ -10,13 +10,15 @@ it("passing required:true should test for defaultOption.length > 0")
 it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
 it("should throw when a none-existent property is accessed, e.g. console.log(properties.dfkdshl)");
 it("free usage on --help");
-it("optimise validation checking, check once on value set or define, cache validation state");
 it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
+
 it("should throw on empty property, i.e. 'rename -' or '--'");
 it("should expose _errors array on Thing instance API, same as 'validationMessages'");
 it("needs consistent error handling.. some errors emit, some throw (like 'renamer -').. should all errors just set valid=false?");
+
 it("should valueTest run on get, so function can refer to other set values in this.config? e.g. if (this.config.regex) then ...");
 it("a 'post-set' hook, so setting '**/*.txt' on 'files' can be expanded");
+it("scrap constructor to remove need for Thing.call(this)");
 
 describe("Thing API", function(){
     var _thing;
