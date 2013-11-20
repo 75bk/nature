@@ -49,186 +49,108 @@ API Documentation
 =================
 #PropertyDefinition
 
-Enforces strict type and value checking on config options
+Enforces strict type and value checking on config properties
 
-##Properties 
+##Properties
 
-### value
+###value
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>value</td><td><em>Any</em></td><td>Gets/sets the property value. Will attempt to convert values to Number for definitions of &#x60;type&#x60; &quot;number&quot;.</td>
-    </tr>
-</table>
+Gets/sets the property value. Will attempt to convert values to Number for definitions of `type` "number".
 
-### type
+**type**: Any
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>type</td><td><em>{String|Function}</em></td><td></td>
-    </tr>
-</table>
+###type
 
-#### Example
+**type**: String | Function
 
-    config.define({ name: "name", type: "string" }); 
+####Example
+
+    config.define({ name: "name", type: "string" });
     config.define({ name: "created", type: Date });
     config.define({ name: "onComplete", type: "function" });
     config.define({ name: "data", type: JobData });
-    config.define({ name: "options", type: Object }); 
+    config.define({ name: "properties", type: Object });
     config.define({ name: "files", type: Array });
 
-### valueTest
+###valueTest
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>valueTest</td><td><em>{Regexp|Function|Array}</em></td><td></td>
-    </tr>
-</table>
+A regular expression, function or Array containing one or more of each. A value
+must return true for all to be valid.
 
-#### Example
+**type**: Regexp | Function | Array
+
+####Example
 
     config.define({ name: "name", type: "string", valueTest: /\w{3}/ })
     config.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
     config.define({
-        name: "colours", 
-        type: Array, 
-        valueTest: [ 
-            /red/, 
-            function(colours){ 
+        name: "colours",
+        type: Array,
+        valueTest: [
+            /red/,
+            function(colours){
                 return colours.length > 0;
-            } 
-        ] 
+            }
+        ]
     });
 
-### valid
+###valid
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>valid</td><td><em>Boolean</em></td><td></td>
-    </tr>
-</table>
+**type**: Boolean
 
-### default
+###default
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>default</td><td><em>Any</em></td><td>The default value to set on instantiation</td>
-    </tr>
-</table>
+The default value to set on instantiation
 
-### validationMessages
+**type**: Any
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>validationMessages</td><td><em>Array</em></td><td></td>
-    </tr>
-</table>
+###validationMessages
 
-### groups
+**type**: Array
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>groups</td><td><em>Array</em></td><td>tags</td>
-    </tr>
-</table>
+###groups
 
-### name
+tags
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>name</td><td><em>string</em></td><td></td>
-    </tr>
-</table>
+**type**: Array
 
-### required
+###name
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>required</td><td><em>Boolean</em></td><td>Thing instance will remain invalid until a value is set</td>
-    </tr>
-</table>
+**type**: string
 
-### defaultOption
+###required
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>defaultOption</td><td><em>Boolean</em></td><td>if unnamed values are passed to config.set(), set them AS AN ARRAY on this option</td>
-    </tr>
-</table>
+Thing instance will remain invalid until a value is set
 
-### alias
+**type**: Boolean
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>alias</td><td><em>string</em></td><td></td>
-    </tr>
-</table>
+###defaultOption
 
-### typeFailMsg
+if unnamed values are passed to config.set(), set them AS AN ARRAY on this property
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>typeFailMsg</td><td><em>string</em></td><td></td>
-    </tr>
-</table>
+**type**: Boolean
 
-### valueFailMsg
+###alias
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>valueFailMsg</td><td><em>string</em></td><td></td>
-    </tr>
-</table>
+**type**: string
+
+###typeFailMsg
+
+**type**: string
+
+###valueFailMsg
+
+**type**: string
 
 #Thing
 
-The base class for some Thing. Example things: 
- 
-* Application option list (version, update, help)
+The base class for some Thing. Example things:
+
+* Application property list (version, update, help)
 * An Output style (verbosity level, dry-run)
 * CRUD capability (add, remove, list, update)
 
-more specific things: 
+more specific things:
 
 * Secure database configuration (username, complex password, remote host IP)
 * Video file list (video files, recursively searched, excludes hidden files)
@@ -237,25 +159,25 @@ more specific things:
 or a hybrid of things
 
 * A Video file list with CRUD capability
- 
+
 To define Things, first load the class
- 
+
     var Thing = require("nature").Thing;
-     
+
 get an instance and start [defining](/classes/Thing.html#method_define)
- 
+
     var youngLad = new Thing()
         .define({ name: "firstname" });
-         
+
     youngLad.firstname = "Geoff";
-    youngLad.car = "Clio"; // Ignored, `car` is not yet defined and Thing instances are sealed (object non-extensible, properties non-configurable). 
+    youngLad.car = "Clio"; // Ignored, `car` is not yet defined and Thing instances are sealed (object non-extensible, properties non-configurable).
 
 Add [type](/classes/PropertyDefinition.html#property_type) checking
- 
+
     // additional calls to define() redefine an existing property, or add new property definitions.
     youngLad.define({ name: "firstname", type: "string" })
         .define({ name: "DOB", type: Date });
-    
+
     var dob = new Date("19 Feb 2000");
     youngLad.DOB = dob; // valid, `dob` is an instance of `Date`
     youngLad.firstname = dob; // invalid, `typeof dob` is not `"string"`
@@ -263,23 +185,23 @@ Add [type](/classes/PropertyDefinition.html#property_type) checking
 Add [value testing](/classes/PropertyDefinition.html#property_valueTest)
 
     youngLad.define({ name: "gender", type: "string", valueTest: /^(male|female)$/ });
-    
+
     youngLad.gender = "man"; // invalid
     youngLad.gender = "male"; // valid
-    
+
 [Value tests](/classes/PropertyDefinition.html#property_valueTest) can be a function
 
     function oldEnough(age){ return age >= 11; }
     youngLad.define({ name: "age", type: "number", valueTest: oldEnough });
-    
+
     youngLad.age = 9; // invalid, too young
-    
+
 Or an array of tests, which must all pass
 
     function oldEnough(age){ return age >= 11; }
     function youngEnough(age){ return age <= 19; }
     youngLad.define({ name: "age", type: "number", valueTest: [oldEnough, youngEnough] });
-    
+
     youngLad.age = 29; // invalid, too old!
 
 Invalid data doesn't throw an error so check the `valid` flag and `validationMessages`
@@ -287,7 +209,7 @@ Invalid data doesn't throw an error so check the `valid` flag and `validationMes
     if (!youngLad.valid){
         console.log(youngLad.validationMessages); // prints "Invalid age: 22"
     }
-    
+
 Add custom validationMessages
 
     // you could also set `validFail` property using `define`, either is fine
@@ -308,89 +230,57 @@ Load data in bulk
 
     youngLad.load({
         firstname: "Paul",
-        age: 19, 
+        age: 19,
         style: "understated class with a grassroot drizzle",
         labels: [ "Paul Smith", "Burberry", "Nike" ]
     });
- 
+
 Besides object literals you can load from the command line, environment or file
 
     youngLad.load(process.argv);
     youngLad.load(process.env);
     youngLad.load("./profile.json");
-  
+
 Other ways of retrieving values
 
     youngLad.toJSON(); // get entire set
     youngLad.where({ group: "primary" }).toJSON(); // get sub-set
 
-##Properties 
+##Properties
 
-### definitions
+###definitions
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>definitions</td><td><em>Object</em></td><td></td>
-    </tr>
-</table>
+**type**: Object
 
-### valid
+###valid
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>valid</td><td><em>Boolean</em></td><td></td>
-    </tr>
-</table>
+**type**: Boolean
 
-### errors
+###errors
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>errors</td><td><em>Array</em></td><td></td>
-    </tr>
-</table>
+**type**: Array
 
-### options
+###properties
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>options</td><td><em>Array</em></td><td>a list of defined Options</td>
-    </tr>
-</table>
+a list of defined Options
+
+**type**: Array
 
 ##Methods
 
 ###define
 
-Define an option
+Define an property
 
 **Chainable**: true
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>groups</td><td><em>String|Array</em></td><td>The group or groups to add the new option definition to</td>
-    </tr>
-    <tr>
-        <td>definitions</td><td><em>Object|PropertyDefinition|Array</em></td><td>The new option definitions</td>
-    </tr>
-</table>
+**Params**:  
+*   groups _String|Array_
 
+    The group or groups to add the new property definition to
+*   definitions _Object|PropertyDefinition|Array_
+
+    The new property definitions
 
 ####Example
 
@@ -406,69 +296,50 @@ Define an option
 
 **Returns**: __ - Object
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>optionName</td><td><em>String</em></td><td>full name or alias</td>
-    </tr>
-</table>
+**Params**:  
+*   propertyName _String_
+
+    full name or alias
 
 
 ###set
 
+Set a value on the specified property
+
 **Chainable**: true
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>option</td><td><em>Thing|Object|String|Array</em></td><td>Pass a Thing instance, string to set a single value, an object to set multiple values</td>
-    </tr>
-    <tr>
-        <td>value</td><td><em>Any</em></td><td></td>
-    </tr>
-</table>
+**Params**:  
+*   property _Thing | Object | String | Array_
+
+    Pass a Thing instance, string to set a single value, an object to set multiple values
+*   value _Any_
+
+    
 
 
 ###group
 
-Groups an option.
+Groups an property.
 
 **Chainable**: true
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>groupName</td><td><em>String</em></td><td>The group</td>
-    </tr>
-</table>
+**Params**:  
+*   groupName _String_
+
+    The group
 
 
 ###ungroup
 
 **Chainable**: true
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>String</td><td><em></em></td><td>groupName</td>
-    </tr>
-    <tr>
-        <td>Array</td><td><em></em></td><td>[optionNames]</td>
-    </tr>
-</table>
+**Params**:  
+*   String __
 
+    groupName
+*   Array __
+
+    [propertyNames]
 
 ####Example
 
@@ -477,53 +348,38 @@ Groups an option.
 
 ###where
 
-returns a new config instance containing a subset of the options
+returns a new config instance containing a subset of the properties
 
 **Returns**: __ - Thing
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>Object</td><td><em></em></td><td>filterOptions</td>
-    </tr>
-</table>
+**Params**:  
+*   Object __
+
+    filterOptions
 
 
 ###toArray
 
-Returns the set options as an array suitable for passing to say, Child_Process.
+Returns the set properties as an array suitable for passing to say, Child_Process.
 
 **Returns**: __ - Array
 
 ###unset
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>optionName</td><td><em>String</em></td><td>unset the option value</td>
-    </tr>
-</table>
+**Params**:  
+*   propertyName _String_
+
+    unset the property value
 
 
 ###get
 
 **Returns**: _Any_ - Option Value
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>option</td><td><em>String</em></td><td>Option name</td>
-    </tr>
-</table>
+**Params**:  
+*   property _String_
+
+    Option name
 
 
 ###toJSON
@@ -532,22 +388,17 @@ Returns the set options as an array suitable for passing to say, Child_Process.
 
 ###mixIn
 
-Mix in options from another config instance
+Mix in properties from another config instance
 
 **Chainable**: true
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>config</td><td><em>Thing</em></td><td>The config instance to mix in</td>
-    </tr>
-    <tr>
-        <td>groups</td><td><em>String|Array</em></td><td>The group or groups to put the added options in</td>
-    </tr>
-</table>
+**Params**:  
+*   config _Thing_
+
+    The config instance to mix in
+*   groups _String|Array_
+
+    The group or groups to put the added properties in
 
 
 ###clone
@@ -558,21 +409,15 @@ Returns a copy of the config instance
 
 ###hasValue
 
-Returns true if the specified option has a value set. If you pass an array, will return 
+Returns true if the specified property has a value set. If you pass an array, will return
 true if at least one of the values is set.
 
 **Returns**: __ - Boolean
 
-**Params**:
-<table>
-    <tr>
-        <th>Name</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>options</td><td><em>Array|String</em></td><td>A single, or array of option names</td>
-    </tr>
-</table>
+**Params**:  
+*   properties _Array|String_
 
+    A single, or array of property names
 
 ####Example
 
@@ -581,7 +426,7 @@ true if at least one of the values is set.
 
 #nature
 
-Nature, a library to help classify the things (models) in your world (app). Take charge of Nature, design Things that do stuff. 
+Nature, a library to help classify the things (models) in your world (app). Take charge of Nature, design Things that do stuff.
 
 * Things can be instantiated with data directly from the command line, environment, an object literal or file.
 * Once classified, Things can be re-used across your apps
@@ -597,7 +442,7 @@ Enables you to write API methods like: (`YoungMan` and `FlammableCar` are derivi
             throw new Error(youngMan.validationMessages.join("\n"));
             // throws:
             // The arsonist supplied must be a young man.
-            // Invalid age 29: Must be between 11 and 19. 
+            // Invalid age 29: Must be between 11 and 19.
             // Over 5 litres Gasoline required
             // Less compassion necessary.
         } else {
@@ -609,7 +454,7 @@ Enables you to write API methods like: (`YoungMan` and `FlammableCar` are derivi
         }
     }
 
-Client code for the above is straight forward: 
+Client code for the above is straight forward:
 
     var outdoors = require("outdoor-activity");
     outdoors.burnCar(process.argv);
@@ -620,29 +465,15 @@ Then a simple command executes the outdoor activity:
 
 See the Thing docs for more detail..
 
-##Properties 
+##Properties
 
-### Thing
+###Thing
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>Thing</td><td><em>Thing</em></td><td></td>
-    </tr>
-</table>
+**type**: Thing
 
-### PropertyDefinition
+###PropertyDefinition
 
-<table>
-    <tr>
-        <th>Property</th><th>Type</th><th>Description</th>
-    </tr>
-    <tr>
-        <td>PropertyDefinition</td><td><em>PropertyDefinition</em></td><td></td>
-    </tr>
-</table>
+**type**: PropertyDefinition
 
 
 
