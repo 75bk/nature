@@ -20,12 +20,12 @@ it("should valueTest run on get, so function can refer to other set values in th
 it("a 'post-set' hook, so setting '**/*.txt' on 'files' can be expanded");
 it("scrap constructor to remove need for Thing.call(this)");
 
-describe("Thing API", function(){
-    var _thing;
-    beforeEach(function(){
-        _thing = new Thing();
-    });
+var _thing;
+beforeEach(function(){
+    _thing = new Thing();
+});
 
+describe("Thing API", function(){
     describe("properties:", function(){
         it("valid - should return true only when all property values are valid", function(){
             _thing.define({ name: "one", type: "number", default: 1 });
@@ -108,24 +108,6 @@ describe("Thing API", function(){
             
             it("define() should work the same with a `definition.value` as set()");
             
-            describe("incorrect usage,", function(){
-                it("define(definition) should not throw on duplicate property", function(){
-                    _thing.define({ name: "yeah" });
-                
-                    assert.doesNotThrow(function(){
-                        _thing.define({ name: "yeah", });
-                    });
-                });
-                it("define(definition) should throw on duplicate alias", function(){
-                    _thing.define({ name: "one", alias: "o" });
-                    _thing.define({ name: "two", alias: "d" });
-                    _thing.define({ name: "three", alias: "t" });
-                
-                    assert.throws(function(){
-                        _thing.define({ name: "four", alias: "t" });
-                    });
-                });
-            });
         });
         
         describe("hasValue()", function(){
@@ -328,51 +310,6 @@ describe("Thing API", function(){
             });
             
             it("warn if set(propertiesArray) produces defaultValues with no defaultOption set");
-
-            describe("incorrect usage,", function(){
-                it("set(property, value) should emit 'error' on unregistered property", function(){
-                    assert.throws(function(){
-                        _thing.set("yeah", "test");
-                    });
-                    assert.strictEqual(_thing.valid, false);
-                    assert.strictEqual(_thing._errors.length, 1);                    
-                });
-                
-                it("catching 'error' surpresses throw on bad set()", function(){
-                    _thing.on("error", function(err){
-                        assert.ok(err);
-                    });
-                    assert.doesNotThrow(function(){
-                        _thing.set("yeah", "test");
-                    });
-                    assert.strictEqual(_thing.valid, false);
-                    assert.strictEqual(_thing._errors.length, 1);                    
-                });
-
-                it("set([--property, value]) should emit 'error' on unregistered property", function(){
-                    assert.throws(function(){
-                        _thing.set(["--asdklfjlkd"]);
-                    });
-                    assert.strictEqual(_thing.valid, false);
-                    assert.strictEqual(_thing._errors.length, 1);                    
-                });
-                                
-                it("get(property) should return undefined on unregistered property", function(){
-                    assert.strictEqual(_thing.get("yeah", "test"), undefined);
-                });
-                
-                it("set(propertiesArray) should not alter propertiesArray itself", function(){
-                    var args = [ "--one", 1, "--two", 2, "--three", 3 ];
-                    _thing
-                        .define({ name: "one", type: "number", default: -1 })
-                        .define({ name: "two", type: "number", default: -2 })
-                        .define({ name: "three", type: "number", default: -3 });
-                    
-                    assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
-                    _thing.set(args);
-                    assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
-                });
-            });
         })
 
         it("should clone()", function(){
@@ -585,5 +522,66 @@ describe("Thing API", function(){
             });
             
         });
+    });
+});
+
+describe("Error handling", function(){
+    it("define(definition) should not throw on duplicate property", function(){
+        _thing.define({ name: "yeah" });
+    
+        assert.doesNotThrow(function(){
+            _thing.define({ name: "yeah", });
+        });
+    });
+    it("define(definition) should throw on duplicate alias", function(){
+        _thing.define({ name: "one", alias: "o" });
+        _thing.define({ name: "two", alias: "d" });
+        _thing.define({ name: "three", alias: "t" });
+    
+        assert.throws(function(){
+            _thing.define({ name: "four", alias: "t" });
+        });
+    });
+    it("set(property, value) should emit 'error' on unregistered property", function(){
+        assert.throws(function(){
+            _thing.set("yeah", "test");
+        });
+        assert.strictEqual(_thing.valid, false);
+        assert.strictEqual(_thing._errors.length, 1);                    
+    });
+    
+    it("catching 'error' surpresses throw on bad set()", function(){
+        _thing.on("error", function(err){
+            assert.ok(err);
+        });
+        assert.doesNotThrow(function(){
+            _thing.set("yeah", "test");
+        });
+        assert.strictEqual(_thing.valid, false);
+        assert.strictEqual(_thing._errors.length, 1);                    
+    });
+
+    it("set([--property, value]) should emit 'error' on unregistered property", function(){
+        assert.throws(function(){
+            _thing.set(["--asdklfjlkd"]);
+        });
+        assert.strictEqual(_thing.valid, false);
+        assert.strictEqual(_thing._errors.length, 1);                    
+    });
+                    
+    it("get(property) should return undefined on unregistered property", function(){
+        assert.strictEqual(_thing.get("yeah", "test"), undefined);
+    });
+    
+    it("set(propertiesArray) should not alter propertiesArray itself", function(){
+        var args = [ "--one", 1, "--two", 2, "--three", 3 ];
+        _thing
+            .define({ name: "one", type: "number", default: -1 })
+            .define({ name: "two", type: "number", default: -2 })
+            .define({ name: "three", type: "number", default: -3 });
+        
+        assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
+        _thing.set(args);
+        assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
     });
 });
