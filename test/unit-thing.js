@@ -527,15 +527,14 @@ describe("Thing API", function(){
 
 describe("Error handling", function(){
     it("define(definition) should not throw on duplicate property", function(){
-        _thing.define({ name: "yeah" });
+        _thing.define({ name: "yeah", type: "string" });
     
         assert.doesNotThrow(function(){
-            _thing.define({ name: "yeah", });
+            _thing.define({ name: "yeah", type: "boolean" });
         });
+        assert.strictEqual(_thing.definition("yeah").type, "boolean");
     });
     it("define(definition) should throw on duplicate alias", function(){
-        _thing.define({ name: "one", alias: "o" });
-        _thing.define({ name: "two", alias: "d" });
         _thing.define({ name: "three", alias: "t" });
     
         assert.throws(function(){
