@@ -1,5 +1,5 @@
 var assert = require("assert"),
-    Definition = require("../lib/propertyDefinition");
+    Definition = require("../lib/PropertyDefinition");
 
 describe("PropertyDefinition", function(){
     describe("properties: ", function(){

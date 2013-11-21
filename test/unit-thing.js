@@ -1,7 +1,7 @@
 var assert = require("assert"),
     _ = require("underscore"),
-    Thing = require("../lib/thing"),
-    PropertyDefinition = require("../lib/propertyDefinition");
+    Thing = require("../lib/Thing"),
+    PropertyDefinition = require("../lib/PropertyDefinition");
 
 it("should toArray()");
 it("should list defined properties");
