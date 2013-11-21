@@ -49,7 +49,7 @@ API Documentation
 =================
 #PropertyDefinition
 
-Enforces strict type and value checking on config properties
+Enforces strict type and value checking on thing properties
 
 ##Properties
 
@@ -65,12 +65,12 @@ Gets/sets the property value. Will attempt to convert values to Number for defin
 
 ####Example
 
-    config.define({ name: "name", type: "string" });
-    config.define({ name: "created", type: Date });
-    config.define({ name: "onComplete", type: "function" });
-    config.define({ name: "data", type: JobData });
-    config.define({ name: "properties", type: Object });
-    config.define({ name: "files", type: Array });
+    thing.define({ name: "name", type: "string" });
+    thing.define({ name: "created", type: Date });
+    thing.define({ name: "onComplete", type: "function" });
+    thing.define({ name: "data", type: JobData });
+    thing.define({ name: "properties", type: Object });
+    thing.define({ name: "files", type: Array });
 
 ###valueTest
 
@@ -81,9 +81,9 @@ must return true for all to be valid.
 
 ####Example
 
-    config.define({ name: "name", type: "string", valueTest: /\w{3}/ })
-    config.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
-    config.define({
+    thing.define({ name: "name", type: "string", valueTest: /\w{3}/ })
+    thing.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
+    thing.define({
         name: "colours",
         type: Array,
         valueTest: [
@@ -126,7 +126,7 @@ Thing instance will remain invalid until a value is set
 
 ###defaultOption
 
-if unnamed values are passed to config.set(), set them AS AN ARRAY on this property
+if unnamed values are passed to thing.set(), set them AS AN ARRAY on this property
 
 **type**: Boolean
 
@@ -164,7 +164,7 @@ To define Things, first load the class
 
     var Thing = require("nature").Thing;
 
-get an instance and start [defining](/classes/Thing.html#method_define)
+get an instance and start defining
 
     var youngLad = new Thing()
         .define({ name: "firstname" });
@@ -172,7 +172,7 @@ get an instance and start [defining](/classes/Thing.html#method_define)
     youngLad.firstname = "Geoff";
     youngLad.car = "Clio"; // Ignored, `car` is not yet defined and Thing instances are sealed (object non-extensible, properties non-configurable).
 
-Add [type](/classes/PropertyDefinition.html#property_type) checking
+Add type checking
 
     // additional calls to define() redefine an existing property, or add new property definitions.
     youngLad.define({ name: "firstname", type: "string" })
@@ -182,14 +182,14 @@ Add [type](/classes/PropertyDefinition.html#property_type) checking
     youngLad.DOB = dob; // valid, `dob` is an instance of `Date`
     youngLad.firstname = dob; // invalid, `typeof dob` is not `"string"`
 
-Add [value testing](/classes/PropertyDefinition.html#property_valueTest)
+Add value testing
 
     youngLad.define({ name: "gender", type: "string", valueTest: /^(male|female)$/ });
 
     youngLad.gender = "man"; // invalid
     youngLad.gender = "male"; // valid
 
-[Value tests](/classes/PropertyDefinition.html#property_valueTest) can be a function
+Value tests can be a function
 
     function oldEnough(age){ return age >= 11; }
     youngLad.define({ name: "age", type: "number", valueTest: oldEnough });
@@ -228,7 +228,7 @@ Mix and match..
 
 Load data in bulk
 
-    youngLad.load({
+    youngLad.set({
         firstname: "Paul",
         age: 19,
         style: "understated class with a grassroot drizzle",
@@ -237,9 +237,9 @@ Load data in bulk
 
 Besides object literals you can load from the command line, environment or file
 
-    youngLad.load(process.argv);
-    youngLad.load(process.env);
-    youngLad.load("./profile.json");
+    youngLad.set(process.argv);
+    youngLad.set(process.env);
+    youngLad.set("./profile.json");
 
 Other ways of retrieving values
 
@@ -256,13 +256,15 @@ Other ways of retrieving values
 
 **type**: Boolean
 
-###errors
+###validationMessages
+
+An array containing a list of invalid properties
 
 **type**: Array
 
 ###properties
 
-a list of defined Options
+A annoy of defined properties
 
 **type**: Array
 
@@ -275,10 +277,10 @@ Define an property
 **Chainable**: true
 
 **Params**:  
-*   groups _String|Array_
+*   groups _String | Array_
 
     The group or groups to add the new property definition to
-*   definitions _Object|PropertyDefinition|Array_
+*   definitions _Object | PropertyDefinition | Array_
 
     The new property definitions
 
@@ -292,14 +294,14 @@ Define an property
             { name: "wheels", type: "number" }
         ]);
 
-###getDefinition
+###definition
 
 **Returns**: __ - Object
 
 **Params**:  
 *   propertyName _String_
 
-    full name or alias
+    Full name or alias
 
 
 ###set
@@ -319,7 +321,7 @@ Set a value on the specified property
 
 ###group
 
-Groups an property.
+Groups a property
 
 **Chainable**: true
 
@@ -343,12 +345,12 @@ Groups an property.
 
 ####Example
 
-    config.ungroup("video");
-    config.ungroup("video", ["stereo", "channels"]);
+    thing.ungroup("video");
+    thing.ungroup("video", ["stereo", "channels"]);
 
 ###where
 
-returns a new config instance containing a subset of the properties
+returns a new thing instance containing a subset of the properties
 
 **Returns**: __ - Thing
 
@@ -364,6 +366,12 @@ Returns the set properties as an array suitable for passing to say, Child_Proces
 
 **Returns**: __ - Array
 
+**Params**:  
+*   quote _Boolean_
+
+    Set to true to wrap the properties values in double quotes
+
+
 ###unset
 
 **Params**:  
@@ -374,36 +382,36 @@ Returns the set properties as an array suitable for passing to say, Child_Proces
 
 ###get
 
-**Returns**: _Any_ - Option Value
+**Returns**: _Any_ - Property Value
 
 **Params**:  
 *   property _String_
 
-    Option name
+    Property name
 
 
 ###toJSON
 
-**Returns**: _Object_ - Containing Option/value pairs
+**Returns**: _Object_ - Containing property/value pairs
 
 ###mixIn
 
-Mix in properties from another config instance
+Mix in properties from another thing instance
 
 **Chainable**: true
 
 **Params**:  
-*   config _Thing_
+*   thing _Thing_
 
-    The config instance to mix in
-*   groups _String|Array_
+    The thing instance to mix in
+*   groups _String | Array_
 
     The group or groups to put the added properties in
 
 
 ###clone
 
-Returns a copy of the config instance
+Returns a copy of the thing instance
 
 **Returns**: __ - Thing
 
@@ -415,14 +423,14 @@ true if at least one of the values is set.
 **Returns**: __ - Boolean
 
 **Params**:  
-*   properties _Array|String_
+*   properties _Array | String_
 
     A single, or array of property names
 
 ####Example
 
-    config.hasValue("verbose");
-    config.hasValue([ "verbose", "debug" ]);
+    thing.hasValue("verbose");
+    thing.hasValue([ "verbose", "debug" ]);
 
 #nature
 
