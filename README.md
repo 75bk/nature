@@ -1,6 +1,7 @@
-***library under construction***
-
 [![NPM version](https://badge.fury.io/js/nature.png)](http://badge.fury.io/js/nature)
+[![Dependency Status](https://david-dm.org/75lb/nature.png)](https://david-dm.org/75lb/nature)
+![Analytics](https://ga-beacon.appspot.com/UA-27725889-9/nature/README.md?pixel)
+***library under construction***
 
 Nature
 ======
@@ -483,9 +484,4 @@ See the Thing docs for more detail..
 
 **type**: PropertyDefinition
 
-
-
-[![NPM](https://nodei.co/npm-dl/nature.png?months=1)](https://nodei.co/npm/nature/)
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/c5ed60ded97e6bf11b24cf4d3c41fe97 "githalytics.com")](http://githalytics.com/75lb/nature)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/75lb/nature/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![NPM](https://nodei.co/npm-dl/nature.png?months=3)](https://nodei.co/npm/nature/)
