@@ -19,6 +19,7 @@ it("needs consistent error handling.. some errors emit, some throw (like 'rename
 it("should valueTest run on get, so function can refer to other set values in this.config? e.g. if (this.config.regex) then ...");
 it("a 'post-set' hook, so setting '**/*.txt' on 'files' can be expanded");
 it("scrap constructor to remove need for Thing.call(this)");
+it("should emit 'invalid' when thing changes from valid to invalid");
 
 var _thing;
 beforeEach(function(){
