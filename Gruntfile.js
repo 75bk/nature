@@ -1,26 +1,25 @@
 var yuidoc2md = require("yuidoc2md");
 
+var docs = yuidoc2md.getMarkdown("lib/nature.js") + yuidoc2md.getMarkdown("lib/Thing.js") + yuidoc2md.getMarkdown("lib/PropertyDefinition.js");
+
 module.exports = function(grunt){
     grunt.initConfig({
         boil: {
             readme: {
                 options: {
-                    templateData: {
-                        APIdocs: yuidoc2md.getMarkdown([
-                            "lib/nature.js",
-                            "lib/Thing.js",
-                            "lib/PropertyDefinition.js"
-                        ])
-                    }
+                    data: { APIdocs: docs }
                 },
-                create: { 
-                    name: "README.md",
-                    content: grunt.file.read("tasks/boil/readme.hbs")
-                }
+                src: "boil/README.hbs",
+                dest: "README.md"
             }
+        },
+        jshint: {
+            options: { jshintrc: true },
+            all: ['Gruntfile.js', 'lib/*.js', 'test/*.js']
         }
     });
-    
-    grunt.loadNpmTasks("grunt-boil");    
+
+    grunt.loadNpmTasks("grunt-boil");
+    grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.registerTask("default", "boil");
 };

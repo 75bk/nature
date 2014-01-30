@@ -50,100 +50,56 @@ $ CAR_MAKE=Vauxhall CAR_MODEL=Astra node outdoors.js --name Alfie --age 11 --lit
 
 API Documentation
 =================
-#PropertyDefinition
+#nature
 
-Enforces strict type and value checking on thing properties
+Nature, a library to help classify the things (models) in your world (app). Take charge of Nature, design Things that do stuff.
+
+* Things can be instantiated with data directly from the command line, environment, an object literal or file.
+* Once classified, Things can be re-used across your apps
+* Removes all input validation code from your app
+
+Synopsis
+
+Enables you to write API methods like: (`YoungMan` and `FlammableCar` are derivitives of `Thing`)
+
+    exports.burnCar = function(arsonist){
+        var youngMan = new YoungMan(arsonist);
+        if (!youngMan.valid){
+            throw new Error(youngMan.validationMessages.join("\n"));
+            // throws:
+            // The arsonist supplied must be a young man.
+            // Invalid age 29: Must be between 11 and 19.
+            // Over 5 litres Gasoline required
+            // Less compassion necessary.
+        } else {
+            var car = new FlammableCar(process.env);
+            if (car.valid){
+                // the Vauxhall Astra supplied in the environment is indeed flammable
+                youngMan.igniteCar(astra);
+            }
+        }
+    }
+
+Client code for the above is straight forward:
+
+    var outdoors = require("outdoor-activity");
+    outdoors.burnCar(process.argv);
+
+Then a simple command executes the outdoor activity:
+
+    $ CAR_MAKE=Vauxhall CAR_MODEL=Astra node outdoors.js --name Alfie --age 11 --litres 13 --compassion unknown
+
+See the Thing docs for more detail..
 
 ##Properties
 
-###value
+###Thing
 
-Gets/sets the property value. Will attempt to convert values to Number for definitions of `type` "number".
+**type**: Thing
 
-**type**: Any
+###PropertyDefinition
 
-###type
-
-**type**: String | Function
-
-####Example
-
-    thing.define({ name: "name", type: "string" });
-    thing.define({ name: "created", type: Date });
-    thing.define({ name: "onComplete", type: "function" });
-    thing.define({ name: "data", type: JobData });
-    thing.define({ name: "properties", type: Object });
-    thing.define({ name: "files", type: Array });
-
-###valueTest
-
-A regular expression, function or Array containing one or more of each. A value
-must return true for all to be valid.
-
-**type**: Regexp | Function | Array
-
-####Example
-
-    thing.define({ name: "name", type: "string", valueTest: /\w{3}/ })
-    thing.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
-    thing.define({
-        name: "colours",
-        type: Array,
-        valueTest: [
-            /red/,
-            function(colours){
-                return colours.length > 0;
-            }
-        ]
-    });
-
-###valid
-
-**type**: Boolean
-
-###default
-
-The default value to set on instantiation
-
-**type**: Any
-
-###validationMessages
-
-**type**: Array
-
-###groups
-
-tags
-
-**type**: Array
-
-###name
-
-**type**: string
-
-###required
-
-Thing instance will remain invalid until a value is set
-
-**type**: Boolean
-
-###defaultOption
-
-if unnamed values are passed to thing.set(), set them AS AN ARRAY on this property
-
-**type**: Boolean
-
-###alias
-
-**type**: string
-
-###typeFailMsg
-
-**type**: string
-
-###valueFailMsg
-
-**type**: string
+**type**: PropertyDefinition
 
 #Thing
 
@@ -435,55 +391,101 @@ true if at least one of the values is set.
     thing.hasValue("verbose");
     thing.hasValue([ "verbose", "debug" ]);
 
-#nature
+#PropertyDefinition
 
-Nature, a library to help classify the things (models) in your world (app). Take charge of Nature, design Things that do stuff.
-
-* Things can be instantiated with data directly from the command line, environment, an object literal or file.
-* Once classified, Things can be re-used across your apps
-* Removes all input validation code from your app
-
-Synopsis
-
-Enables you to write API methods like: (`YoungMan` and `FlammableCar` are derivitives of `Thing`)
-
-    exports.burnCar = function(arsonist){
-        var youngMan = new YoungMan(arsonist);
-        if (!youngMan.valid){
-            throw new Error(youngMan.validationMessages.join("\n"));
-            // throws:
-            // The arsonist supplied must be a young man.
-            // Invalid age 29: Must be between 11 and 19.
-            // Over 5 litres Gasoline required
-            // Less compassion necessary.
-        } else {
-            var car = new FlammableCar(process.env);
-            if (car.valid){
-                // the Vauxhall Astra supplied in the environment is indeed flammable
-                youngMan.igniteCar(astra);
-            }
-        }
-    }
-
-Client code for the above is straight forward:
-
-    var outdoors = require("outdoor-activity");
-    outdoors.burnCar(process.argv);
-
-Then a simple command executes the outdoor activity:
-
-    $ CAR_MAKE=Vauxhall CAR_MODEL=Astra node outdoors.js --name Alfie --age 11 --litres 13 --compassion unknown
-
-See the Thing docs for more detail..
+Enforces strict type and value checking on thing properties
 
 ##Properties
 
-###Thing
+###value
 
-**type**: Thing
+Gets/sets the property value. Will attempt to convert values to Number for definitions of `type` "number".
 
-###PropertyDefinition
+**type**: Any
 
-**type**: PropertyDefinition
+###type
+
+**type**: String | Function
+
+####Example
+
+    thing.define({ name: "name", type: "string" });
+    thing.define({ name: "created", type: Date });
+    thing.define({ name: "onComplete", type: "function" });
+    thing.define({ name: "data", type: JobData });
+    thing.define({ name: "properties", type: Object });
+    thing.define({ name: "files", type: Array });
+
+###valueTest
+
+A regular expression, function or Array containing one or more of each. A value
+must return true for all to be valid.
+
+**type**: Regexp | Function | Array
+
+####Example
+
+    thing.define({ name: "name", type: "string", valueTest: /\w{3}/ })
+    thing.define({ name: "age", type: "number", valueTest: function(value){ return value > 16; } })
+    thing.define({
+        name: "colours",
+        type: Array,
+        valueTest: [
+            /red/,
+            function(colours){
+                return colours.length > 0;
+            }
+        ]
+    });
+
+###valid
+
+**type**: Boolean
+
+###default
+
+The default value to set on instantiation
+
+**type**: Any
+
+###validationMessages
+
+**type**: Array
+
+###groups
+
+tags
+
+**type**: Array
+
+###name
+
+**type**: string
+
+###required
+
+Thing instance will remain invalid until a value is set
+
+**type**: Boolean
+
+###defaultOption
+
+if unnamed values are passed to thing.set(), set them AS AN ARRAY on this property
+
+**type**: Boolean
+
+###alias
+
+**type**: string
+
+###typeFailMsg
+
+**type**: string
+
+###valueFailMsg
+
+**type**: string
+
+
 
 [![NPM](https://nodei.co/npm-dl/nature.png?months=3)](https://nodei.co/npm/nature/)
