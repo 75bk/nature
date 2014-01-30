@@ -1,7 +1,9 @@
 "use strict";
 var assert = require("assert"),
     Definition = require("../lib/PropertyDefinition"),
-    def = null;
+    def = null,
+    l = console.log,
+    ld = function(def){l(JSON.stringify(def, null, "\t"));};
 
 var CustomClass = function(){};
 
@@ -50,8 +52,7 @@ function factory(name){
 describe("PropertyDefinition", function(){
     describe("properties: ", function(){
         it("access to `this.config` in a `valid` function must fail if config is not set");
-
-        it("should be ok to have an option with no defined type");
+        it("should be ok to have an definition with no defined type");
         it("type: [Array, Function] should allow a type of either");
 
         describe(".valid", function(){
@@ -60,7 +61,7 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.valid, true);
             });
 
-            it("valid when value matches type`", function(){
+            it("valid when value matches type", function(){
                 def = factory("string");
                 def.value = 123;
                 assert.strictEqual(def.valid, false);
@@ -159,7 +160,6 @@ describe("PropertyDefinition", function(){
                 assert.ok(def.value[0] instanceof Date);
 
                 def = factory("custom");
-                assert.strictEqual(def.valid, true);
                 def.value = 123;
                 assert.strictEqual(def.valid, false);
                 def.value = [];
@@ -170,7 +170,6 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.valid, true);
 
                 def = factory("date");
-                assert.strictEqual(def.valid, true);
                 def.value = new Date();
                 assert.strictEqual(def.valid, true);
             });
@@ -180,7 +179,7 @@ describe("PropertyDefinition", function(){
                 required means 'value should be truthy'
                 */
                 def = factory("string");
-                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.valid, true, JSON.stringify(def));
                 def.required = true;
                 assert.strictEqual(def.valid, false);
                 def.value = "";
@@ -201,6 +200,11 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.valid, true);
                 def.required = true;
                 assert.strictEqual(def.valid, false);
+
+                def = factory("custom");
+                assert.strictEqual(def.valid, true);
+                def.required = true;
+                assert.strictEqual(def.valid, false);
             });
 
             it("valid with RegExp .valueTest", function(){
@@ -211,8 +215,6 @@ describe("PropertyDefinition", function(){
                 def.valueTest = /test/;
                 assert.strictEqual(def.valid, false);
                 def.required = true;
-                assert.strictEqual(def.valid, false);
-                def.required = false;
                 assert.strictEqual(def.valid, false);
                 def.value = "test";
                 assert.strictEqual(def.valid, true);
@@ -286,7 +288,7 @@ describe("PropertyDefinition", function(){
         });
 
         describe(".validationMessages", function(){
-            it("with no fail message", function(){
+            it("with no .invalidMsg", function(){
                 def = factory("string");
                 def.value = "ok";
                 assert.strictEqual(def.validationMessages.length, 0);
