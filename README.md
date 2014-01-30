@@ -311,13 +311,20 @@ Groups a property
 
 returns a new thing instance containing a subset of the properties
 
-**Returns**: __ - Thing
+**Returns**: _Thing_ - A new Thing instance with the filters applied
 
 **Params**:  
-*   Object __
+*   filterOptions _Object_
 
-    filterOptions
+    Mongo style query
 
+####Example
+ 
+    var excludeProperties = thing.where({
+        name: { $ne: ["preset-list", "help", "scan", "title" ] }
+    });
+
+    var certainGroup = thing.where({ group: "handbrake" });
 
 ###toArray
 

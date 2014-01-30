@@ -1,6 +1,38 @@
 var assert = require("assert"),
     Definition = require("../lib/PropertyDefinition");
 
+var CustomClass = function(){};
+
+function factory(name){
+    var definitions = {
+        name:   { name: "one" }),
+        string: { name: "one", type: "string" }),
+        number: { name: "one", type: "number" }),
+        bool:   { name: "one", type: "boolean" },
+        func:   { name: "one", type: "function" },
+        obj:    { name: "one", type: "object" },
+        array:  { name: "one", type: Array }),
+        custom: { name: "one", type: CustomClass }),
+        date:   { name: "one", type: Date }),
+        
+        { name: "one", type: "number", default: 4, valueTest: smallNumber });
+        { name: "one", type: Array, default: [0,4,6], valueTest: smallArray });
+        { name: "one", type: "number", required: true, default: 1 });
+        { name: "one", type: Array, required: true, valueTest: function(files){
+        { name: "one",  type: Array,  valueTest: validArray,  valueFailMsg: "every value must be over 10" });
+        { name: "one", type: RegExp, value: "\\w{4}" });
+        { name: "one", type: "string", value: "ok" });
+        { name: "one", type: "number", value: "not ok" });
+        { name: "one", type: RegExp, value: /ok/ });
+        { name: "one", type: RegExp, typeFail: "pass a regex", value: "ok" });
+        { name: "one", type: RegExp, typeFail: "pass a regex", value: "+++" });
+        { name: "relative", type: "string", value: "dog", valueTest: /^(dad|sister|brother|mother)$/, valueFail: "invalid relative" });
+        { name: "family", type: Array, value: ["dad", "sister", "dog"], valueTest: /(dad|sister|brother|mother)/ });
+        { name: "family", type: Array, value: ["dad", "sister", "dog"], valueTest: function(family){ return family.every(function(member){ return /^(dad|sister|brother|mother)$/.test(member); }); }, valueFail: "every member must be valid" });
+        {name: "one", type: "number", valueTest: validTest, valueFailMsg: "must supply a value over 10" });    };
+    return new Definition(definitions[name]);
+}
+
 describe("PropertyDefinition", function(){
     describe("properties: ", function(){
         it("access to `this.config` in a `valid` function must fail if config is not set");
@@ -8,31 +40,250 @@ describe("PropertyDefinition", function(){
         it("should be ok to have an option with no defined type");
         it("type: [Array, Function] should allow a type of either");
         
-        describe("validation", function(){
-            it("type validation summary", function(){
-                var def = new Definition({ name: "one", type: "string", value: "ok" });
+        describe(".valid", function(){
+            it("valid if no type specified", function(){
+                var def = factory("name");
                 assert.strictEqual(def.valid, true);
-                assert.strictEqual(def.validationMessages.length, 0);
-                
-                def = new Definition({ name: "one", type: "number", value: "not ok" });
-                assert.strictEqual(def.valid, false);
-                assert.strictEqual(def.validationMessages.length, 1);
+            });
 
-                def = new Definition({ name: "one", type: RegExp, value: /ok/ });
-                assert.strictEqual(def.valid, true);
-                assert.strictEqual(def.validationMessages.length, 0);
-                
-                // "ok" parses by RegExp
-                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "ok" });
-                assert.strictEqual(def.valid, true);
-                assert.strictEqual(def.validationMessages.length, 0);
-
-                // "+++" does not parse by RegExp
-                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "+++" });
+            it("valid when value matches type`", function(){
+                var def = factory("string");
+                def.value = 123;
                 assert.strictEqual(def.valid, false);
-                assert.strictEqual(def.validationMessages.length, 1);
+                def.value = true;
+                assert.strictEqual(def.valid, false);
+                def.value = "test";
+                assert.strictEqual(def.valid, true);
+                def.value = function(){};
+                assert.strictEqual(def.valid, false);
+                def.value = {};
+                assert.strictEqual(def.valid, false);
+                def.value = [];
+                assert.strictEqual(def.valid, false);
+    
+                def = factory("number");
+                def.value = 123;
+                assert.strictEqual(def.valid, true);
+                def.value = true;
+                assert.strictEqual(def.valid, false);
+                def.value = "test";
+                assert.strictEqual(def.valid, false);
+                def.value = "123";
+                assert.strictEqual(def.valid, true); // numeric string gets typecast to Number
+                def.value = function(){};
+                assert.strictEqual(def.valid, false);
+                def.value = {};
+                assert.strictEqual(def.valid, false);
+                def.value = [];
+                assert.strictEqual(def.valid, false);
+
+                def = factory("boolean");
+                def.value = 123;
+                assert.strictEqual(def.valid, false);
+                def.value = true;
+                assert.strictEqual(def.valid, true);
+                def.value = "test";
+                assert.strictEqual(def.valid, false);
+                def.value = "123";
+                assert.strictEqual(def.valid, false);
+                def.value = function(){};
+                assert.strictEqual(def.valid, false);
+                def.value = {};
+                assert.strictEqual(def.valid, false);
+                def.value = [];
+                assert.strictEqual(def.valid, false);
+
+                def = factory("function");
+                def.value = 123;
+                assert.strictEqual(def.valid, false);
+                def.value = true;
+                assert.strictEqual(def.valid, false);
+                def.value = "test";
+                assert.strictEqual(def.valid, false);
+                def.value = "123";
+                assert.strictEqual(def.valid, false);
+                def.value = function(){};
+                assert.strictEqual(def.valid, true);
+                def.value = {};
+                assert.strictEqual(def.valid, false);
+                def.value = [];
+                assert.strictEqual(def.valid, false);
+    
+                def = factory("object");
+                def.value = 123;
+                assert.strictEqual(def.valid, false);
+                def.value = true;
+                assert.strictEqual(def.valid, false);
+                def.value = "test";
+                assert.strictEqual(def.valid, false);
+                def.value = "123";
+                assert.strictEqual(def.valid, false);
+                def.value = function(){};
+                assert.strictEqual(def.valid, false);
+                def.value = {};
+                assert.strictEqual(def.valid, true);
+                def.value = [];
+                assert.strictEqual(def.valid, true);
+            });
+
+            it("valid when value instanceof type", function(){
+                var def = factory("array");
+                def.value = 123;
+                assert.strictEqual(def.valid, true); // converted to Array
+                assert.deepEqual(def.value, [ 123 ]);
+                def.value = [];
+                assert.strictEqual(def.valid, true);
+                assert.deepEqual(def.value, [ ]);
+                def.value = {};
+                assert.strictEqual(def.valid, true);
+                assert.deepEqual(def.value, [ {} ]);
+                def.value = "a string";
+                assert.strictEqual(def.valid, true); // converted to Array
+                assert.deepEqual(def.value, [ "a string" ]);
+                def.value = new Date();
+                assert.strictEqual(def.valid, true); // converted to Array
+                assert.ok(def.value[0] instanceof Date);
+
+                var def = factory("custom");
+                assert.strictEqual(def.valid, true);
+                def.value = 123;
+                assert.strictEqual(def.valid, false);
+                def.value = [];
+                assert.strictEqual(def.valid, false);
+                def.value = {};
+                assert.strictEqual(def.valid, false);
+                def.value = new CustomClass();
+                assert.strictEqual(def.valid, true);
+
+                var def = factory("date");
+                assert.strictEqual(def.valid, true);
+                def.value = new Date();
+                assert.strictEqual(def.valid, true);
+            });
+    
+            it("valid with .required", function(){
+                /*
+                required means 'value should be truthy'
+                */
+                var def = factory("string");
+                assert.strictEqual(def.valid, true);
+                def.required = true;
+                assert.strictEqual(def.valid, false);
+                def.value = "";
+                assert.strictEqual(def.valid, false);
+                def.value = " ";
+                assert.strictEqual(def.valid, true);
+
+                def = factory("number");
+                assert.strictEqual(def.valid, true);
+                def.required = true;
+                assert.strictEqual(def.valid, false);
+                def.value = 0;
+                assert.strictEqual(def.valid, false);
+                def.value = 1;
+                assert.strictEqual(def.valid, true);
+            
+                def = factory("array");
+                assert.strictEqual(def.valid, true);
+                def.required = true;
+                assert.strictEqual(def.valid, false);
             });
             
+            it("valid with RegExp .valueTest", function(){
+                /*
+                any definition with a valueTest should always be tested. Required is implied.
+                */
+                def = factory("string");
+                def.valueTest = /test/;
+                assert.strictEqual(def.valid, false);
+                def.required = true;
+                assert.strictEqual(def.valid, false);
+                def.required = false;
+                assert.strictEqual(def.valid, false);
+                def.value = "test";
+                assert.strictEqual(def.valid, true);
+                def.valueTest = /tast/;
+                assert.strictEqual(def.valid, false);            
+            });
+
+            it("valid with primitive .valueTest", function(){
+                def = factory("bool");
+                def.valueTest = false;
+                def.value = false;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = /true/;
+                assert.strictEqual(def.valid, false);
+                def.valueTest = "false";
+                assert.strictEqual(def.valid, false);
+
+                def = factory("number");
+                def.valueTest = 5;
+                def.value = 5;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = 4;
+                assert.strictEqual(def.valid, false);
+                def.valueTest = "5";
+                assert.strictEqual(def.valid, false);
+            });
+    
+            it("valid with function .validTest", function(){
+                function smallNumber(value) {
+                    return value < 10;
+                }
+                var def = new Definition({ name: "one", type: "number", default: 4, valueTest: smallNumber });
+                assert.strictEqual(def.valid, true);
+                def.value = 11;
+                assert.strictEqual(def.valid, false);
+
+                function smallArray(a){
+                    return a.length < 10;
+                }
+                def = new Definition({ name: "one", type: Array, default: [0,4,6], valueTest: smallArray });
+                assert.strictEqual(def.valid, true);
+                def.value = [1,2,3,4,5,6,7,5,4,3,2,1,0];
+                assert.strictEqual(def.valid, false);
+            });
+    
+            it("`valid` should accept and test an array of functions");
+
+            it("`valid` should return false if option `required` with no value set", function(){
+                var def = new Definition({ name: "one", type: "number", required: true });
+                assert.strictEqual(def.valid, false);
+        
+                def = new Definition({ name: "one", type: "number", required: true, default: 1 });
+                assert.strictEqual(def.valid, true);
+            });
+            
+            describe("bad usage", function(){
+                it("`valid` should return `false` if `valueTest` function threw", function(){
+                    var def = new Definition({ name: "one", type: Array, required: true, valueTest: function(files){
+                        throw new Error("error");
+                    }});
+                
+                    def.value = ["test"];
+                    assert.strictEqual(def.valid, false);
+                });
+            });
+        });
+        
+        describe(".validationMessages", function(){
+            it("custom invalid msg with type `Array`", function(){
+                function validArray(values){
+                    return values.every(function(val){
+                        return val > 10;
+                    });
+                }
+                var def = new Definition({ name: "one",  type: Array,  valueTest: validArray,  valueFailMsg: "every value must be over 10" });
+            
+                def.value = [1];
+                assert.deepEqual(def.validationMessages, ["every value must be over 10"]);
+
+                def.value = [11];
+                assert.deepEqual(def.validationMessages, []);
+            });
+        });
+        
+        describe(".value", function(){
             it("a number string should typecast to a Number type automatically", function(){
                var def = new Definition({ name: "one", type: "number" }) ;
            
@@ -85,40 +336,45 @@ describe("PropertyDefinition", function(){
                 assert.ok(def.value instanceof RegExp, def.value);
                 assert.deepEqual(def.value, /\w{4}/);
             });
+        });
+        
+        describe("validation", function(){
+            it("type validation summary", function(){
+                var def = new Definition({ name: "one", type: "string", value: "ok" });
+                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.validationMessages.length, 0);
+                
+                def = new Definition({ name: "one", type: "number", value: "not ok" });
+                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.validationMessages.length, 1);
+
+                def = new Definition({ name: "one", type: RegExp, value: /ok/ });
+                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.validationMessages.length, 0);
+                
+                // "ok" parses by RegExp
+                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "ok" });
+                assert.strictEqual(def.valid, true);
+                assert.strictEqual(def.validationMessages.length, 0);
+
+                // "+++" does not parse by RegExp
+                def = new Definition({ name: "one", type: RegExp, typeFail: "pass a regex", value: "+++" });
+                assert.strictEqual(def.valid, false);
+                assert.strictEqual(def.validationMessages.length, 1);
+            });
             
             it("value validation summary", function(){
-                var def = new Definition({ 
-                    name: "relative", 
-                    type: "string", 
-                    value: "dog", 
-                    valueTest: /^(dad|sister|brother|mother)$/,
-                    valueFail: "invalid relative"
-                });
+                var def = new Definition({ name: "relative", type: "string", value: "dog", valueTest: /^(dad|sister|brother|mother)$/, valueFail: "invalid relative" });
                 assert.strictEqual(def.valid, false);
                 assert.strictEqual(def.validationMessages.length, 1);
                 def.value = "dad";
                 assert.strictEqual(def.valid, true);
                 assert.strictEqual(def.validationMessages.length, 0);
 
-                def = new Definition({
-                    name: "family", 
-                    type: Array, 
-                    value: ["dad", "sister", "dog"],
-                    valueTest: /(dad|sister|brother|mother)/
-                });
+                def = new Definition({ name: "family", type: Array, value: ["dad", "sister", "dog"], valueTest: /(dad|sister|brother|mother)/ });
                 assert.strictEqual(def.valid, true);
 
-                def = new Definition({
-                    name: "family", 
-                    type: Array, 
-                    value: ["dad", "sister", "dog"], 
-                    valueTest: function(family){
-                        return family.every(function(member){
-                            return /^(dad|sister|brother|mother)$/.test(member);
-                        });
-                    },
-                    valueFail: "every member must be valid"
-                });
+                def = new Definition({ name: "family", type: Array, value: ["dad", "sister", "dog"], valueTest: function(family){ return family.every(function(member){ return /^(dad|sister|brother|mother)$/.test(member); }); }, valueFail: "every member must be valid" });
                 assert.strictEqual(def.valid, false);
                 assert.strictEqual(def.validationMessages.length, 1);
 
@@ -143,210 +399,6 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.validationMessages.length, 2);
             });
             
-            it("`valid` should return true if no type specified", function(){
-                var def = new Definition({ name: "one" });
-                assert.strictEqual(def.valid, true);
-            });
-    
-            it("`valid` should return true when `typeof value === type`", function(){
-                var def = new Definition({ name: "one", type: "string" });
-                assert.strictEqual(def.valid, true);
-                def.value = 123;
-                assert.strictEqual(def.valid, false);
-                def.value = true;
-                assert.strictEqual(def.valid, false);
-                def.value = "test";
-                assert.strictEqual(def.valid, true);
-                def.value = function(){};
-                assert.strictEqual(def.valid, false);
-                def.value = {};
-                assert.strictEqual(def.valid, false);
-                def.value = [];
-                assert.strictEqual(def.valid, false);
-        
-                def = new Definition({name: "one", type: "number"});
-                assert.strictEqual(def.valid, true);
-                def.value = 123;
-                assert.strictEqual(def.valid, true);
-                def.value = true;
-                assert.strictEqual(def.valid, false);
-                def.value = "test";
-                assert.strictEqual(def.valid, false);
-                def.value = "123";
-                assert.strictEqual(def.valid, true); // numeric string gets typecast to Number
-                def.value = function(){};
-                assert.strictEqual(def.valid, false);
-                def.value = {};
-                assert.strictEqual(def.valid, false);
-                def.value = [];
-                assert.strictEqual(def.valid, false);
-
-                def = new Definition({name: "one", type: "boolean"});
-                assert.strictEqual(def.valid, true);
-                def.value = 123;
-                assert.strictEqual(def.valid, false);
-                def.value = true;
-                assert.strictEqual(def.valid, true);
-                def.value = "test";
-                assert.strictEqual(def.valid, false);
-                def.value = "123";
-                assert.strictEqual(def.valid, false);
-                def.value = function(){};
-                assert.strictEqual(def.valid, false);
-                def.value = {};
-                assert.strictEqual(def.valid, false);
-                def.value = [];
-                assert.strictEqual(def.valid, false);
-
-                def = new Definition({name: "one", type: "function"});
-                assert.strictEqual(def.valid, true);
-                def.value = 123;
-                assert.strictEqual(def.valid, false);
-                def.value = true;
-                assert.strictEqual(def.valid, false);
-                def.value = "test";
-                assert.strictEqual(def.valid, false);
-                def.value = "123";
-                assert.strictEqual(def.valid, false);
-                def.value = function(){};
-                assert.strictEqual(def.valid, true);
-                def.value = {};
-                assert.strictEqual(def.valid, false);
-                def.value = [];
-                assert.strictEqual(def.valid, false);
-        
-                def = new Definition({name: "one", type: "object"});
-                assert.strictEqual(def.valid, true);
-                def.value = 123;
-                assert.strictEqual(def.valid, false);
-                def.value = true;
-                assert.strictEqual(def.valid, false);
-                def.value = "test";
-                assert.strictEqual(def.valid, false);
-                def.value = "123";
-                assert.strictEqual(def.valid, false);
-                def.value = function(){};
-                assert.strictEqual(def.valid, false);
-                def.value = {};
-                assert.strictEqual(def.valid, true);
-                def.value = [];
-                assert.strictEqual(def.valid, true);
-            });
-    
-            it("`valid` should return true if `value instanceof type`", function(){
-                var def = new Definition({ name: "one", type: Array });
-                assert.strictEqual(def.valid, true);
-                def.value = 123;
-                assert.strictEqual(def.valid, true); // converted to Array
-                assert.deepEqual(def.value, [ 123 ]);
-                def.value = [];
-                assert.strictEqual(def.valid, true);
-                assert.deepEqual(def.value, [ ]);
-                def.value = {};
-                assert.strictEqual(def.valid, true);
-                assert.deepEqual(def.value, [ {} ]);
-                def.value = "a string";
-                assert.strictEqual(def.valid, true); // converted to Array
-                assert.deepEqual(def.value, [ "a string" ]);
-                def.value = new Date();
-                assert.strictEqual(def.valid, true); // converted to Array
-                assert.ok(def.value[0] instanceof Date);
-
-                var CustomClass = function(){};
-                var def = new Definition({ name: "one", type: CustomClass });
-                assert.strictEqual(def.valid, true);
-                def.value = 123;
-                assert.strictEqual(def.valid, false);
-                def.value = [];
-                assert.strictEqual(def.valid, false);
-                def.value = {};
-                assert.strictEqual(def.valid, false);
-                def.value = new CustomClass();
-                assert.strictEqual(def.valid, true);
-
-                var def = new Definition({ name: "one", type: Date });
-                assert.strictEqual(def.valid, true);
-                def.value = new Date();
-                assert.strictEqual(def.valid, true);
-            });
-        
-            it("`valid` should be true with an empty value and not `required`", function(){
-                var def = new Definition({ name: "one", type: "string" });
-                assert.strictEqual(def.valid, true);
-                
-                def = new Definition({ name: "one", type: "string", required: true });
-                assert.strictEqual(def.valid, false);
-
-                var def = new Definition({ name: "one", type: "number" });
-                assert.strictEqual(def.valid, true);
-                
-                def = new Definition({ name: "one", type: "number", required: true });
-                assert.strictEqual(def.valid, false);
-                
-                var def = new Definition({ name: "one", type: Array });
-                assert.strictEqual(def.valid, true);
-                
-                def = new Definition({ name: "one", type: Array, required: true });
-                assert.strictEqual(def.valid, false);
-                
-                var def = new Definition({ name: "one", type: "string", valueTest: /test/ });
-                assert.strictEqual(def.valid, true);
-                
-                def = new Definition({ name: "one", type: "string", valueTest: /test/, required: true });
-                assert.strictEqual(def.valid, false);
-            });
-        
-            it("`valid` RegExp should work with primitive types", function(){
-                var def = new Definition({ name: "one", type: "string", default: "test", valueTest: /es/ });
-                assert.strictEqual(def.valid, true, JSON.stringify(def));
-                def.valueTest = /as/;
-                assert.strictEqual(def.valid, false);
-
-                def = new Definition({ name: "one", type: "boolean", default: false, valueTest: /false/ });
-                assert.strictEqual(def.valid, true);
-                def.valueTest = /true/;
-                assert.strictEqual(def.valid, false);
-            });
-
-            it("`valid` Function should work with primitive and object types", function(){
-                function smallNumber(value) {
-                    return value < 10;
-                }
-                var def = new Definition({ name: "one", type: "number", default: 4, valueTest: smallNumber });
-                assert.strictEqual(def.valid, true);
-                def.value = 11;
-                assert.strictEqual(def.valid, false);
-
-                function smallArray(a){
-                    return a.length < 10;
-                }
-                def = new Definition({ name: "one", type: Array, default: [0,4,6], valueTest: smallArray });
-                assert.strictEqual(def.valid, true);
-                def.value = [1,2,3,4,5,6,7,5,4,3,2,1,0];
-                assert.strictEqual(def.valid, false);
-            });
-        
-            it("`valid` should accept and test an array of functions");
-    
-            it("`valid` should return false if option `required` with no value set", function(){
-                var def = new Definition({ name: "one", type: "number", required: true });
-                assert.strictEqual(def.valid, false);
-            
-                def = new Definition({ name: "one", type: "number", required: true, default: 1 });
-                assert.strictEqual(def.valid, true);
-            });
-        
-            describe("bad usage", function(){
-                it("`valid` should return `false` if `valueTest` function threw", function(){
-                    var def = new Definition({ name: "one", type: Array, required: true, valueTest: function(files){
-                        throw new Error("error");
-                    }});
-                
-                    def.value = ["test"];
-                    assert.strictEqual(def.valid, false);
-                });
-            });
-        
             it("custom invalid msg with type `number`", function(){
                 function validTest(value){
                     return value > 10;
@@ -357,26 +409,6 @@ describe("PropertyDefinition", function(){
                 assert.deepEqual(def.validationMessages, ["must supply a value over 10"]);
 
                 def.value = 11;
-                assert.deepEqual(def.validationMessages, []);
-            });
-
-            it("custom invalid msg with type `Array`", function(){
-                function validArray(values){
-                    return values.every(function(val){
-                        return val > 10;
-                    });
-                }
-                var def = new Definition({
-                    name: "one", 
-                    type: Array, 
-                    valueTest: validArray, 
-                    valueFailMsg: "every value must be over 10" 
-                });
-            
-                def.value = [1];
-                assert.deepEqual(def.validationMessages, ["every value must be over 10"]);
-
-                def.value = [11];
                 assert.deepEqual(def.validationMessages, []);
             });
 
