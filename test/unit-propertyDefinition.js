@@ -1,6 +1,7 @@
 "use strict";
 var assert = require("assert"),
-    Definition = require("../lib/PropertyDefinition");
+    Definition = require("../lib/PropertyDefinition"),
+    def = null;
 
 var CustomClass = function(){};
 
@@ -12,7 +13,7 @@ function allLessThan10(arr){
 }
 function allFamily(arr){
     return arr.every(function(member){
-        return /^(dad|sister|brother|mother)$/.test(member);
+        return (/^(dad|sister|brother|mother)$/).test(member);
     });
 }
 function allFamilyElse(arr){
@@ -26,19 +27,22 @@ function allFamilyElse(arr){
         }
     });
 }
+function broken(){
+    throw new Error("error");
+}
 
 function factory(name){
     var definitions = {
-        name:   { name: "one" }),
-        string: { name: "one", type: "string" }),
-        number: { name: "one", type: "number" }),
+        name:   { name: "one" },
+        string: { name: "one", type: "string" },
+        number: { name: "one", type: "number" },
         bool:   { name: "one", type: "boolean" },
         func:   { name: "one", type: "function" },
         obj:    { name: "one", type: "object" },
-        array:  { name: "one", type: Array }),
-        custom: { name: "one", type: CustomClass }),
-        date:   { name: "one", type: Date }),
-        regex:  { name: "one", type: RegExp })
+        array:  { name: "one", type: Array },
+        custom: { name: "one", type: CustomClass },
+        date:   { name: "one", type: Date },
+        regex:  { name: "one", type: RegExp }
     };
     return new Definition(definitions[name]);
 }
@@ -52,12 +56,12 @@ describe("PropertyDefinition", function(){
 
         describe(".valid", function(){
             it("valid if no type specified", function(){
-                var def = factory("name");
+                def = factory("name");
                 assert.strictEqual(def.valid, true);
             });
 
             it("valid when value matches type`", function(){
-                var def = factory("string");
+                def = factory("string");
                 def.value = 123;
                 assert.strictEqual(def.valid, false);
                 def.value = true;
@@ -137,7 +141,7 @@ describe("PropertyDefinition", function(){
             });
 
             it("valid when value instanceof type", function(){
-                var def = factory("array");
+                def = factory("array");
                 def.value = 123;
                 assert.strictEqual(def.valid, true); // converted to Array
                 assert.deepEqual(def.value, [ 123 ]);
@@ -154,7 +158,7 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.valid, true); // converted to Array
                 assert.ok(def.value[0] instanceof Date);
 
-                var def = factory("custom");
+                def = factory("custom");
                 assert.strictEqual(def.valid, true);
                 def.value = 123;
                 assert.strictEqual(def.valid, false);
@@ -165,7 +169,7 @@ describe("PropertyDefinition", function(){
                 def.value = new CustomClass();
                 assert.strictEqual(def.valid, true);
 
-                var def = factory("date");
+                def = factory("date");
                 assert.strictEqual(def.valid, true);
                 def.value = new Date();
                 assert.strictEqual(def.valid, true);
@@ -175,7 +179,7 @@ describe("PropertyDefinition", function(){
                 /*
                 required means 'value should be truthy'
                 */
-                var def = factory("string");
+                def = factory("string");
                 assert.strictEqual(def.valid, true);
                 def.required = true;
                 assert.strictEqual(def.valid, false);
@@ -215,14 +219,14 @@ describe("PropertyDefinition", function(){
                 def.valueTest = /tast/;
                 assert.strictEqual(def.valid, false);
 
-                def.valueTest = /^(dad|sister|brother|mother)$/
-                def.value = "dog"
+                def.valueTest = /^(dad|sister|brother|mother)$/;
+                def.value = "dog";
                 assert.strictEqual(def.valid, false);
                 def.value = "dad";
                 assert.strictEqual(def.valid, true);
 
                 def.type = Array;
-                def.valueTest = /(dad|sister|brother|mother)/
+                def.valueTest = /(dad|sister|brother|mother)/;
                 def.value = ["dad", "sister", "dog"];
                 assert.strictEqual(def.valid, true);
             });
@@ -248,7 +252,7 @@ describe("PropertyDefinition", function(){
             });
 
             it("valid with function .validTest", function(){
-                var def = factory("number");
+                def = factory("number");
                 def.valueTest = lessThan10;
                 def.value = 4;
                 assert.strictEqual(def.valid, true);
@@ -273,10 +277,8 @@ describe("PropertyDefinition", function(){
 
             describe("bad usage", function(){
                 it("valid with function .validTest - function throws", function(){
-                    var def = factory("array");
-                    def.valueTest = function(){
-                        throw new Error("error");
-                    });
+                    def = factory("array");
+                    def.valueTest = broken;
                     def.value = ["test"];
                     assert.strictEqual(def.valid, false);
                 });
@@ -285,7 +287,7 @@ describe("PropertyDefinition", function(){
 
         describe(".validationMessages", function(){
             it("with no fail message", function(){
-                var def = factory("string");
+                def = factory("string");
                 def.value = "ok";
                 assert.strictEqual(def.validationMessages.length, 0);
 
@@ -298,7 +300,7 @@ describe("PropertyDefinition", function(){
 
             it("with .valueFailMsg", function(){
                 it("with type Array", function(){
-                    var def = factory("array");
+                    def = factory("array");
                     def.valueTest = allLessThan10;
                     def.valueFailMsg = "every value must be less than 10";
 
@@ -322,45 +324,44 @@ describe("PropertyDefinition", function(){
             });
 
             it("raised from .validTest function", function(){
-                var def = factory("array");
+                def = factory("array");
                 def.value = ["dad", "sister", "dog"];
-                def.valueTest = allFamilyElse,
+                def.valueTest = allFamilyElse;
                 def.valueFailMsg = "every member must be valid";
                 assert.strictEqual(def.valid, false);
                 assert.strictEqual(def.validationMessages.length, 2);
             });
-        })
+        });
 
         describe(".value", function(){
             it("typecasting with number", function(){
-               var def = factory("number");
-
-               def.value = "3";
-               assert.strictEqual(def.value, 3);
-               def.value = "0";
-               assert.strictEqual(def.value, 0);
-               def.value = "-1";
-               assert.strictEqual(def.value, -1);
-               def.value = -1.5345;
-               assert.strictEqual(def.value, -1.5345);
-               def.value = "-1.5345";
-               assert.strictEqual(def.value, -1.5345);
-               def.value = "a";
-               assert.strictEqual(def.value, "a");
-               def.value = "";
-               assert.strictEqual(def.value, "");
-               def.value = true;
-               assert.strictEqual(def.value, true);
-               def.value = CustomClass;
-               assert.strictEqual(def.value, CustomClass);
-               def.value = null;
-               assert.strictEqual(def.value, null);
-               def.value = undefined;
-               assert.strictEqual(def.value, undefined);
+                def = factory("number");
+                def.value = "3";
+                assert.strictEqual(def.value, 3);
+                def.value = "0";
+                assert.strictEqual(def.value, 0);
+                def.value = "-1";
+                assert.strictEqual(def.value, -1);
+                def.value = -1.5345;
+                assert.strictEqual(def.value, -1.5345);
+                def.value = "-1.5345";
+                assert.strictEqual(def.value, -1.5345);
+                def.value = "a";
+                assert.strictEqual(def.value, "a");
+                def.value = "";
+                assert.strictEqual(def.value, "");
+                def.value = true;
+                assert.strictEqual(def.value, true);
+                def.value = CustomClass;
+                assert.strictEqual(def.value, CustomClass);
+                def.value = null;
+                assert.strictEqual(def.value, null);
+                def.value = undefined;
+                assert.strictEqual(def.value, undefined);
             });
 
             it("typecasting with RegExp", function(){
-                var def = factory("regex");
+                def = factory("regex");
                 def.value = "\\w{4}";
                 assert.ok(def.value instanceof RegExp, def.value);
                 assert.deepEqual(def.value, /\w{4}/);
