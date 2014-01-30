@@ -91,7 +91,7 @@ describe("PropertyDefinition", function(){
                 def.value = [];
                 assert.strictEqual(def.valid, false);
 
-                def = factory("boolean");
+                def = factory("bool");
                 def.value = 123;
                 assert.strictEqual(def.valid, false);
                 def.value = true;
@@ -107,7 +107,7 @@ describe("PropertyDefinition", function(){
                 def.value = [];
                 assert.strictEqual(def.valid, false);
 
-                def = factory("function");
+                def = factory("func");
                 def.value = 123;
                 assert.strictEqual(def.valid, false);
                 def.value = true;
@@ -123,7 +123,7 @@ describe("PropertyDefinition", function(){
                 def.value = [];
                 assert.strictEqual(def.valid, false);
 
-                def = factory("object");
+                def = factory("obj");
                 def.value = 123;
                 assert.strictEqual(def.valid, false);
                 def.value = true;
