@@ -176,10 +176,11 @@ describe("PropertyDefinition", function(){
 
             it("valid with .required", function(){
                 /*
-                required means 'value should be truthy'
+                required means 'value should be truthy'.
+                not required permits a value to be undefined.
                 */
                 def = factory("string");
-                assert.strictEqual(def.valid, true, JSON.stringify(def));
+                assert.strictEqual(def.valid, true);
                 def.required = true;
                 assert.strictEqual(def.valid, false);
                 def.value = "";
@@ -206,6 +207,76 @@ describe("PropertyDefinition", function(){
                 def.required = true;
                 assert.strictEqual(def.valid, false);
             });
+            
+            it("valid with .required and .valueTest", function(){
+                def = factory("string");
+                assert.strictEqual(def.valid, true);
+                def.valueTest = /test/;
+                assert.strictEqual(def.valid, true);
+                def.value = "clive"
+                assert.strictEqual(def.valid, false);
+                def.value = "test"
+                assert.strictEqual(def.valid, true);
+                def.value = "";
+                assert.strictEqual(def.valid, false);
+                def.value = undefined;
+                assert.strictEqual(def.valid, true);
+                def.required = true;
+                assert.strictEqual(def.valid, false);
+
+                def = factory("number");
+                assert.strictEqual(def.valid, true);
+                def.valueTest = lessThan10;
+                assert.strictEqual(def.valid, true);
+                def.value = "clive"
+                assert.strictEqual(def.valid, false);
+                def.value = 9
+                assert.strictEqual(def.valid, true);
+                def.value = 0;
+                assert.strictEqual(def.valid, true);
+                def.value = undefined;
+                assert.strictEqual(def.valid, true);
+                def.required = true;
+                assert.strictEqual(def.valid, false);
+                def.value = 0;
+                assert.strictEqual(def.valid, false);
+                
+                def = factory("string");
+                assert.strictEqual(def.valid, true);
+                def.valueTest = /test/;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = 1;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = lessThan10;
+                assert.strictEqual(def.valid, true);
+                
+                def = factory("number");
+                assert.strictEqual(def.valid, true);
+                def.valueTest = /test/;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = 1;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = lessThan10;
+                assert.strictEqual(def.valid, true);
+                
+                def = factory("func");
+                assert.strictEqual(def.valid, true);
+                def.valueTest = /test/;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = 1;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = lessThan10;
+                assert.strictEqual(def.valid, true);
+                
+                def = factory("array");
+                assert.strictEqual(def.valid, true);
+                def.valueTest = /test/;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = 1;
+                assert.strictEqual(def.valid, true);
+                def.valueTest = lessThan10;
+                assert.strictEqual(def.valid, true);
+            });
 
             it("valid with RegExp .valueTest", function(){
                 /*
@@ -213,7 +284,6 @@ describe("PropertyDefinition", function(){
                 */
                 def = factory("string");
                 def.valueTest = /test/;
-                assert.strictEqual(def.valid, false);
                 def.required = true;
                 assert.strictEqual(def.valid, false);
                 def.value = "test";
