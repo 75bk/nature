@@ -298,23 +298,19 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.validationMessages.length, 0);
             });
 
-            it("with .valueFailMsg", function(){
-                it("with type Array", function(){
-                    def = factory("array");
-                    def.valueTest = allLessThan10;
-                    def.valueFailMsg = "every value must be less than 10";
+            it("with .invalidMsg", function(){
+                def = factory("array");
+                def.valueTest = allLessThan10;
+                def.invalidMsg = "every value must be less than 10";
 
-                    def.value = [1];
-                    assert.deepEqual(def.validationMessages, ["every value must be less than 10"]);
+                def.value = [1];
+                assert.deepEqual(def.validationMessages, ["every value must be less than 10"]);
 
-                    def.value = [11];
-                    assert.deepEqual(def.validationMessages, []);
-                });
-            });
-
-            it("with .typeFailMsg", function(){
+                def.value = [11];
+                assert.deepEqual(def.validationMessages, []);
+                
                 def = factory("regex");
-                def.typeFailMsg = "pass a regex";
+                def.invalidMsg = "pass a regex";
                 def.value = "ok";
                 assert.strictEqual(def.validationMessages.length, 0);
 
@@ -327,7 +323,7 @@ describe("PropertyDefinition", function(){
                 def = factory("array");
                 def.value = ["dad", "sister", "dog"];
                 def.valueTest = allFamilyElse;
-                def.valueFailMsg = "every member must be valid";
+                def.invalidMsg = "every member must be valid";
                 assert.strictEqual(def.valid, false);
                 assert.strictEqual(def.validationMessages.length, 2);
             });
