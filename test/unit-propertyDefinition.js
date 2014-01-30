@@ -3,7 +3,7 @@ var assert = require("assert"),
     Definition = require("../lib/PropertyDefinition"),
     def = null,
     l = console.log,
-    ld = function(def){l(JSON.stringify(def, null, "\t"));};
+    d = function(def){ return JSON.stringify(def, null, "\t"); };
 
 var CustomClass = function(){};
 
@@ -297,7 +297,7 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.validationMessages.length, 1);
 
                 def.type = RegExp;
-                assert.strictEqual(def.validationMessages.length, 0);
+                assert.strictEqual(def.validationMessages.length, 1);
             });
 
             it("with .invalidMsg", function(){
@@ -305,10 +305,10 @@ describe("PropertyDefinition", function(){
                 def.valueTest = allLessThan10;
                 def.invalidMsg = "every value must be less than 10";
 
-                def.value = [1];
-                assert.deepEqual(def.validationMessages, ["every value must be less than 10"]);
-
                 def.value = [11];
+                assert.strictEqual(def.validationMessages[1], "every value must be less than 10");
+
+                def.value = [1];
                 assert.deepEqual(def.validationMessages, []);
                 
                 def = factory("regex");
@@ -317,8 +317,8 @@ describe("PropertyDefinition", function(){
                 assert.strictEqual(def.validationMessages.length, 0);
 
                 def.value = "+++";
-                assert.strictEqual(def.validationMessages.length, 1);
-                assert.strictEqual(def.validationMessages[0], "pass a regex");
+                assert.strictEqual(def.validationMessages.length, 2);
+                assert.strictEqual(def.validationMessages[1], "pass a regex");
             });
 
             it("raised from .validTest function", function(){
@@ -327,7 +327,7 @@ describe("PropertyDefinition", function(){
                 def.valueTest = allFamilyElse;
                 def.invalidMsg = "every member must be valid";
                 assert.strictEqual(def.valid, false);
-                assert.strictEqual(def.validationMessages.length, 2);
+                assert.strictEqual(def.validationMessages.length, 3);
             });
         });
 
