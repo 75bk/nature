@@ -4,84 +4,93 @@ var assert = require("assert"),
     PropertyDefinition = require("../lib/PropertyDefinition"),
     l = console.log;
 
-it("should toArray()");
-it("should list defined properties");
-it("should be compatible with --property=value style");
-it("passing required:true should test for defaultOption.length > 0")
-it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
-it("should throw when a none-existent property is accessed, e.g. console.log(properties.dfkdshl)");
-it("free usage on --help");
-it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
+describe("Thing", function(){
+    it("should toArray()");
+    it("should list defined properties");
+    it("should be compatible with --property=value style");
+    it("passing required:true should test for defaultOption.length > 0");
+    it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
+    it("should throw when a none-existent property is accessed, e.g. console.log(properties.dfkdshl)");
+    it("free usage on --help");
+    it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
 
-it("should throw on empty property, i.e. 'rename -' or '--'");
-it("should expose _errors array on Thing instance API, same as 'validationMessages'");
-it("needs consistent error handling.. some errors emit, some throw (like 'renamer -').. should all errors just set valid=false?");
+    it("should throw on empty property, i.e. 'rename -' or '--'");
+    it("should expose _errors array on Thing instance API, same as 'validationMessages'");
+    it("needs consistent error handling.. some errors emit, some throw (like 'renamer -').. should all errors just set valid=false?");
 
-it("should valueTest run on get, so function can refer to other set values in this.config? e.g. if (this.config.regex) then ...");
-it("a 'post-set' hook, so setting '**/*.txt' on 'files' can be expanded");
-it("scrap constructor to remove need for Thing.call(this)");
-it("should emit 'invalid' when thing changes from valid to invalid");
+    it("should valueTest run on get, so function can refer to other set values in this.config? e.g. if (this.config.regex) then ...");
+    it("a 'post-set' hook, so setting '**/*.txt' on 'files' can be expanded");
+    it("scrap constructor to remove need for Thing.call(this)");
+    it("should emit 'invalid' when thing changes from valid to invalid");
 
-var _thing;
-beforeEach(function(){
-    _thing = new Thing();
-});
-
-describe("Thing API", function(){
-    describe("properties:", function(){
-        it("valid - should return true only when all property values are valid", function(){
-            _thing.define({ name: "one", type: "number", value: 1 });
-            assert.strictEqual(_thing.valid, true);
-            _thing.define({ name: "two", type: "number", value: -1034.1 });
-            assert.strictEqual(_thing.valid, true);
-            _thing.define({ name: "three", type: "number", value: "Cazzo" });
-            assert.strictEqual(_thing.valid, false);
-        });
-        
-        it("validationMessages - should return an array of msgs", function(){
-            _thing.define({ name: "one", type: Array, value: 1 });
-            _thing.define({ name: "two", type: "string", value: 1 });
-            _thing.define({ name: "three", type: RegExp, value: 1 });
-            _thing.define({ name: "four", type: "string", value: "clive", valueTest: /test/ });
-            _thing.define({ name: "five", type: Array, value: "clive", valueTest: function (val){ 
-                return val.length == 0; 
-            }});
-            _thing.define({ name: "six",type: "number", value: 1 });
-            assert.ok(_thing.validationMessages.length == 5, JSON.stringify(_thing.validationMessages));
-        });
-        
-        it("definitions", function(){
-            var def1 = new PropertyDefinition({ name: "one", type: Array, value: 1 }),
-                def2 = new PropertyDefinition({ name: "two", type: "string", value: 1 }),
-                def3 = new PropertyDefinition({ name: "three", type: RegExp, value: 1 });
-
-            _thing.define([ def1, def2, def3 ]);
-            
-            assert.strictEqual(Object.keys(_thing.definitions).length, 3);
-            assert.strictEqual(_thing.definitions.one, def1);
-            assert.strictEqual(_thing.definitions.two, def2);
-            assert.strictEqual(_thing.definitions.three, def3);
-        });
-        it("properties", function(){
-            _thing.define({ name: "one", type: Array, value: 1 });
-            _thing.define({ name: "two", type: "string", value: 1 });
-            _thing.define({ name: "three", type: RegExp, value: 1 });
-
-            assert.deepEqual(_thing.properties, [ "one", "two", "three" ]);
-        })
+    var _thing;
+    beforeEach(function(){
+        _thing = new Thing();
     });
-    
+
+    describe("properties:", function(){
+        describe(".valid", function(){
+            it("return true when all values valid", function(){
+                _thing.define({ name: "one", type: "number", value: 1 });
+                assert.strictEqual(_thing.valid, true);
+                _thing.define({ name: "two", type: "number", value: -1034.1 });
+                assert.strictEqual(_thing.valid, true);
+                _thing.define({ name: "three", type: "number", value: "Cazzo" });
+                assert.strictEqual(_thing.valid, false);
+            });
+        });
+
+        describe(".validationMessages", function(){
+            it("return array of invalid messages", function(){
+                _thing.define({ name: "one", type: Array, value: 1 });
+                _thing.define({ name: "two", type: "string", value: 1 });
+                _thing.define({ name: "three", type: RegExp, value: 1 });
+                _thing.define({ name: "four", type: "string", value: "clive", valueTest: /test/ });
+                _thing.define({ name: "five", type: Array, value: "clive", valueTest: function (val){
+                    return val.length === 0;
+                }});
+                _thing.define({ name: "six",type: "number", value: 1 });
+                assert.ok(_thing.validationMessages.length === 5, JSON.stringify(_thing.validationMessages));
+            });
+        });
+
+        describe(".definitions", function(){
+            it("return hash of PropertyDefinitions", function(){
+                var def1 = new PropertyDefinition({ name: "one", type: Array, value: 1 }),
+                    def2 = new PropertyDefinition({ name: "two", type: "string", value: 1 }),
+                    def3 = new PropertyDefinition({ name: "three", type: RegExp, value: 1 });
+
+                _thing.define([ def1, def2, def3 ]);
+
+                assert.strictEqual(Object.keys(_thing.definitions).length, 3);
+                assert.strictEqual(_thing.definitions.one, def1);
+                assert.strictEqual(_thing.definitions.two, def2);
+                assert.strictEqual(_thing.definitions.three, def3);
+            });
+        });
+
+        describe(".properties", function(){
+            it("return array of property name strings", function(){
+                _thing.define({ name: "one", type: Array, value: 1 });
+                _thing.define({ name: "two", type: "string", value: 1 });
+                _thing.define({ name: "three", type: RegExp, value: 1 });
+
+                assert.deepEqual(_thing.properties, [ "one", "two", "three" ]);
+            });
+        });
+    });
+
     describe("methods: ", function(){
-        describe("defining properties", function(){
+        describe(".define", function(){
             it("define(definition) and definition(name) should set and retrieve", function(){
                 var definition = { name: "one", type: "string", value: "one" };
                 _thing.define(definition);
-                
+
                 assert.strictEqual(definition.type, _thing.definition("one").type);
                 assert.strictEqual(definition.value, _thing.definition("one").value);
                 assert.strictEqual(_thing.get("one"), "one");
             });
-            
+
             it("define(existingDefinition) should redefine definition", function(){
                 _thing.define({ name: "one", type: "number", alias: "a" });
                 assert.strictEqual(_thing.definition("one").type, "number");
@@ -89,29 +98,58 @@ describe("Thing API", function(){
                 _thing.define({ name: "one", type: "string", alias: "a" });
                 assert.strictEqual(_thing.definition("a").type, "string");
             });
-            
+
             it("define(PropertyDefinition) and retrieve with definition(name)", function(){
                 var def = new PropertyDefinition({ name: "one", "type": "number" });
                 _thing.define(def);
-                
+
                 assert.strictEqual(def, _thing.definition("one"));
             });
 
             it("definition(name) should return defined properties", function(){
                 function testValid(){}
                 _thing.define({ name: "one", "type": "number", alias: "o", valueTest: testValid });
-                
+
                 assert.strictEqual(_thing.definition("one").type, "number");
                 assert.strictEqual(_thing.definition("o").type, "number");
                 assert.strictEqual(_thing.definition("one").alias, "o");
                 assert.strictEqual(_thing.definition("one").valueTest, testValid);
             });
-            
+
             it("define() should work the same with a `definition.value` as set()");
+
+            it("grouping", function(){
+                _thing
+                    .define("group1", [
+                        { name: "one", type: "boolean" },
+                        { name: "two", type: "string" }
+                    ])
+                    .define("group2", { name: "three", type: "number"});
+
+                assert.deepEqual(_thing.definition("one").groups, ["group1"]);
+                assert.deepEqual(_thing.definition("two").groups, ["group1"]);
+                assert.deepEqual(_thing.definition("three").groups, ["group2"]);
+            });
             
+            it("define(definition) should not throw on duplicate property, updating it instead", function(){
+                _thing.define({ name: "yeah", type: "string" });
+
+                assert.doesNotThrow(function(){
+                    _thing.define({ name: "yeah", type: "boolean" });
+                });
+                assert.strictEqual(_thing.definition("yeah").type, "boolean");
+            });
+            
+            it("define(definition) should throw on duplicate alias", function(){
+                _thing.define({ name: "three", alias: "t" });
+
+                assert.throws(function(){
+                    _thing.define({ name: "four", alias: "t" });
+                });
+            });
         });
-        
-        describe("hasValue()", function(){
+
+        describe(".hasValue", function(){
             it("hasValue(propertyName) should return true if property has value", function(){
                 _thing.define({ name: "one" });
                 assert.strictEqual(_thing.hasValue("one"), false);
@@ -124,7 +162,7 @@ describe("Thing API", function(){
                 _thing.define({ name: "one" })
                     .define({ name: "two" });
                 assert.strictEqual(_thing.hasValue(["one", "two"]), false);
-                
+
                 _thing.set("one", 1);
                 assert.strictEqual(_thing.hasValue(["one", "two"]), true);
 
@@ -132,246 +170,295 @@ describe("Thing API", function(){
                 assert.strictEqual(_thing.hasValue(["one", "two"]), true);
             });
         });
-        
-        it("should unset() an property, and its alias", function(){
-            _thing.define({ name: "one", type: "number", value: 1, alias: "K" });
-            assert.strictEqual(_thing.get("one"), 1);
-            assert.strictEqual(_thing.get("K"), 1);
-            _thing.unset("one");
-            assert.strictEqual(_thing.get("one"), undefined);            
-            assert.strictEqual(_thing.get("K"), undefined);
+
+        describe(".unset", function(){
+            it("should set a property and its alias to undefined", function(){
+                _thing.define({ name: "one", type: "number", alias: "K", value: 1 });
+                assert.strictEqual(_thing.get("one"), 1);
+                assert.strictEqual(_thing.get("K"), 1);
+                _thing.unset("one");
+                assert.strictEqual(_thing.get("one"), undefined);
+                assert.strictEqual(_thing.get("K"), undefined);
+            });
         });
-        
+
         it("should remove() an property and its alias");
-        
-        describe("setting and getting values", function(){
-            it("should set(property, value) and get(property) an array", function(){
+
+        describe(".get", function(){
+            it("get(property) with no value set", function(){
+                _thing.define({ name: "one", type: "number" });
+                assert.strictEqual(_thing.get("one"), undefined);
+            });
+
+            it("get(property, default)", function(){
+                _thing.define({ name: "one", type: "number", value: 1 });
+                assert.strictEqual(_thing.get("one"), 1);
+            });
+
+            it("get(property) should return undefined on unregistered property", function(){
+                assert.strictEqual(_thing.get("yeah", "test"), undefined);
+            });
+        });
+
+        describe(".set", function(){
+            it("set(property, array)", function(){
                 _thing.define({ name: "one", type: Array });
                 _thing.set("one", [0, 1]);
-                
+
                 assert.deepEqual(_thing.get("one"), [0, 1]);
             })
-            
-            it("should set(property, value) and get(property) a string", function(){
-                _thing.define({ name: "test", type: "string", alias: "d" });
+
+            it("set(property, string)", function(){
+                _thing.define({ name: "test", type: "string" });
                 _thing.set("test", "testset");
 
                 assert.strictEqual(_thing.get("test"), "testset");
             });
 
-            it("should set(alias, value) then get(alias) and get(property)", function(){
-                _thing.define({ name: "archiveDirectory", type: "string", alias: "d" });
-                _thing.set("d", "testset");
+            it("set(alias, string)", function(){
+                var val = "test";
+                _thing.define({ name: "test", type: "string", alias: "d" });
+                _thing.set("d", val);
 
-                assert.strictEqual(_thing.get("d"), "testset");
-                assert.strictEqual(_thing.get("archiveDirectory"), "testset");
+                assert.strictEqual(_thing.get("d"), val);
+                assert.strictEqual(_thing.get("test"), val);
             });
 
-            it("should set default property() value", function(){
-                _thing.define({ name: "one", type: "number", value: 1 });
-            
-                assert.strictEqual(_thing.get("one"), 1);
-            });
-
-            it("set(propertiesHash) should set properties in bulk", function(){
-                _thing.define({ name: "one", type: "number", alias: "1" })
-                    .define({ name: "two", type: "number", alias: "t" })
-                    .define({ name: "three", type: "number", alias: "3" });
-            
-                assert.strictEqual(_thing.get("one"), undefined);
-                assert.strictEqual(_thing.get("t"), undefined);
-                assert.strictEqual(_thing.get("3"), undefined);
-
-                _thing.set({ one: 1, t: 2, 3: 3 });
-            
-                assert.strictEqual(_thing.get("one"), 1);
-                assert.strictEqual(_thing.get("two"), 2);
-                assert.strictEqual(_thing.get("three"), 3);
-            });
-
-            it("set(configInstance) should set properties in bulk", function(){
-                _thing.define({ name: "one", type: "number", alias: "1" })
-                    .define({ name: "two", type: "number", alias: "t" })
-                    .define({ name: "three", type: "number", alias: "3" });
-            
-                assert.strictEqual(_thing.get("one"), undefined);
-                assert.strictEqual(_thing.get("t"), undefined);
-                assert.strictEqual(_thing.get("3"), undefined);
-
-                var config2 = new Thing()
-                    .define({ name: "one", type: "number", value: -1 })
-                    .define({ name: "two", type: "number", value: -2 })
-                    .define({ name: "three", type: "number", value: -3 })
-
-                _thing.set(config2);
-            
-                assert.strictEqual(_thing.get("one"), -1);
-                assert.strictEqual(_thing.get("two"), -2);
-                assert.strictEqual(_thing.get("three"), -3);
-            
-            });
-        
-            it("set(propertiesArray) should set properties in bulk", function(){
-                var argv = ["-d", "--preset", "dope", "--recurse", "music", "film", "documentary"];
-                _thing
-                    .define({ name: "detailed", alias: "d", type: "boolean" })
-                    .define({ name: "recurse", type: "boolean" })
-                    .define({ name: "preset", type: "string" })
-                    .define({ name: "files", type: Array, defaultOption: true })
-                    .set(argv);
-            
-                assert.strictEqual(_thing.get("detailed"), true, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.get("recurse"), true, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.get("preset"), "dope");
-                assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
-            });
-            
-            it("set(process.argv) should set properties in bulk", function(){
-                process.argv = ["node", "test.js", "-d", "--preset", "dope", "--recurse", "music", "film", "documentary"];
-                _thing
-                    .define({ name: "detailed", alias: "d", type: "boolean" })
-                    .define({ name: "recurse", type: "boolean" })
-                    .define({ name: "preset", type: "string" })
-                    .define({ name: "files", type: Array, defaultOption: true })
-                    .set(process.argv);
-
-                assert.strictEqual(_thing.get("detailed"), true, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.get("recurse"), true, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.get("preset"), "dope");
-                assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
-            });
-
-            it("set(process.argv) should set correct defaults", function(){
-                process.argv = [ 
-                    "/usr/local/bin/node", "/usr/local/bin/rename", "file1.test","file2.test", 
-                    "file3.test", "file4.test", "file5.test", 
-                    "-d", "-r" 
-                ];
-                _thing
-                    .define({ 
-                        name: "files",
-                        type: Array,
-                        required: true,
-                        defaultOption: true,
-                        value: []
-                    })
-                    .define({ name: "find", type: "string", alias: "f" })
-                    .define({ name: "make", type: "string", alias: "m", value: "pie" })
-                    .define({ name: "num", type: "number" })
-                    .define({ name: "num2", type: "number", value: 10 })
-                    .define({ name: "replace", type: "string", alias: "r", value: "" })
-                    .define({ name: "dry-run", type: "boolean", alias: "d" })
-                    .set(process.argv);
-            
-                assert.strictEqual(_thing.make, "pie", JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.replace, "", JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.num, undefined, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing.num2, 10, JSON.stringify(_thing.toJSON()));
-                assert.strictEqual(_thing["dry-run"], true, JSON.stringify(_thing.toJSON()));
-                assert.deepEqual(_thing.files, ["file1.test", "file2.test", "file3.test", "file4.test", "file5.test"]);
-            });
-            
-            it("set(propertiesArray) with a type Array", function(){
+            it("set(string) on a type Array", function(){
                 _thing.define({ name:"one", type: Array });
-
-                _thing.set(["--one", "test", 1, false]);
-                assert.deepEqual(_thing.get("one"), ["test"]);
-
                 _thing.set(["--one", "test ,1    , false"]);
                 assert.deepEqual(_thing.get("one"), ["test", "1", "false"]);
-            });
-            
-            it("set(['--property', '--value']) should set correctly, where 'property' expects a value", function(){
-                _thing.define({ name: "one", type: "string" });
-                _thing.set([ "--one", "--23" ]);
-                assert.deepEqual(_thing.one, "--23");
-                _thing.set([ "--one", "" ]);
-                assert.deepEqual(_thing.one, "");
+                _thing.set("one", "test ,  2    , false");
+                assert.deepEqual(_thing.get("one"), ["test", "2", "false"]);
             });
 
-            it("set(propertiesArray) with a `defaultOption` of type Array", function(){
-                _thing.define({ name: "one", type: Array, defaultOption: true });
-                _thing.set(["test", 1, false]);
-                
-                assert.deepEqual(_thing.get("one"), ["test", 1, false]);
+            describe("set values in bulk", function(){
+                it("set(object)", function(){
+                    _thing.define({ name: "one", type: "number" })
+                        .define({ name: "two", type: "number" })
+                        .define({ name: "three", type: "number" });
+
+                    _thing.set({ one: 1, two: 2, three: 3 });
+
+                    assert.strictEqual(_thing.get("one"), 1);
+                    assert.strictEqual(_thing.get("two"), 2);
+                    assert.strictEqual(_thing.get("three"), 3);
+                });
+
+                it("set(thing)", function(){
+                    _thing.define({ name: "one", type: "number" })
+                        .define({ name: "two", type: "number" })
+                        .define({ name: "three", type: "number" });
+
+                    var thing2 = new Thing()
+                        .define({ name: "one", type: "number", value: -1 })
+                        .define({ name: "two", type: "number", value: -2 })
+                        .define({ name: "three", type: "number", value: -3 })
+
+                    _thing.set(thing2);
+
+                    assert.strictEqual(_thing.get("one"), -1);
+                    assert.strictEqual(_thing.get("two"), -2);
+                    assert.strictEqual(_thing.get("three"), -3);
+
+                });
+
+                it("set(array)", function(){
+                    var argv = ["-d", "--preset", "dope", "--recurse", "music", "film", "documentary"];
+                    _thing
+                        .define({ name: "detailed", alias: "d", type: "boolean" })
+                        .define({ name: "recurse", type: "boolean" })
+                        .define({ name: "preset", type: "string" })
+                        .define({ name: "files", type: Array, defaultOption: true })
+                        .set(argv);
+
+                    assert.strictEqual(_thing.get("detailed"), true);
+                    assert.strictEqual(_thing.get("recurse"), true);
+                    assert.strictEqual(_thing.get("preset"), "dope");
+                    assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
+                });
+
+                it("set(process.argv)", function(){
+                    process.argv = ["node", "test.js", "-d", "--preset", "dope", "--recurse", "music", "film", "documentary"];
+                    _thing
+                        .define({ name: "detailed", alias: "d", type: "boolean" })
+                        .define({ name: "recurse", type: "boolean" })
+                        .define({ name: "preset", type: "string" })
+                        .define({ name: "files", type: Array, defaultOption: true })
+                        .set(process.argv);
+
+                    assert.strictEqual(_thing.get("detailed"), true);
+                    assert.strictEqual(_thing.get("recurse"), true);
+                    assert.strictEqual(_thing.get("preset"), "dope");
+                    assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
+                });
+
+                it("set(process.argv) should set correct defaults", function(){
+                    process.argv = [
+                        "/usr/local/bin/node", "/usr/local/bin/rename", "file1.test","file2.test",
+                        "file3.test", "file4.test", "file5.test",
+                        "-d", "-r"
+                    ];
+                    _thing
+                        .define({
+                            name: "files",
+                            type: Array,
+                            required: true,
+                            defaultOption: true,
+                            value: []
+                        })
+                        .define({ name: "find", type: "string" })
+                        .define({ name: "make", type: "string", value: "pie" })
+                        .define({ name: "num", type: "number" })
+                        .define({ name: "num2", type: "number", value: 10 })
+                        .define({ name: "replace", type: "string", alias: "r", value: "" })
+                        .define({ name: "dry-run", type: "boolean", alias: "d" })
+                        .set(process.argv);
+
+                    assert.strictEqual(_thing.make, "pie");
+                    assert.strictEqual(_thing.replace, "");
+                    assert.strictEqual(_thing.num, undefined);
+                    assert.strictEqual(_thing.num2, 10);
+                    assert.strictEqual(_thing["dry-run"], true);
+                    assert.deepEqual(_thing.files, ["file1.test", "file2.test", "file3.test", "file4.test", "file5.test"]);
+                });
+
+                it("set(['--property', '--value']) should set correctly, where 'property' expects a value", function(){
+                    _thing.define({ name: "one", type: "string" });
+                    _thing.set([ "--one", "--23" ]);
+                    assert.deepEqual(_thing.one, "--23");
+                    _thing.set([ "--one", "" ]);
+                    assert.deepEqual(_thing.one, "");
+                });
+
+                it("set(array) with a defaultOption of type Array", function(){
+                    _thing.define({ name: "one", type: Array, defaultOption: true });
+                    _thing.set(["test", 1, false]);
+
+                    assert.deepEqual(_thing.get("one"), ["test", 1, false]);
+                });
+
+                it("set(array) with a defaultOption of type string", function(){
+                    _thing.define({ name: "one", type: "string", defaultOption: true });
+                    _thing.set(["test", 1, false]);
+
+                    assert.strictEqual(_thing.get("one"), "test");
+                });
+
+                it("set(array) with a `defaultOption` of type number", function(){
+                    _thing.define({ name: "one", type: "number", defaultOption: true });
+                    _thing.set([1, 4, 5]);
+
+                    assert.strictEqual(_thing.get("one"), 1);
+                });
+
+                it("warn if set(array) produces defaultValues with no defaultOption set");
             });
 
-            it("set(propertiesArray) with a `defaultOption` of type 'string'", function(){
-                _thing.define({ name: "one", type: "string", defaultOption: true });
-                _thing.set(["test", 1, false]);
-                
-                assert.strictEqual(_thing.get("one"), "test");
-            });
+            describe("Error handling", function(){
+                it("set(property, value) should emit 'error' on unregistered property", function(){
+                    assert.throws(function(){
+                        _thing.set("yeah", "test");
+                    });
+                    assert.strictEqual(_thing.valid, false);
+                    assert.strictEqual(_thing._errors.length, 1);
+                });
 
-            it("set(propertiesArray) with a `defaultOption` of type number", function(){
-                _thing.define({ name: "one", type: "number", defaultOption: true });
-                _thing.set([1, 4, 5]);
-                
-                assert.strictEqual(_thing.get("one"), 1);
-            });
-            
-            it("warn if set(propertiesArray) produces defaultValues with no defaultOption set");
-        })
+                it("catching 'error' surpresses throw on bad set()", function(){
+                    _thing.on("error", function(err){
+                        assert.ok(err);
+                    });
+                    assert.doesNotThrow(function(){
+                        _thing.set("yeah", "test");
+                    });
+                    assert.strictEqual(_thing.valid, false);
+                    assert.strictEqual(_thing._errors.length, 1);
+                });
 
-        it("should clone()", function(){
+                it("set([--property, value]) should emit 'error' on unregistered property", function(){
+                    assert.throws(function(){
+                        _thing.set(["--asdklfjlkd"]);
+                    });
+                    assert.strictEqual(_thing.valid, false);
+                    assert.strictEqual(_thing._errors.length, 1);
+                });
+
+                it("set(propertiesArray) should not alter propertiesArray itself", function(){
+                    var args = [ "--one", 1, "--two", 2, "--three", 3 ];
+                    _thing
+                        .define({ name: "one", type: "number", value: -1 })
+                        .define({ name: "two", type: "number", value: -2 })
+                        .define({ name: "three", type: "number", value: -3 });
+
+                    assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
+                    _thing.set(args);
+                    assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
+                });
+            });
+        });
+
+        it(".clone()", function(){
             _thing.define({ name: "one", type: "number", value: 1 })
                 .define({ name: "two", type: "number", value: 2 });
-            
+
             var config2 = _thing.clone();
             assert.notStrictEqual(_thing, config2);
             assert.deepEqual(_.omit(_thing.definition("one"), "config"), _.omit(config2.definition("one"), "config"));
             assert.deepEqual(_.omit(_thing.definition("two"), "config"), _.omit(config2.definition("two"), "config"));
         });
-        
-        it("properties() should return Array of property names");
-        
-        it("mixin(config)", function(){
-            _thing.define({ name: "year", type: "number", value: 2013 });
-            var config2 = new Thing().define({ name: "month", type: "string", value: "feb", alias: "m" });
-            var config3 = new Thing().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
-            
-            _thing.mixIn(config2);
-            _thing.mixIn(config3);
-            
-            assert.strictEqual(_thing.get("year"), 2013);
-            assert.strictEqual(_thing.get("month"), "feb");
-            assert.strictEqual(_thing.get("day"), "Sunday");
-            assert.strictEqual(_thing.get("m"), "feb");
-            assert.strictEqual(_thing.get("d"), "Sunday");
-        });
-        
-        it("mixin() must fail on duplicate propertyName or alias");
 
-        it("mixin(config, groups)", function(){
-            _thing.define({ name: "year", type: "number", value: 2013 });
-            var config2 = new Thing().define({ name: "month", type: "string", value: "feb", alias: "m" });
-            var config3 = new Thing().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
-            
-            _thing.mixIn(config2, "config2");
-            _thing.mixIn(config3, ["config2", "config3"]);
-            
-            assert.strictEqual(_thing.get("year"), 2013);
-            assert.deepEqual(_thing.definition("year").groups, []);
-            assert.strictEqual(_thing.get("month"), "feb");
-            assert.deepEqual(_thing.definition("month").groups, ["config2"]);
-            assert.strictEqual(_thing.get("day"), "Sunday");
-            assert.deepEqual(_thing.definition("day").groups, ["config2", "config3"]);
-        });
-        
-        it("definition(property) should return correct def for full name and alias", function(){
-            _thing.define({ name: "one", type: Array, value: [1,2], required: true, alias: "a" });
+        it(".properties() should return Array of property names");
+        describe(".mixin", function(){
+            it("mixin(thing)", function(){
+                _thing.define({ name: "year", type: "number", value: 2013 });
+                var config2 = new Thing().define({ name: "month", type: "string", value: "feb", alias: "m" });
+                var config3 = new Thing().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
 
-            assert.strictEqual(_thing.definition("one").type, Array);
-            assert.strictEqual(_thing.definition("a").type, Array);
-            assert.deepEqual(_thing.definition("one").value, [1,2]);
-            assert.deepEqual(_thing.definition("a").value, [1,2]);
-            assert.strictEqual(_thing.definition("one").required, true);
-            assert.strictEqual(_thing.definition("a").required, true);
-            assert.strictEqual(_thing.definition("one").alias, "a");
-            assert.strictEqual(_thing.definition("a").alias, "a");
+                _thing.mixIn(config2);
+                _thing.mixIn(config3);
+
+                assert.strictEqual(_thing.get("year"), 2013);
+                assert.strictEqual(_thing.get("month"), "feb");
+                assert.strictEqual(_thing.get("day"), "Sunday");
+                assert.strictEqual(_thing.get("m"), "feb");
+                assert.strictEqual(_thing.get("d"), "Sunday");
+            });
+
+            it("mixin() must fail on duplicate propertyName or alias");
+
+            it("mixin(thing, groups)", function(){
+                _thing.define({ name: "year", type: "number", value: 2013 });
+                var config2 = new Thing().define({ name: "month", type: "string", value: "feb", alias: "m" });
+                var config3 = new Thing().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
+
+                _thing.mixIn(config2, "config2");
+                _thing.mixIn(config3, ["config2", "config3"]);
+
+                assert.strictEqual(_thing.get("year"), 2013);
+                assert.deepEqual(_thing.definition("year").groups, []);
+                assert.strictEqual(_thing.get("month"), "feb");
+                assert.deepEqual(_thing.definition("month").groups, ["config2"]);
+                assert.strictEqual(_thing.get("day"), "Sunday");
+                assert.deepEqual(_thing.definition("day").groups, ["config2", "config3"]);
+            });
+        });
+
+        describe(".definition", function(){
+            it("definition(property) should return correct def for full name and alias", function(){
+                _thing.define({ name: "one", type: Array, value: [1,2], required: true, alias: "a" });
+
+                assert.strictEqual(_thing.definition("one").type, Array);
+                assert.strictEqual(_thing.definition("a").type, Array);
+                assert.deepEqual(_thing.definition("one").value, [1,2]);
+                assert.deepEqual(_thing.definition("a").value, [1,2]);
+                assert.strictEqual(_thing.definition("one").required, true);
+                assert.strictEqual(_thing.definition("a").required, true);
+                assert.strictEqual(_thing.definition("one").alias, "a");
+                assert.strictEqual(_thing.definition("a").alias, "a");
+            });
         });
         
-        describe("grouping", function(){
+        describe(".group", function(){
             it("grouping summary", function(){
                 // set group after defining
                 _thing
@@ -379,7 +466,7 @@ describe("Thing API", function(){
                     .define({ name: "two", type: "number" })
                     .define({ name: "three", type: "number" })
                     .group("group1", ["one", "two", "three"]);
-                
+
                 // group during define
                 _thing
                     .define({ name: "four" })
@@ -388,21 +475,21 @@ describe("Thing API", function(){
                         { name: "six", type: "string" }
                     ])
                     .define("group3", { name: "title", type: "number"});
-                    
+
                 // group during mixin
                 var config2 = new Thing().define({ name: "seven" });
                 _thing.mixIn(config2, "group4");
-                
+
                 // ungroup specific properties
                 _thing.ungroup("group1", ["one", "two"]);
-                
+
                 // ungroup all
                 _thing.ungroup("group2");
-                
+
                 // retrieve group
                 _thing.where({ group: "group3" }).toJSON();
             });
-            
+
             it("group(groupName, propertyNameArray)", function(){
                 _thing
                     .define({ name: "one", type: "number", alias: "1", value: 1 })
@@ -412,33 +499,33 @@ describe("Thing API", function(){
                     .group("everything2", ["one", "two", "three"])
                     .group("smallest", "one")
                     .group("not the smallest", ["two", "three"]);
-            
+
                 assert.deepEqual(_thing.where({ group: "everything" }).toJSON(), {one: 1, two:2, three:3 });
                 assert.deepEqual(_thing.where({ group: "everything2" }).toJSON(), {one: 1, two:2, three:3 });
                 assert.deepEqual(_thing.where({ group: "smallest" }).toJSON(), {one: 1 });
                 assert.deepEqual(_thing.where({ group: "not the smallest" }).toJSON(), { two:2, three:3 });
             });
-            
+
             it("group(groupName) groups all properties", function(){
                 _thing
                     .define({ name: "one", type: "number", alias: "1", value: 1 })
                     .define({ name: "two", type: "number", alias: "t", value: 2 })
                     .define({ name: "three", type: "number", alias: "3", value: 3 })
                     .group("everything");
-            
+
                 assert.deepEqual(_thing.where({ group: "everything" }).toJSON(), {one: 1, two:2, three:3 });
             })
-            
+
             it("ungroup(groupName) should remove all properties from groupName", function(){
                 _thing
                     .define("group1", {name: "one"})
                     .define("group1", {name: "two"})
                     .define("group2", {name: "three"});
                 assert.deepEqual(_thing.where({ group: "group1"}).properties, ["one", "two"]);
-                
+
                 _thing.ungroup("group1");
                 assert.deepEqual(_thing.where({ group: "group1"}).properties, []);
-                
+
             });
 
             it("ungroup(groupName, propertyNameArray) should remove propertyNames from groupName", function(){
@@ -448,21 +535,21 @@ describe("Thing API", function(){
                     .define("group2", {name: "three"})
                     .define("group1", {name: "four"});
                 assert.deepEqual(_thing.where({ group: "group1"}).properties, ["one", "two", "four"]);
-                
+
                 _thing.ungroup("group1", "one");
                 assert.deepEqual(_thing.where({ group: "group1"}).properties, ["two", "four"]);
 
                 _thing.ungroup("group1", ["two", "four"]);
                 assert.deepEqual(_thing.where({ group: "group1"}).properties, []);
             });
-            
+
             it("where({group: groupName}) returns a Thing clone, with reduced properties", function(){
                 _thing
                     .define({ name: "one", type: "number", alias: "1", value: 1 })
                     .define({ name: "two", type: "number", alias: "t", value: 2 })
                     .define({ name: "three", type: "number", alias: "3", value: 3 })
                     .group("group", ["two", "three"]);
-                
+
                 assert.strictEqual(_thing.where({ group: "group" }).get("one"), undefined);
                 assert.strictEqual(_thing.where({ group: "group" }).get("two"), 2);
                 assert.strictEqual(_thing.where({ group: "group" }).get("three"), 3);
@@ -470,13 +557,13 @@ describe("Thing API", function(){
                 assert.strictEqual(_thing.get("two"), 2);
                 assert.strictEqual(_thing.get("three"), 3);
             });
-            
+
             it("where({ name: {$ne: []}}) should exclude named properties", function(){
                 _thing
                     .define({ name: "one", type: "number", alias: "1", value: 1 })
                     .define({ name: "two", type: "number", alias: "t", value: 2 })
                     .define({ name: "three", type: "number", alias: "3", value: 3 });
-                    
+
                 assert.throws(function(){
                     assert.strictEqual(_thing.where({ name: { $ne: ["one", "two"] }}).get("one"), 1);
                 }, null, JSON.stringify(_thing.where({ name: { $ne: ["one", "two"] }}).toJSON()));
@@ -485,9 +572,9 @@ describe("Thing API", function(){
                 });
                 assert.strictEqual(_thing.get("three"), 3);
             });
-            
+
             it("define() with groups and subgroups");
-            
+
             it("define(groupName, definitionArray) with groups", function(){
                 _thing
                     .define({ name: "no group" })
@@ -503,85 +590,25 @@ describe("Thing API", function(){
                             alias: "t"
                         },
                         {
-                            name: "start-at", 
-                            type: "string", 
-                            valid: /duration|frame|pts/, 
+                            name: "start-at",
+                            type: "string",
+                            valid: /duration|frame|pts/,
                             invalidMsg: "please specify the unit, e.g. --start-at duration:10 or --start-at frame:2000"
                         },
                         {
                             name: "stop-at",
                             type: "string",
                             valid: /duration|frame|pts/,
-                            invalidMsg: "please specify the unit, e.g. --stop-at duration:100 or --stop-at frame:3000" 
+                            invalidMsg: "please specify the unit, e.g. --stop-at duration:100 or --stop-at frame:3000"
                         }
                     ]);
-               
+
                 assert.deepEqual(_thing.definition("no group").groups, []);
                 assert.deepEqual(_thing.definition("title").groups, ["source"], JSON.stringify(_thing.definition("title")));
                 assert.deepEqual(_thing.definition("start-at").groups, ["source"]);
                 assert.deepEqual(_thing.definition("stop-at").groups, ["source"]);
             });
-            
-        });
-    });
-});
 
-describe("Error handling", function(){
-    it("define(definition) should not throw on duplicate property", function(){
-        _thing.define({ name: "yeah", type: "string" });
-    
-        assert.doesNotThrow(function(){
-            _thing.define({ name: "yeah", type: "boolean" });
         });
-        assert.strictEqual(_thing.definition("yeah").type, "boolean");
-    });
-    it("define(definition) should throw on duplicate alias", function(){
-        _thing.define({ name: "three", alias: "t" });
-    
-        assert.throws(function(){
-            _thing.define({ name: "four", alias: "t" });
-        });
-    });
-    it("set(property, value) should emit 'error' on unregistered property", function(){
-        assert.throws(function(){
-            _thing.set("yeah", "test");
-        });
-        assert.strictEqual(_thing.valid, false);
-        assert.strictEqual(_thing._errors.length, 1);                    
-    });
-    
-    it("catching 'error' surpresses throw on bad set()", function(){
-        _thing.on("error", function(err){
-            assert.ok(err);
-        });
-        assert.doesNotThrow(function(){
-            _thing.set("yeah", "test");
-        });
-        assert.strictEqual(_thing.valid, false);
-        assert.strictEqual(_thing._errors.length, 1);                    
-    });
-
-    it("set([--property, value]) should emit 'error' on unregistered property", function(){
-        assert.throws(function(){
-            _thing.set(["--asdklfjlkd"]);
-        });
-        assert.strictEqual(_thing.valid, false);
-        assert.strictEqual(_thing._errors.length, 1);                    
-    });
-                    
-    it("get(property) should return undefined on unregistered property", function(){
-        assert.strictEqual(_thing.get("yeah", "test"), undefined);
-    });
-    
-    it("set(propertiesArray) should not alter propertiesArray itself", function(){
-        var args = [ "--one", 1, "--two", 2, "--three", 3 ];
-        _thing
-            .define({ name: "one", type: "number", value: -1 })
-            .define({ name: "two", type: "number", value: -2 })
-            .define({ name: "three", type: "number", value: -3 });
-        
-        assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
-        _thing.set(args);
-        assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
     });
 });
