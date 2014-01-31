@@ -135,9 +135,10 @@ describe("Thing", function(){
                 _thing.define({ name: "yeah", type: "string" });
 
                 assert.doesNotThrow(function(){
-                    _thing.define({ name: "yeah", type: "boolean" });
+                    _thing.define({ name: "yeah", type: "boolean", validTest: /\w+/ });
                 });
                 assert.strictEqual(_thing.definition("yeah").type, "boolean");
+                assert.strictEqual(_thing.definition("yeah").validTest, /\w+/);
             });
             
             it("define(definition) should throw on duplicate alias", function(){
