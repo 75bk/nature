@@ -5,21 +5,7 @@ var assert = require("assert"),
     l = console.log;
 
 describe("Thing", function(){
-    it("should remove() an property and its alias");
-    it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
-    it("should throw when a none-existent property is accessed, e.g. console.log(properties.dfkdshl)");
-    it("free usage on --help");
-    it("should protect from defining properties with reserved names like clone, toJSON, mixIn etc");
-
-    it("should throw on empty property, i.e. 'rename -' or '--'");
-    it("should expose _errors array on Thing instance API, same as 'validationMessages'");
-    it("needs consistent error handling.. some errors emit, some throw (like 'renamer -').. should all errors just set valid=false?");
-
     it("should valueTest run on get, so function can refer to other set values in this.config? e.g. if (this.config.regex) then ...");
-    it("a 'post-set' hook, so setting '**/*.txt' on 'files' can be expanded");
-    it("scrap constructor to remove need for Thing.call(this)");
-    it("should emit 'invalid' when thing changes from valid to invalid");
-    it("nature should set valid=false on error, instead of throwing an error requiring a handler")
 
     var _thing;
     beforeEach(function(){
@@ -75,7 +61,7 @@ describe("Thing", function(){
 
                 assert.deepEqual(_thing.properties, [ "one", "two", "three" ]);
             });
-        });
+            });
     });
 
     describe("methods: ", function(){
@@ -128,7 +114,7 @@ describe("Thing", function(){
                 assert.deepEqual(_thing.definition("two").groups, ["group1"]);
                 assert.deepEqual(_thing.definition("three").groups, ["group2"]);
             });
-            
+
             it("define(definition) should not throw on duplicate property, updating it instead", function(){
                 _thing.define({ name: "yeah", type: "string" });
 
@@ -138,7 +124,7 @@ describe("Thing", function(){
                 assert.strictEqual(_thing.definition("yeah").type, "boolean");
                 // assert.strictEqual(_thing.definition("yeah").validTest, /\w+/);
             });
-            
+
             it("define(definition) should throw on duplicate alias", function(){
                 _thing.define({ name: "three", alias: "t" });
 
@@ -349,7 +335,7 @@ describe("Thing", function(){
                     assert.strictEqual(_thing.get("one"), 1);
                 });
 
-                it("warn if set(array) produces defaultValues with no defaultOption set");
+                it("should throw on empty property, i.e. 'rename -' or '--'");
             });
 
             describe("Error handling", function(){
@@ -392,6 +378,9 @@ describe("Thing", function(){
                     assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
                 });
             });
+        });
+
+        describe(".unset", function(){
         });
 
         describe(".clone", function(){
@@ -455,7 +444,7 @@ describe("Thing", function(){
                 assert.strictEqual(_thing.definition("a").alias, "a");
             });
         });
-        
+
         describe(".group", function(){
             it("grouping summary", function(){
                 // set group after defining
@@ -607,6 +596,18 @@ describe("Thing", function(){
                 assert.deepEqual(_thing.definition("stop-at").groups, ["source"]);
             });
 
+        });
+
+        describe(".ungroup", function(){
+        });
+
+        describe(".where", function(){
+        });
+
+        describe(".toArray", function(){
+        });
+
+        describe(".toJSON", function(){
         });
     });
 });

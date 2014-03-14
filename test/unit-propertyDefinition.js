@@ -51,7 +51,7 @@ function factory(name){
 
 describe("PropertyDefinition", function(){
     describe("properties: ", function(){
-        it("access to `this.config` in a `valid` function must fail if config is not set");
+        it("access to `this.config` in a `valueTest` function must fail if config is not set");
         it("should be ok to have an definition with no defined type");
         it("type: [Array, Function] should allow a type of either");
 
@@ -444,5 +444,16 @@ describe("PropertyDefinition", function(){
 
             });
         });
+        
+        describe(".type", function(){});
+        describe(".valueTest", function(){});
+        describe(".required", function(){});
+        describe(".invalidMsg", function(){});
+        describe(".groups", function(){});
+        describe(".name", function(){});
+        describe(".defaultOption", function(){});
+        describe(".alias", function(){});
+        describe(".throwOnInvalid", function(){});
+        
     });
 });
