@@ -1,5 +1,5 @@
 var assert = require("assert"),
-    _ = require("underscore"),
+    w = require("wodge"),
     Thing = require("../lib/Thing"),
     PropertyDefinition = require("../lib/PropertyDefinition"),
     l = console.log;
@@ -355,8 +355,14 @@ describe("Thing", function(){
 
                 var config2 = _thing.clone();
                 assert.notStrictEqual(_thing, config2);
-                assert.deepEqual(_.omit(_thing.definitions["one"], "config"), _.omit(config2.definitions["one"], "config"));
-                assert.deepEqual(_.omit(_thing.definitions["two"], "config"), _.omit(config2.definitions["two"], "config"));
+                assert.deepEqual(
+                    w.omit(_thing.definitions["one"], "config"), 
+                    w.omit(config2.definitions["one"], "config")
+                );
+                assert.deepEqual(
+                    w.omit(_thing.definitions["two"], "config"), 
+                    w.omit(config2.definitions["two"], "config")
+                );
             });
         });
 
