@@ -5,10 +5,7 @@ var assert = require("assert"),
     l = console.log;
 
 describe("Thing", function(){
-    it("should toArray()");
-    it("should list defined properties");
-    it("should be compatible with --property=value style");
-    it("passing required:true should test for defaultOption.length > 0");
+    it("should remove() an property and its alias");
     it("this case should be invalid straight after definition: { type: Array, valueTest: function(a){ return a.length > 0; }}");
     it("should throw when a none-existent property is accessed, e.g. console.log(properties.dfkdshl)");
     it("free usage on --help");
@@ -22,6 +19,7 @@ describe("Thing", function(){
     it("a 'post-set' hook, so setting '**/*.txt' on 'files' can be expanded");
     it("scrap constructor to remove need for Thing.call(this)");
     it("should emit 'invalid' when thing changes from valid to invalid");
+    it("nature should set valid=false on error, instead of throwing an error requiring a handler")
 
     var _thing;
     beforeEach(function(){
@@ -182,8 +180,6 @@ describe("Thing", function(){
                 assert.strictEqual(_thing.get("K"), undefined);
             });
         });
-
-        it("should remove() an property and its alias");
 
         describe(".get", function(){
             it("get(property) with no value set", function(){
@@ -398,17 +394,18 @@ describe("Thing", function(){
             });
         });
 
-        it(".clone()", function(){
-            _thing.define({ name: "one", type: "number", value: 1 })
-                .define({ name: "two", type: "number", value: 2 });
+        describe(".clone", function(){
+            it("clones correctly", function(){
+                _thing.define({ name: "one", type: "number", value: 1 })
+                    .define({ name: "two", type: "number", value: 2 });
 
-            var config2 = _thing.clone();
-            assert.notStrictEqual(_thing, config2);
-            assert.deepEqual(_.omit(_thing.definition("one"), "config"), _.omit(config2.definition("one"), "config"));
-            assert.deepEqual(_.omit(_thing.definition("two"), "config"), _.omit(config2.definition("two"), "config"));
+                var config2 = _thing.clone();
+                assert.notStrictEqual(_thing, config2);
+                assert.deepEqual(_.omit(_thing.definition("one"), "config"), _.omit(config2.definition("one"), "config"));
+                assert.deepEqual(_.omit(_thing.definition("two"), "config"), _.omit(config2.definition("two"), "config"));
+            });
         });
 
-        it(".properties() should return Array of property names");
         describe(".mixin", function(){
             it("mixin(thing)", function(){
                 _thing.define({ name: "year", type: "number", value: 2013 });
