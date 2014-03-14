@@ -52,16 +52,6 @@ describe("Thing", function(){
                 assert.strictEqual(_thing.definitions.three, def3);
             });
         });
-
-        describe(".properties", function(){
-            it("return array of property name strings", function(){
-                _thing.define({ name: "one", type: Array, value: 1 });
-                _thing.define({ name: "two", type: "string", value: 1 });
-                _thing.define({ name: "three", type: RegExp, value: 1 });
-
-                assert.deepEqual(_thing.properties, [ "one", "two", "three" ]);
-            });
-            });
     });
 
     describe("methods: ", function(){
@@ -468,10 +458,10 @@ describe("Thing", function(){
                     .define("group1", {name: "one"})
                     .define("group1", {name: "two"})
                     .define("group2", {name: "three"});
-                assert.deepEqual(_thing.where({ group: "group1"}).properties, ["one", "two"]);
+                assert.deepEqual(Object.keys(_thing.where({ group: "group1"})), ["one", "two"]);
 
                 _thing.ungroup("group1");
-                assert.deepEqual(_thing.where({ group: "group1"}).properties, []);
+                assert.deepEqual(Object.keys(_thing.where({ group: "group1"})), []);
 
             });
 
@@ -481,13 +471,13 @@ describe("Thing", function(){
                     .define("group1", {name: "two"})
                     .define("group2", {name: "three"})
                     .define("group1", {name: "four"});
-                assert.deepEqual(_thing.where({ group: "group1"}).properties, ["one", "two", "four"]);
+                assert.deepEqual(Object.keys(_thing.where({ group: "group1"})), ["one", "two", "four"]);
 
                 _thing.ungroup("group1", "one");
-                assert.deepEqual(_thing.where({ group: "group1"}).properties, ["two", "four"]);
+                assert.deepEqual(Object.keys(_thing.where({ group: "group1"})), ["two", "four"]);
 
                 _thing.ungroup("group1", ["two", "four"]);
-                assert.deepEqual(_thing.where({ group: "group1"}).properties, []);
+                assert.deepEqual(Object.keys(_thing.where({ group: "group1"})), []);
             });
 
             it("where({group: groupName}) returns a Thing clone, with reduced properties", function(){
