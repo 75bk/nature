@@ -134,28 +134,6 @@ describe("Thing", function(){
             });
         });
 
-        describe(".hasValue", function(){
-            it("hasValue(propertyName) should return true if property has value", function(){
-                _thing.define({ name: "one" });
-                assert.strictEqual(_thing.hasValue("one"), false);
-
-                _thing.set("one", 1);
-                assert.strictEqual(_thing.hasValue("one"), true);
-            });
-
-            it("hasValue(propertyNameArray) should return true if has at least one value in list", function(){
-                _thing.define({ name: "one" })
-                    .define({ name: "two" });
-                assert.strictEqual(_thing.hasValue(["one", "two"]), false);
-
-                _thing.set("one", 1);
-                assert.strictEqual(_thing.hasValue(["one", "two"]), true);
-
-                _thing.set("two", 2);
-                assert.strictEqual(_thing.hasValue(["one", "two"]), true);
-            });
-        });
-
         describe(".unset", function(){
             it("should set a property and its alias to undefined", function(){
                 _thing.define({ name: "one", type: "number", alias: "K", value: 1 });
