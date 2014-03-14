@@ -11,7 +11,6 @@
   "license": "MIT",
   "gitHead": "20081be5ea695af800c5b675027ce9408b63bec4",
   "dependencies": {
-    "underscore": "~1.6",
     "wodge": "~0.3.0"
   },
   "devDependencies": {
