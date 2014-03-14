@@ -70,34 +70,32 @@ describe("Thing", function(){
                 var definition = { name: "one", type: "string", value: "one" };
                 _thing.define(definition);
 
-                assert.strictEqual(definition.type, _thing.definition("one").type);
-                assert.strictEqual(definition.value, _thing.definition("one").value);
+                assert.strictEqual(definition.type, _thing.definitions["one"].type);
+                assert.strictEqual(definition.value, _thing.definitions["one"].value);
                 assert.strictEqual(_thing.get("one"), "one");
             });
 
             it("define(existingDefinition) should redefine definition", function(){
-                _thing.define({ name: "one", type: "number", alias: "a" });
-                assert.strictEqual(_thing.definition("one").type, "number");
-                assert.strictEqual(_thing.definition("a").type, "number");
-                _thing.define({ name: "one", type: "string", alias: "a" });
-                assert.strictEqual(_thing.definition("a").type, "string");
+                _thing.define({ name: "one", type: "number" });
+                assert.strictEqual(_thing.definitions["one"].type, "number");
+                _thing.define({ name: "one", type: "string" });
+                assert.strictEqual(_thing.definitions["one"].type, "string");
             });
 
             it("define(PropertyDefinition) and retrieve with definition(name)", function(){
                 var def = new PropertyDefinition({ name: "one", "type": "number" });
                 _thing.define(def);
 
-                assert.strictEqual(def, _thing.definition("one"));
+                assert.strictEqual(def, _thing.definitions["one"]);
             });
 
             it("definition(name) should return defined properties", function(){
                 function testValid(){}
                 _thing.define({ name: "one", "type": "number", alias: "o", valueTest: testValid });
 
-                assert.strictEqual(_thing.definition("one").type, "number");
-                assert.strictEqual(_thing.definition("o").type, "number");
-                assert.strictEqual(_thing.definition("one").alias, "o");
-                assert.strictEqual(_thing.definition("one").valueTest, testValid);
+                assert.strictEqual(_thing.definitions["one"].type, "number");
+                assert.strictEqual(_thing.definitions["one"].alias, "o");
+                assert.strictEqual(_thing.definitions["one"].valueTest, testValid);
             });
 
             it("define() should work the same with a `definition.value` as set()");
@@ -110,9 +108,9 @@ describe("Thing", function(){
                     ])
                     .define("group2", { name: "three", type: "number"});
 
-                assert.deepEqual(_thing.definition("one").groups, ["group1"]);
-                assert.deepEqual(_thing.definition("two").groups, ["group1"]);
-                assert.deepEqual(_thing.definition("three").groups, ["group2"]);
+                assert.deepEqual(_thing.definitions["one"].groups, ["group1"]);
+                assert.deepEqual(_thing.definitions["two"].groups, ["group1"]);
+                assert.deepEqual(_thing.definitions["three"].groups, ["group2"]);
             });
 
             it("define(definition) should not throw on duplicate property, updating it instead", function(){
@@ -121,8 +119,8 @@ describe("Thing", function(){
                 assert.doesNotThrow(function(){
                     _thing.define({ name: "yeah", type: "boolean", validTest: /\w+/ });
                 });
-                assert.strictEqual(_thing.definition("yeah").type, "boolean");
-                // assert.strictEqual(_thing.definition("yeah").validTest, /\w+/);
+                assert.strictEqual(_thing.definitions["yeah"].type, "boolean");
+                // assert.strictEqual(_thing.definitions["yeah"].validTest, /\w+/);
             });
 
             it("define(definition) should throw on duplicate alias", function(){
@@ -133,18 +131,9 @@ describe("Thing", function(){
                 });
             });
         });
-
-        describe(".unset", function(){
-            it("should set a property and its alias to undefined", function(){
-                _thing.define({ name: "one", type: "number", alias: "K", value: 1 });
-                assert.strictEqual(_thing.get("one"), 1);
-                assert.strictEqual(_thing.get("K"), 1);
-                _thing.unset("one");
-                assert.strictEqual(_thing.get("one"), undefined);
-                assert.strictEqual(_thing.get("K"), undefined);
-            });
-        });
-
+        
+        describe(".undefine", function(){});
+            
         describe(".get", function(){
             it("get(property) with no value set", function(){
                 _thing.define({ name: "one", type: "number" });
@@ -359,6 +348,14 @@ describe("Thing", function(){
         });
 
         describe(".unset", function(){
+            it("should set a property and its alias to undefined", function(){
+                _thing.define({ name: "one", type: "number", alias: "K", value: 1 });
+                assert.strictEqual(_thing.get("one"), 1);
+                assert.strictEqual(_thing.get("K"), 1);
+                _thing.unset("one");
+                assert.strictEqual(_thing.get("one"), undefined);
+                assert.strictEqual(_thing.get("K"), undefined);
+            });
         });
 
         describe(".clone", function(){
@@ -368,8 +365,8 @@ describe("Thing", function(){
 
                 var config2 = _thing.clone();
                 assert.notStrictEqual(_thing, config2);
-                assert.deepEqual(_.omit(_thing.definition("one"), "config"), _.omit(config2.definition("one"), "config"));
-                assert.deepEqual(_.omit(_thing.definition("two"), "config"), _.omit(config2.definition("two"), "config"));
+                assert.deepEqual(_.omit(_thing.definitions["one"], "config"), _.omit(config2.definitions["one"], "config"));
+                assert.deepEqual(_.omit(_thing.definitions["two"], "config"), _.omit(config2.definitions["two"], "config"));
             });
         });
 
@@ -400,26 +397,11 @@ describe("Thing", function(){
                 _thing.mixIn(config3, ["config2", "config3"]);
 
                 assert.strictEqual(_thing.get("year"), 2013);
-                assert.deepEqual(_thing.definition("year").groups, []);
+                assert.deepEqual(_thing.definitions["year"].groups, []);
                 assert.strictEqual(_thing.get("month"), "feb");
-                assert.deepEqual(_thing.definition("month").groups, ["config2"]);
+                assert.deepEqual(_thing.definitions["month"].groups, ["config2"]);
                 assert.strictEqual(_thing.get("day"), "Sunday");
-                assert.deepEqual(_thing.definition("day").groups, ["config2", "config3"]);
-            });
-        });
-
-        describe(".definition", function(){
-            it("definition(property) should return correct def for full name and alias", function(){
-                _thing.define({ name: "one", type: Array, value: [1,2], required: true, alias: "a" });
-
-                assert.strictEqual(_thing.definition("one").type, Array);
-                assert.strictEqual(_thing.definition("a").type, Array);
-                assert.deepEqual(_thing.definition("one").value, [1,2]);
-                assert.deepEqual(_thing.definition("a").value, [1,2]);
-                assert.strictEqual(_thing.definition("one").required, true);
-                assert.strictEqual(_thing.definition("a").required, true);
-                assert.strictEqual(_thing.definition("one").alias, "a");
-                assert.strictEqual(_thing.definition("a").alias, "a");
+                assert.deepEqual(_thing.definitions["day"].groups, ["config2", "config3"]);
             });
         });
 
@@ -568,10 +550,10 @@ describe("Thing", function(){
                         }
                     ]);
 
-                assert.deepEqual(_thing.definition("no group").groups, []);
-                assert.deepEqual(_thing.definition("title").groups, ["source"], JSON.stringify(_thing.definition("title")));
-                assert.deepEqual(_thing.definition("start-at").groups, ["source"]);
-                assert.deepEqual(_thing.definition("stop-at").groups, ["source"]);
+                assert.deepEqual(_thing.definitions["no group"].groups, []);
+                assert.deepEqual(_thing.definitions["title"].groups, ["source"], JSON.stringify(_thing.definitions["title"]));
+                assert.deepEqual(_thing.definitions["start-at"].groups, ["source"]);
+                assert.deepEqual(_thing.definitions["stop-at"].groups, ["source"]);
             });
 
         });
@@ -587,5 +569,9 @@ describe("Thing", function(){
 
         describe(".toJSON", function(){
         });
+    });
+    
+    describe("events: ", function(){
+        
     });
 });
