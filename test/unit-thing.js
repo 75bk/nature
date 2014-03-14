@@ -5,8 +5,6 @@ var assert = require("assert"),
     l = console.log;
 
 describe("Thing", function(){
-    it("should valueTest run on get, so function can refer to other set values in this.config? e.g. if (this.config.regex) then ...");
-
     var _thing;
     beforeEach(function(){
         _thing = new Thing();
@@ -334,17 +332,6 @@ describe("Thing", function(){
                     _thing.set(args);
                     assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
                 });
-            });
-        });
-
-        describe(".unset", function(){
-            it("should set a property and its alias to undefined", function(){
-                _thing.define({ name: "one", type: "number", alias: "K", value: 1 });
-                assert.strictEqual(_thing.get("one"), 1);
-                assert.strictEqual(_thing.get("K"), 1);
-                _thing.unset("one");
-                assert.strictEqual(_thing.get("one"), undefined);
-                assert.strictEqual(_thing.get("K"), undefined);
             });
         });
 
