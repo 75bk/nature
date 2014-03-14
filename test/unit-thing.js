@@ -60,7 +60,7 @@ describe("Thing", function(){
 
                 assert.strictEqual(definition.type, _thing.definitions["one"].type);
                 assert.strictEqual(definition.value, _thing.definitions["one"].value);
-                assert.strictEqual(_thing.get("one"), "one");
+                assert.strictEqual(_thing.one, "one");
             });
 
             it("define(existingDefinition) should redefine definition", function(){
@@ -122,19 +122,19 @@ describe("Thing", function(){
         
         describe(".undefine", function(){});
             
-        describe(".get", function(){
-            it("get(property) with no value set", function(){
+        describe("read property value", function(){
+            it("read property with no value set", function(){
                 _thing.define({ name: "one", type: "number" });
-                assert.strictEqual(_thing.get("one"), undefined);
+                assert.strictEqual(_thing.one, undefined);
             });
 
-            it("get(property, default)", function(){
+            it("read property with value set", function(){
                 _thing.define({ name: "one", type: "number", value: 1 });
-                assert.strictEqual(_thing.get("one"), 1);
+                assert.strictEqual(_thing.one, 1);
             });
 
-            it("get(property) should return undefined on unregistered property", function(){
-                assert.strictEqual(_thing.get("yeah", "test"), undefined);
+            it("read property should return undefined on unregistered property", function(){
+                assert.strictEqual(_thing.yeah, undefined);
             });
         });
 
@@ -143,14 +143,14 @@ describe("Thing", function(){
                 _thing.define({ name: "one", type: Array });
                 _thing.set("one", [0, 1]);
 
-                assert.deepEqual(_thing.get("one"), [0, 1]);
+                assert.deepEqual(_thing.one, [0, 1]);
             })
 
             it("set(property, string)", function(){
                 _thing.define({ name: "test", type: "string" });
                 _thing.set("test", "testset");
 
-                assert.strictEqual(_thing.get("test"), "testset");
+                assert.strictEqual(_thing.test, "testset");
             });
 
             it("set(alias, string)", function(){
@@ -158,16 +158,15 @@ describe("Thing", function(){
                 _thing.define({ name: "test", type: "string", alias: "d" });
                 _thing.set("d", val);
 
-                assert.strictEqual(_thing.get("d"), val);
-                assert.strictEqual(_thing.get("test"), val);
+                assert.strictEqual(_thing.test, val);
             });
 
             it("set(string) on a type Array", function(){
                 _thing.define({ name:"one", type: Array });
                 _thing.set(["--one", "test ,1    , false"]);
-                assert.deepEqual(_thing.get("one"), ["test", "1", "false"]);
+                assert.deepEqual(_thing.one, ["test", "1", "false"]);
                 _thing.set("one", "test ,  2    , false");
-                assert.deepEqual(_thing.get("one"), ["test", "2", "false"]);
+                assert.deepEqual(_thing.one, ["test", "2", "false"]);
             });
 
             describe("set values in bulk", function(){
@@ -178,9 +177,9 @@ describe("Thing", function(){
 
                     _thing.set({ one: 1, two: 2, three: 3 });
 
-                    assert.strictEqual(_thing.get("one"), 1);
-                    assert.strictEqual(_thing.get("two"), 2);
-                    assert.strictEqual(_thing.get("three"), 3);
+                    assert.strictEqual(_thing.one, 1);
+                    assert.strictEqual(_thing.two, 2);
+                    assert.strictEqual(_thing.three, 3);
                 });
 
                 it("set(thing)", function(){
@@ -195,9 +194,9 @@ describe("Thing", function(){
 
                     _thing.set(thing2);
 
-                    assert.strictEqual(_thing.get("one"), -1);
-                    assert.strictEqual(_thing.get("two"), -2);
-                    assert.strictEqual(_thing.get("three"), -3);
+                    assert.strictEqual(_thing.one, -1);
+                    assert.strictEqual(_thing.two, -2);
+                    assert.strictEqual(_thing.three, -3);
 
                 });
 
@@ -210,10 +209,10 @@ describe("Thing", function(){
                         .define({ name: "files", type: Array, defaultOption: true })
                         .set(argv);
 
-                    assert.strictEqual(_thing.get("detailed"), true);
-                    assert.strictEqual(_thing.get("recurse"), true);
-                    assert.strictEqual(_thing.get("preset"), "dope");
-                    assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
+                    assert.strictEqual(_thing.detailed, true);
+                    assert.strictEqual(_thing.recurse, true);
+                    assert.strictEqual(_thing.preset, "dope");
+                    assert.deepEqual(_thing.files, ["music", "film", "documentary"]);
                 });
 
                 it("set(process.argv)", function(){
@@ -225,10 +224,10 @@ describe("Thing", function(){
                         .define({ name: "files", type: Array, defaultOption: true })
                         .set(process.argv);
 
-                    assert.strictEqual(_thing.get("detailed"), true);
-                    assert.strictEqual(_thing.get("recurse"), true);
-                    assert.strictEqual(_thing.get("preset"), "dope");
-                    assert.deepEqual(_thing.get("files"), ["music", "film", "documentary"]);
+                    assert.strictEqual(_thing.detailed, true);
+                    assert.strictEqual(_thing.recurse, true);
+                    assert.strictEqual(_thing.preset, "dope");
+                    assert.deepEqual(_thing.files, ["music", "film", "documentary"]);
                 });
 
                 it("set(process.argv) should set correct defaults", function(){
@@ -273,21 +272,21 @@ describe("Thing", function(){
                     _thing.define({ name: "one", type: Array, defaultOption: true });
                     _thing.set(["test", 1, false]);
 
-                    assert.deepEqual(_thing.get("one"), ["test", 1, false]);
+                    assert.deepEqual(_thing.one, ["test", 1, false]);
                 });
 
                 it("set(array) with a defaultOption of type string", function(){
                     _thing.define({ name: "one", type: "string", defaultOption: true });
                     _thing.set(["test", 1, false]);
 
-                    assert.strictEqual(_thing.get("one"), "test");
+                    assert.strictEqual(_thing.one, "test");
                 });
 
                 it("set(array) with a `defaultOption` of type number", function(){
                     _thing.define({ name: "one", type: "number", defaultOption: true });
                     _thing.set([1, 4, 5]);
 
-                    assert.strictEqual(_thing.get("one"), 1);
+                    assert.strictEqual(_thing.one, 1);
                 });
 
                 it("should throw on empty property, i.e. 'rename -' or '--'");
@@ -362,11 +361,9 @@ describe("Thing", function(){
                 _thing.mixIn(config2);
                 _thing.mixIn(config3);
 
-                assert.strictEqual(_thing.get("year"), 2013);
-                assert.strictEqual(_thing.get("month"), "feb");
-                assert.strictEqual(_thing.get("day"), "Sunday");
-                assert.strictEqual(_thing.get("m"), "feb");
-                assert.strictEqual(_thing.get("d"), "Sunday");
+                assert.strictEqual(_thing.year, 2013);
+                assert.strictEqual(_thing.month, "feb");
+                assert.strictEqual(_thing.day, "Sunday");
             });
 
             it("mixin() must fail on duplicate propertyName or alias");
@@ -379,11 +376,11 @@ describe("Thing", function(){
                 _thing.mixIn(config2, "config2");
                 _thing.mixIn(config3, ["config2", "config3"]);
 
-                assert.strictEqual(_thing.get("year"), 2013);
+                assert.strictEqual(_thing.year, 2013);
                 assert.deepEqual(_thing.definitions["year"].groups, []);
-                assert.strictEqual(_thing.get("month"), "feb");
+                assert.strictEqual(_thing.month, "feb");
                 assert.deepEqual(_thing.definitions["month"].groups, ["config2"]);
-                assert.strictEqual(_thing.get("day"), "Sunday");
+                assert.strictEqual(_thing.day, "Sunday");
                 assert.deepEqual(_thing.definitions["day"].groups, ["config2", "config3"]);
             });
         });
@@ -480,12 +477,12 @@ describe("Thing", function(){
                     .define({ name: "three", type: "number", alias: "3", value: 3 })
                     .group("group", ["two", "three"]);
 
-                assert.strictEqual(_thing.where({ group: "group" }).get("one"), undefined);
-                assert.strictEqual(_thing.where({ group: "group" }).get("two"), 2);
-                assert.strictEqual(_thing.where({ group: "group" }).get("three"), 3);
-                assert.strictEqual(_thing.get("one"), 1);
-                assert.strictEqual(_thing.get("two"), 2);
-                assert.strictEqual(_thing.get("three"), 3);
+                assert.strictEqual(_thing.where({ group: "group" }).one, undefined);
+                assert.strictEqual(_thing.where({ group: "group" }).two, 2);
+                assert.strictEqual(_thing.where({ group: "group" }).three, 3);
+                assert.strictEqual(_thing.one, 1);
+                assert.strictEqual(_thing.two, 2);
+                assert.strictEqual(_thing.three, 3);
             });
 
             it("where({ name: {$ne: []}}) should exclude named properties", function(){
@@ -495,12 +492,12 @@ describe("Thing", function(){
                     .define({ name: "three", type: "number", alias: "3", value: 3 });
 
                 assert.throws(function(){
-                    assert.strictEqual(_thing.where({ name: { $ne: ["one", "two"] }}).get("one"), 1);
+                    assert.strictEqual(_thing.where({ name: { $ne: ["one", "two"] }}).one, 1);
                 }, null, JSON.stringify(_thing.where({ name: { $ne: ["one", "two"] }}).toJSON()));
                 assert.throws(function(){
-                    assert.strictEqual(_thing.where({ name: { $ne: ["one", "two"] }}).get("two"), 2);
+                    assert.strictEqual(_thing.where({ name: { $ne: ["one", "two"] }}).two, 2);
                 });
-                assert.strictEqual(_thing.get("three"), 3);
+                assert.strictEqual(_thing.three, 3);
             });
 
             it("define() with groups and subgroups");
