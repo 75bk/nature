@@ -51,21 +51,6 @@ describe("Thing", function(){
                 assert.ok(_thing.validationMessages.length === 5, JSON.stringify(_thing.validationMessages));
             });
         });
-
-        describe(".definitions", function(){
-            it("return hash of PropertyDefinitions", function(){
-                var def1 = new Definition({ name: "one", type: Array, value: 1 }),
-                    def2 = new Definition({ name: "two", type: "string", value: 1 }),
-                    def3 = new Definition({ name: "three", type: RegExp, value: 1 });
-
-                _thing.define([ def1, def2, def3 ]);
-
-                assert.strictEqual(Object.keys(_thing.definitions).length, 3);
-                assert.strictEqual(_thing.definitions.one, def1);
-                assert.strictEqual(_thing.definitions.two, def2);
-                assert.strictEqual(_thing.definitions.three, def3);
-            });
-        });
     });
 
     describe("methods: ", function(){
@@ -74,32 +59,32 @@ describe("Thing", function(){
                 var definition = { name: "one", type: "string", value: "one" };
                 _thing.define(definition);
 
-                assert.strictEqual(definition.type, _thing.definitions["one"].type);
-                assert.strictEqual(definition.value, _thing.definitions["one"].value);
+                assert.strictEqual(definition.type, _thing._definitionList["one"].type);
+                assert.strictEqual(definition.value, _thing._definitionList["one"].value);
                 assert.strictEqual(_thing.one, "one");
             });
 
             it("define(existingDefinition) should redefine definition", function(){
                 _thing.define({ name: "one", type: "number" });
-                assert.strictEqual(_thing.definitions["one"].type, "number");
+                assert.strictEqual(_thing._definitionList["one"].type, "number");
                 _thing.define({ name: "one", type: "string" });
-                assert.strictEqual(_thing.definitions["one"].type, "string");
+                assert.strictEqual(_thing._definitionList["one"].type, "string");
             });
 
             it("define(PropertyDefinition) and retrieve with definition(name)", function(){
                 var def = new Definition({ name: "one", "type": "number" });
                 _thing.define(def);
 
-                assert.strictEqual(def, _thing.definitions["one"]);
+                assert.strictEqual(def, _thing._definitionList["one"]);
             });
 
             it("definition(name) should return defined properties", function(){
                 function testValid(){}
                 _thing.define({ name: "one", "type": "number", alias: "o", valueTest: testValid });
 
-                assert.strictEqual(_thing.definitions["one"].type, "number");
-                assert.strictEqual(_thing.definitions["one"].alias, "o");
-                assert.strictEqual(_thing.definitions["one"].valueTest, testValid);
+                assert.strictEqual(_thing._definitionList["one"].type, "number");
+                assert.strictEqual(_thing._definitionList["one"].alias, "o");
+                assert.strictEqual(_thing._definitionList["one"].valueTest, testValid);
             });
 
             it("define() should work the same with a `definition.value` as set()");
@@ -112,9 +97,9 @@ describe("Thing", function(){
                     ])
                     .define("group2", { name: "three", type: "number"});
 
-                assert.deepEqual(_thing.definitions["one"].groups, ["group1"]);
-                assert.deepEqual(_thing.definitions["two"].groups, ["group1"]);
-                assert.deepEqual(_thing.definitions["three"].groups, ["group2"]);
+                assert.deepEqual(_thing._definitionList["one"].groups, ["group1"]);
+                assert.deepEqual(_thing._definitionList["two"].groups, ["group1"]);
+                assert.deepEqual(_thing._definitionList["three"].groups, ["group2"]);
             });
 
             it("define(definition) should not throw on duplicate property, updating it instead", function(){
@@ -123,8 +108,8 @@ describe("Thing", function(){
                 assert.doesNotThrow(function(){
                     _thing.define({ name: "yeah", type: "boolean", validTest: /\w+/ });
                 });
-                assert.strictEqual(_thing.definitions["yeah"].type, "boolean");
-                // assert.strictEqual(_thing.definitions["yeah"].validTest, /\w+/);
+                assert.strictEqual(_thing._definitionList["yeah"].type, "boolean");
+                // assert.strictEqual(_thing._definitionList["yeah"].validTest, /\w+/);
             });
 
             it("define(definition) should throw on duplicate alias", function(){
@@ -375,11 +360,11 @@ describe("Thing", function(){
                 _thing.mixIn(config3, ["config2", "config3"]);
 
                 assert.strictEqual(_thing.year, 2013);
-                assert.deepEqual(_thing.definitions["year"].groups, []);
+                assert.deepEqual(_thing._definitionList["year"].groups, []);
                 assert.strictEqual(_thing.month, "feb");
-                assert.deepEqual(_thing.definitions["month"].groups, ["config2"]);
+                assert.deepEqual(_thing._definitionList["month"].groups, ["config2"]);
                 assert.strictEqual(_thing.day, "Sunday");
-                assert.deepEqual(_thing.definitions["day"].groups, ["config2", "config3"]);
+                assert.deepEqual(_thing._definitionList["day"].groups, ["config2", "config3"]);
             });
         });
 
@@ -528,10 +513,10 @@ describe("Thing", function(){
                         }
                     ]);
 
-                assert.deepEqual(_thing.definitions["no group"].groups, []);
-                assert.deepEqual(_thing.definitions["title"].groups, ["source"], JSON.stringify(_thing.definitions["title"]));
-                assert.deepEqual(_thing.definitions["start-at"].groups, ["source"]);
-                assert.deepEqual(_thing.definitions["stop-at"].groups, ["source"]);
+                assert.deepEqual(_thing._definitionList["no group"].groups, []);
+                assert.deepEqual(_thing._definitionList["title"].groups, ["source"], JSON.stringify(_thing._definitionList["title"]));
+                assert.deepEqual(_thing._definitionList["start-at"].groups, ["source"]);
+                assert.deepEqual(_thing._definitionList["stop-at"].groups, ["source"]);
             });
 
         });
