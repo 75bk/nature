@@ -1,8 +1,24 @@
 var assert = require("assert"),
     w = require("wodge"),
     Thing = require("../lib/Thing"),
-    PropertyDefinition = require("../lib/PropertyDefinition"),
+    Definition = require("../lib/PropertyDefinition"),
     l = console.log;
+
+function factory(name, type){
+    var definitions = {
+        name:   { name: name },
+        string: { name: name, type: "string" },
+        number: { name: name, type: "number" },
+        bool:   { name: name, type: "boolean" },
+        func:   { name: name, type: "function" },
+        obj:    { name: name, type: "object" },
+        array:  { name: name, type: Array },
+        custom: { name: name, type: CustomClass },
+        date:   { name: name, type: Date },
+        regex:  { name: name, type: RegExp }
+    };
+    return new Definition(definitions[name]);
+}
 
 describe("Thing", function(){
     var _thing;
@@ -38,9 +54,9 @@ describe("Thing", function(){
 
         describe(".definitions", function(){
             it("return hash of PropertyDefinitions", function(){
-                var def1 = new PropertyDefinition({ name: "one", type: Array, value: 1 }),
-                    def2 = new PropertyDefinition({ name: "two", type: "string", value: 1 }),
-                    def3 = new PropertyDefinition({ name: "three", type: RegExp, value: 1 });
+                var def1 = new Definition({ name: "one", type: Array, value: 1 }),
+                    def2 = new Definition({ name: "two", type: "string", value: 1 }),
+                    def3 = new Definition({ name: "three", type: RegExp, value: 1 });
 
                 _thing.define([ def1, def2, def3 ]);
 
@@ -71,7 +87,7 @@ describe("Thing", function(){
             });
 
             it("define(PropertyDefinition) and retrieve with definition(name)", function(){
-                var def = new PropertyDefinition({ name: "one", "type": "number" });
+                var def = new Definition({ name: "one", "type": "number" });
                 _thing.define(def);
 
                 assert.strictEqual(def, _thing.definitions["one"]);
@@ -331,24 +347,6 @@ describe("Thing", function(){
                     _thing.set(args);
                     assert.deepEqual(args, [ "--one", 1, "--two", 2, "--three", 3 ]);
                 });
-            });
-        });
-
-        describe(".clone", function(){
-            it("clones correctly", function(){
-                _thing.define({ name: "one", type: "number", value: 1 })
-                    .define({ name: "two", type: "number", value: 2 });
-
-                var config2 = _thing.clone();
-                assert.notStrictEqual(_thing, config2);
-                assert.deepEqual(
-                    w.omit(_thing.definitions["one"], "config"), 
-                    w.omit(config2.definitions["one"], "config")
-                );
-                assert.deepEqual(
-                    w.omit(_thing.definitions["two"], "config"), 
-                    w.omit(config2.definitions["two"], "config")
-                );
             });
         });
 
