@@ -532,6 +532,9 @@ describe("Thing", function(){
 
         describe(".toJSON", function(){
         });
+        
+        describe("._destroy", function(){});
+        describe("._load", function(){});
     });
     
     describe("events: ", function(){
