@@ -1,7 +1,7 @@
 var assert = require("assert"),
     w = require("wodge"),
-    Thing = require("../lib/Thing"),
-    Definition = require("../lib/PropertyDefinition"),
+    Model = require("../lib/Model"),
+    Attribute = require("../lib/Attribute"),
     l = console.log;
 
 function factory(name, type){
@@ -17,13 +17,13 @@ function factory(name, type){
         date:   { name: name, type: Date },
         regex:  { name: name, type: RegExp }
     };
-    return new Definition(definitions[name]);
+    return new Attribute(definitions[name]);
 }
 
-describe("Thing", function(){
+describe("Model", function(){
     var _thing;
     beforeEach(function(){
-        _thing = new Thing();
+        _thing = new Model();
     });
 
     describe("properties:", function(){
@@ -64,15 +64,15 @@ describe("Thing", function(){
                 assert.strictEqual(_thing.one, "one");
             });
 
-            it("define(existingDefinition) should redefine definition", function(){
+            it("define(existingAttribute) should redefine definition", function(){
                 _thing.define({ name: "one", type: "number" });
                 assert.strictEqual(_thing._definitionList["one"].type, "number");
                 _thing.define({ name: "one", type: "string" });
                 assert.strictEqual(_thing._definitionList["one"].type, "string");
             });
 
-            it("define(PropertyDefinition) and retrieve with definition(name)", function(){
-                var def = new Definition({ name: "one", "type": "number" });
+            it("define(PropertyAttribute) and retrieve with definition(name)", function(){
+                var def = new Attribute({ name: "one", "type": "number" });
                 _thing.define(def);
 
                 assert.strictEqual(def, _thing._definitionList["one"]);
@@ -188,7 +188,7 @@ describe("Thing", function(){
                         .define({ name: "two", type: "number" })
                         .define({ name: "three", type: "number" });
 
-                    var thing2 = new Thing()
+                    var thing2 = new Model()
                         .define({ name: "one", type: "number", value: -1 })
                         .define({ name: "two", type: "number", value: -2 })
                         .define({ name: "three", type: "number", value: -3 })
@@ -338,8 +338,8 @@ describe("Thing", function(){
         describe(".mixin", function(){
             it("mixin(thing)", function(){
                 _thing.define({ name: "year", type: "number", value: 2013 });
-                var config2 = new Thing().define({ name: "month", type: "string", value: "feb", alias: "m" });
-                var config3 = new Thing().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
+                var config2 = new Model().define({ name: "month", type: "string", value: "feb", alias: "m" });
+                var config3 = new Model().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
 
                 _thing.mixIn(config2);
                 _thing.mixIn(config3);
@@ -353,8 +353,8 @@ describe("Thing", function(){
 
             it("mixin(thing, groups)", function(){
                 _thing.define({ name: "year", type: "number", value: 2013 });
-                var config2 = new Thing().define({ name: "month", type: "string", value: "feb", alias: "m" });
-                var config3 = new Thing().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
+                var config2 = new Model().define({ name: "month", type: "string", value: "feb", alias: "m" });
+                var config3 = new Model().define({ name: "day", type: "string", value: "Sunday", alias: "d" })
 
                 _thing.mixIn(config2, "config2");
                 _thing.mixIn(config3, ["config2", "config3"]);
@@ -387,7 +387,7 @@ describe("Thing", function(){
                     .define("group3", { name: "title", type: "number"});
 
                 // group during mixin
-                var config2 = new Thing().define({ name: "seven" });
+                var config2 = new Model().define({ name: "seven" });
                 _thing.mixIn(config2, "group4");
 
                 // ungroup specific properties
@@ -453,7 +453,7 @@ describe("Thing", function(){
                 assert.deepEqual(Object.keys(_thing.where({ group: "group1"})), []);
             });
 
-            it("where({group: groupName}) returns a Thing clone, with reduced properties", function(){
+            it("where({group: groupName}) returns a Model clone, with reduced properties", function(){
                 _thing
                     .define({ name: "one", type: "number", alias: "1", value: 1 })
                     .define({ name: "two", type: "number", alias: "t", value: 2 })

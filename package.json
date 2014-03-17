@@ -9,15 +9,10 @@
   "repository": "https://github.com/75lb/nature.git",
   "author": "Lloyd Brookes",
   "license": "MIT",
-  "gitHead": "20081be5ea695af800c5b675027ce9408b63bec4",
   "dependencies": {
     "wodge": "~0.3.0"
   },
   "devDependencies": {
-    "mocha": "~1.18",
-    "grunt": "~0.4.1",
-    "yuidoc2md": "~0.2.2",
-    "grunt-boil": "~0.6.0",
-    "grunt-contrib-jshint": "~0.8.0"
+    "mocha": "~1.18"
   }
 }
