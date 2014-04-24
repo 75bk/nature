@@ -10,7 +10,7 @@
   "author": "Lloyd Brookes",
   "license": "MIT",
   "dependencies": {
-    "wodge": "~0.3.0"
+    "wodge": "~0.5.2"
   },
   "devDependencies": {
     "mocha": "~1.18"
