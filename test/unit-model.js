@@ -290,6 +290,25 @@ describe("Model", function(){
                     assert.strictEqual(_thing.one, 1);
                 });
 
+                it("set(array) should ammend defaultOption items", function(){
+                    _thing.define({ name: "do", type: "string" });
+                    _thing.define({ name: "when", type: Array, defaultOption: true });
+                    _thing.define({ name: "change", type: "boolean" });
+                    _thing.set([ 
+                        '--do',
+                        'tmp/balders.sh',
+                        '--when',
+                        'lib/Handbrake.js',
+                        'lib/HandbrakeOptions.js',
+                        'lib/handbrake-js.js',
+                        'lib/progress.js',
+                        '--change' 
+                    ]);
+                    /* --when is set initially with 'lib/Handbrake.js', the defaultOptions 
+                    where overwriting the initial value  */
+                    assert.strictEqual(_thing.when.length, 4);
+                });
+
                 it("should throw on empty property, i.e. 'rename -' or '--'");
             });
 
