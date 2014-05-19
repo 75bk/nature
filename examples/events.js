@@ -1,18 +1,6 @@
 /* in the style of an MVC controller.. or Presenter..  */
 
-var nature = require("nature");
-
-/* no constructor, therefore use default constructor which loads data */
-var Cat = nature.design({
-    attributes: [
-        { name: "name" },
-        { name: "colour" },
-        { name: "personality", test: /calm|aggressive|afraid/ }
-    ]
-})
-var Cat = nature.design("http://localhost:3000/cat/design")
-
-/* loading data */
+/* model */
 var cat = new Cat({
     name: "Meow",
     colour: "ginger",
@@ -20,27 +8,27 @@ var cat = new Cat({
 })
 
 Cat.load(cat, "http://localhost:3000/cat/1");
-Cat.load(cat, { name: "tabby" })
-argv.load(cat, [ "--name", "tabby", "-c", "white" ]);
 
-
-
-
-function CatView(cat){
+/* view.. input: model, output: DOM */
+function CatView(cat, element){
     var self = this;
+    this.name;
+    this.colourSelect;
     this.cat = cat;
-    this.cat.on("update", function(prop, new, old){
-        self.render();
-    })
+ 
+    this.render = = function(){
+        this.body = this.template.render(this.cat);
+    }
 }
-CatView.prototype.render = function(){
-    this.body = this.template.render(this.cat);
+var view = new CatView()
+
+/* controller.. input: DOM, output: Model */
+function CatController(element, cat){
+    element.name.attachEventListener("change", function(){
+        cat.name = this.value;
+    });
+    
 }
-
-var cat = new Cat({
-    name: "Meow",
-    colour: "ginger",
-    personality: "calm"
-})
-var view = new CatView(cat)
-
+var controller = new CatController(element){}
+cat.name.on("update", view.setName);
+cat.colour.on("update", view.setColour);
