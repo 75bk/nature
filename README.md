@@ -6,4 +6,42 @@
 
 Nature
 ======
-**big-ass rewrite in progress**
+abstract validation tests, for re-usabilty. 
+
+Model
+-----
+A plain object with 
+
+- validation per property
+- validation per whole object (e.g. values must not match)
+- observable, emit change events
+
+Command line parse
+------------------
+
+- define which are boolean options
+- which is the default option
+- define alias
+- define description
+- free usage    
+
+Collection
+----------
+
+- validation (e.g. all files in a collection exist)
+
+nature module
+-------------
+provides extra features on models and collections.. 
+
+- test valid:   nature.isValid(model)
+- group:        nature.group(model, [ "name", "type" ], "groupA")
+- mixin:        nature.merge(commandLineArgs, fileArgs)
+- extract:      nature.where(model, "fileArgs")
+- create
+
+    var argv = nature.create([
+        { name: "one", alias: "a" },
+        { name: "files", alias: "a", required: true, defaultOption: true },
+        { name: "verbose", type: "boolean" }
+    ]);
