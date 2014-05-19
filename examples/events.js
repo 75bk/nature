@@ -11,13 +11,11 @@ Cat.load(cat, "http://localhost:3000/cat/1");
 
 /* view.. input: model, output: DOM */
 function CatView(cat, element){
-    var self = this;
-    this.name;
-    this.colourSelect;
     this.cat = cat;
- 
-    this.render = = function(){
-        this.body = this.template.render(this.cat);
+    cat.on("update", this.update)
+    
+    this.update = function(prop, value){
+        self[prop] = value;
     }
 }
 var view = new CatView()
@@ -27,8 +25,5 @@ function CatController(element, cat){
     element.name.attachEventListener("change", function(){
         cat.name = this.value;
     });
-    
 }
 var controller = new CatController(element){}
-cat.name.on("update", view.setName);
-cat.colour.on("update", view.setColour);
