@@ -15,7 +15,7 @@ test("constructor returns design instance", function(t){
 
 test("constructor(attributes)", function(t){
     var design = Design(attributes);
-    t.equal(design._attributes, attributes);
+    t.deepEqual(design._attributes, attributes);
     t.end();
 });
 
@@ -39,10 +39,10 @@ test("constructor(attributes) grouped", function(t){
 
     var design = Design(attributes);
     t.deepEqual(design._attributes, [
-        { name: "verbose", type: Boolean, groups: "test1" },
-        { name: "dry", type: Boolean, groups: "test1" },
-        { name: "three", type: Boolean, groups: "test2" },
-        { name: "four", type: Boolean, groups: "test2" }
+        { name: "verbose", type: Boolean, groups: ["test1"] },
+        { name: "dry", type: Boolean, groups: ["test1"] },
+        { name: "three", type: Boolean, groups: ["test2"] },
+        { name: "four", type: Boolean, groups: ["test2"] }
     ]);
     t.end();
 });
