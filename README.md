@@ -1,5 +1,5 @@
 [![view on npm](http://img.shields.io/npm/v/nature.svg)](https://www.npmjs.org/package/nature)
-![npm module downloads per month](http://img.shields.io/npm/dm/nature.svg)
+[![npm module downloads per month](http://img.shields.io/npm/dm/nature.svg)](https://www.npmjs.org/package/nature)
 [![Build Status](https://travis-ci.org/75lb/nature.svg?branch=master)](https://travis-ci.org/75lb/nature)
 [![Dependency Status](https://david-dm.org/75lb/nature.svg)](https://david-dm.org/75lb/nature)
 ![Analytics](https://ga-beacon.appspot.com/UA-27725889-9/nature/README.md?pixel)
