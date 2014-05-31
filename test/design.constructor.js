@@ -12,4 +12,3 @@ test("constructor returns design instance", function(t){
     t.ok(design instanceof Design);
     t.end();
 });
-
