@@ -12,3 +12,10 @@ test("design.create() returns Model instance", function(t){
     t.ok(design.create() instanceof Model);
     t.end();
 });
+
+test("Model instance has correct properties", function(t){
+    var design = Design(attributes);
+    var model = design.create();
+    t.deepEqual(Object.keys(model), [ "verbose", "dry" ]);
+    t.end();
+});
