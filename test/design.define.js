@@ -10,7 +10,7 @@ var attributes = [
 test("design.define(attribute)", function(t){
     var design = Design();
     design.define(attributes[0]);
-    t.equal(design._attributes[0] === attributes[0]);
+    t.equal(design._attributes[0], attributes[0]);
     t.end();
 });
 
