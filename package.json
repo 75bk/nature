@@ -4,16 +4,16 @@
   "description": "Classify the things in your world and how they interact.",
   "main": "lib/nature.js",
   "scripts": {
-    "test": "mocha --reporter spec test/unit-*.js"
+    "test": "tap test/*.js"
   },
   "repository": "https://github.com/75lb/nature.git",
   "author": "Lloyd Brookes",
   "license": "MIT",
   "dependencies": {
-    "wodge": "~0.6"
+    "wodge": "~0.7"
   },
   "devDependencies": {
-    "mocha": "~1.18",
+    "tap": "^0.4.9",
     "tape": "^2.13.1"
   }
 }
