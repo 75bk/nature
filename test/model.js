@@ -1,4 +1,4 @@
-var test = require("tape");
+var test = require("tap").test;
 var Design = require("../lib/Design");
 
 var attributes = [

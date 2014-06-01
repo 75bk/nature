@@ -21,12 +21,6 @@ test("design.where(model, { groups: 'blah' })", function(t){
     ];
 
     var design = Design(attributes);
-    var model = design.create();
-    model.verbose = true;
-    model.colour = "red";
-    t.deepEqual(design.where("return attribute.groups && attribute.groups.indexOf('test1') > -1;", model), {
-        verbose: true,
-        colour: "red"
-    });
+    t.deepEqual(design.groups(), [ "test1", "test2" ]);
     t.end();
 });
