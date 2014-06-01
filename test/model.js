@@ -11,6 +11,7 @@ var attributes = [
 test("Model has correct values", function(t){
     var design = Design(attributes);
     var model = design.create();
+    t.equal(Object.keys(model).length, 4);
     t.equal(model.verbose, undefined);
     t.equal(model.colour, undefined);
     t.equal(model.number, undefined);
