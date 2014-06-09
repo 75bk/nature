@@ -1,8 +1,8 @@
-var test = require("tap").test;
+var test = require("tape");
 var Design = require("../lib/Design");
 var Model = require("../lib/Model2");
 
-test("design.where(model, { groups: 'blah' })", function(t){
+test("design.groups()", function(t){
     var attributes = [
         {
             groups: "test1",
@@ -25,7 +25,7 @@ test("design.where(model, { groups: 'blah' })", function(t){
     t.end();
 });
 
-test("design.where(model, { groups: 'blah' })", function(t){
+test("design.groups() with attributes with multiple groups", function(t){
     var attributes = [
         {
             groups: ["test1", "all"],

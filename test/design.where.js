@@ -1,4 +1,4 @@
-var test = require("tap").test;
+var test = require("tape");
 var Design = require("../lib/Design");
 var Model = require("../lib/Model2");
 

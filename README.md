@@ -16,15 +16,6 @@ A plain object with
 - validation per whole object (e.g. values must not match)
 - observable, emit change events
 
-Command line parse
-------------------
-
-- define which are boolean options
-- which is the default option
-- define alias
-- define description
-- free usage    
-
 Collection
 ----------
 

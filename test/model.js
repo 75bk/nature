@@ -1,4 +1,4 @@
-var test = require("tap").test;
+var test = require("tape");
 var Design = require("../lib/Design");
 
 var attributes = [
@@ -60,4 +60,3 @@ test("array values", function(t){
     t.deepEqual(model.colours, [ "red" ]);
     t.end();
 });
-
