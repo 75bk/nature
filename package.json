@@ -4,13 +4,14 @@
   "description": "Classify the things in your world and how they interact.",
   "main": "lib/nature.js",
   "scripts": {
-    "test": "tap test/*.js"
+    "test": "tape test/*.js"
   },
   "repository": "https://github.com/75lb/nature.git",
   "author": "Lloyd Brookes",
   "license": "MIT",
   "dependencies": {
     "array-ting": "^1.0.0",
+    "object-ting": "^1.0.1",
     "typical": "^1.0.0"
   },
   "devDependencies": {
